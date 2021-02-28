@@ -1,89 +1,23 @@
 \documentclass[12pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
 % maxwidth is the original width if it is less than linewidth
 % otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-% \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-% \newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-% \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-% \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-% \newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-% \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-% \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-% \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-% \newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-% \newenvironment{kframe}{%
-%  \def\at@end@of@kframe{}%
-%  \ifinner\ifhmode%
-%   \def\at@end@of@kframe{\end{minipage}}%
-%   \begin{minipage}{\columnwidth}%
-%  \fi\fi%
-%  \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
-%  \colorbox{shadecolor}{##1}\hskip-\fboxsep
-%      % There is no \\@totalrightmargin, so:
-%      \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
-%  \MakeFramed {\advance\hsize-\width
-%    \@totalleftmargin\z@ \linewidth\hsize
-%    \@setminipage}}%
-%  {\par\unskip\endMakeFramed%
-%  \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
 
 \input{McMasterReport_preamble.tex}
-%%\hidecomments
-
-
-
-
-
-
 
 \title{Evaluating COVID-19 strategies
 through compartmental, mechanistic mathematical modelling and rigorous
-statistical inference\\
-\bigskip
-\small
-Final report for project ``Modelling support for the evaluation of testing strategies and public health measures lifting associated with de-escalation in the Covid-19 context''
-%%COVID-19 modelling report from McMaster
-%%:\\
-%%{\bfseries Ontario} analysis and forecasting
+statistical inferencec health measures lifting associated with de-escalation in the Covid-19 context''
 }
 
-\author{Ben Bolker, Jonathan Dushoff, Michael Li and David Earn\\
+\author{Michael Li, Jonathan Dushoff, David Earn, Nick Ogden and Ben Bolker\\
   McMaster University\\
-  \url{https://mac-theobio.github.io/covid-19/}\\
-  \href{mailto:earn@math.mcmaster.ca?subject=McMaster_COVID-19_modelling}{\texttt{earn@math.mcmaster.ca}}}
-%% ?subject=McMaster_COVID-19_modelling
-
-%% \mike{What did we decide on Author order? I recall me first and Ben last. We also need to include Nick right?} 
+  \url{https://mac-theobio.github.io/covid-19/}
+  }
 
 
-
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-\linenumbers
 
+\linenumbers
 \maketitle
 
 \section*{Story:}
@@ -208,11 +142,8 @@ after discharge from ICU (\code{H2}), and cumulative deaths
 %%\begin{figure}[ht!]
 \begin{figure}
 \vspace{-5cm} % hack to get around extra space around diagram
-\begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/flowchartdiagram-1} 
-
-\end{knitrout}
+\includegraphics[width=\maxwidth]{figure/flowchartdiagram-1.pdf} 
 \vspace{-3cm} % hack to get around extra space around diagram
 \caption{Flow chart for basic compartmental mechanistic transmission
   model. Compartments: \code{S} (susceptible), \code{E} (exposed),
@@ -234,11 +165,9 @@ after discharge from ICU (\code{H2}), and cumulative deaths
 \end{figure}
 
 \begin{figure}[ht!]
-\begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/flowmatrix-1} 
+\includegraphics[width=\maxwidth]{figure/flowmatrix-1.pdf} 
 
-\end{knitrout}
 \caption{Flow matrix for basic compartmental mechanistic transmission
   model.  Gray indicates non-zero flows: compartments as in
   \cref{fig:flowchart}.  \ben{it was easier to set all flows equal
@@ -417,8 +346,6 @@ day.\david{OK.  That's not how demographic stochasticity is
 \item{transform beta to r and calculate delta r for logistic}
 \item{betaAvg assumption}
 \end{itemize}
-
-
 
 \subsection{Data sources}
 
@@ -660,8 +587,6 @@ the direct and indirect effects of susceptible depletion.}
 %% LOOP THROUGH PROVINCES TO GET FIGURES:
 %% Note that we could implement a switch for the captions via:
 %%   https://tex.stackexchange.com/questions/64131/implementing-switch-cases
-
-\makeatother
 
 \clearpage
 
