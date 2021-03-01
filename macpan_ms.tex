@@ -120,11 +120,12 @@ of the model resembles many other COVID-19 models
 in splitting the usual single infectious compartment into sub-compartments reflective
 of the epidemiology of COVID-19; it additionally adds
 compartments for hospitalized individuals in acute care
-or intensive care.  Infections can be
-asymptomatic (\code{a}), mildly symptomatic (\code{m}) or
-severely symptomatic (\code{s}).  All symptomatic individuals are
+or intensive care. All symptomatic individuals are
 presumed to have undergone a period of pre-symptomatic infectiousness
-(\code{p}).  All individuals who die (\code{d}) are assumed to have
+(\code{p}). Infections can be
+asymptomatic (\code{a}), mildly symptomatic (\code{m}) or
+severely symptomatic (\code{s}); all individuals with severe symptoms
+go to the hospital (acute care or ICU), and all individuals who die (\code{d}) are assumed to have
 have spent time in the ICU.  Recovered individuals (\code{R}) are
 assumed to be immune.  The model flow chart
 (\cref{fig:flowchart}) and flow matrix (\cref{fig:flowmatrix})
@@ -164,11 +165,9 @@ after discharge from ICU (\code{H2}), and cumulative deaths
 
 \caption{Flow matrix for basic compartmental mechanistic transmission
   model.  Gray indicates non-zero flows: compartments as in
-  \cref{fig:flowchart}.  \ben{it was easier to set all flows equal
-    than sort out proper scale: could work on this if it's
-    important}\david{No problem, but you seem to have it sorted in the
-    testify version (\cref{fig:flowmatrix_testify}).  Did you just not
-    update this simpler case?}}
+  \cref{fig:flowchart}.  \ben{do we want this? It's equivalent to
+    the flowchart, could be used to show differences in magnitude (via shading)
+  if we sorted out the details}
 \label{fig:flowmatrix}
 \end{figure}
 
@@ -208,6 +207,8 @@ of covariates.
 
 columns corresponding to B-splines (time is the covariate) and the
 vector $\boldsymbol{c}$ contains the coefficients of the B-splines.
+
+\ben{more tricks/details here: ODE vs discrete time, eigenvalue start, par\_adjust, ???}
 
 \subsubsection*{Calibration}
 
