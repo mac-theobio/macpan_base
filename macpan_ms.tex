@@ -4,12 +4,9 @@
 
 \input{McMasterReport_preamble.tex}
 
-\title{Evaluating COVID-19 strategies
-through compartmental, mechanistic mathematical modelling and rigorous
-statistical inferencec health measures lifting associated with de-escalation in the Covid-19 context''
-}
+\title{A compartmental model for epidemic parameter estimation and forecasting, with applications to COVID-19 variant-of-concern spread}
 
-\author{Michael Li, Jonathan Dushoff, David Earn, Nick Ogden and Ben Bolker\\
+\author{Michael Li, Jonathan Dushoff, David Earn, Nick Ogden and Benjamin M. Bolker\\
   McMaster University\\
   \url{https://mac-theobio.github.io/covid-19/}
   }
@@ -111,23 +108,22 @@ incidence of disease with less guesswork than other existing methods.
 
 \section{Methods}
 
-\subsection{Analysis framework}
-
 \subsubsection*{Compartmental mechanistic model}
 
-Our basic model, before consideration of testing, uses
+The epidemiological structure of the model is based on
 a susceptible-exposed-infectious-removed (SEIR) model with
 additional compartments reflecting the biology of COVID-19 and the
 structure of the health-care system. The COVID-19-specific compartmental structure
-of the model is similar to other recently developed modeling frameworks
-[CITE Mordecai/Stanford; Georgia?; SEIRS+ network model ...] in dividing
-the usual single infectious compartment into sub-compartments reflective
+of the model resembles many other COVID-19 models
+\ben{orig Stanford model is at \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7276010/}, preprint only? Feeling
+  lazy, but we should probably dig up 2 or 3 examples}
+in splitting the usual single infectious compartment into sub-compartments reflective
 of the epidemiology of COVID-19; it additionally adds
-additional compartments for hospitalized individuals in acute care
+compartments for hospitalized individuals in acute care
 or intensive care.  Infections can be
-asymptomatic (\code{a}), mildly/moderately symptomatic (\code{m}) or
+asymptomatic (\code{a}), mildly symptomatic (\code{m}) or
 severely symptomatic (\code{s}).  All symptomatic individuals are
-presumed to have had a period of pre-symptomatic infectiousness
+presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}).  All individuals who die (\code{d}) are assumed to have
 have spent time in the ICU.  Recovered individuals (\code{R}) are
 assumed to be immune.  The model flow chart
@@ -136,8 +132,6 @@ include additional compartments which facilitate book-keeping:
 cumulative hospital admissions (\code{X}), individuals in acute care
 after discharge from ICU (\code{H2}), and cumulative deaths
 (\code{D}).
-
-
 
 %%\begin{figure}[ht!]
 \begin{figure}

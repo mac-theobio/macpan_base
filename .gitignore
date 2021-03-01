@@ -3,6 +3,8 @@
 *.toc
 *.bbl
 *.pdf
+*.aux
 *.synctex.gz
-
-
+\#*
+.#*
+*.out
