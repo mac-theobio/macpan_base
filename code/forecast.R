@@ -7,7 +7,7 @@ suppressMessages({
 # load('end_date.RData')
 nsims <- 500
 
-flist <- list.files(path="cachestuff/",pattern=paste0(end_date,"[.]"))
+flist <- list.files(path="cachestuff/",pattern="RDS")
 
 flist <- flist[grepl("breaks",flist)]
 
@@ -22,7 +22,7 @@ for(i in flist){
  	)
  	datedat <- data.frame(parameters = "date", value = as.character(end_date))
  	paramdat <- rbind(datedat,dd,bddat)
- 	write.csv(paramdat,paste0("outputs/",tempmod$inputs$province,".params.csv"))
+ 	# write.csv(paramdat,paste0("outputs/",tempmod$inputs$province,".params.csv"))
  	
  	maxdate <- max(tempmod$trimdat$date)
 	print(plot(tempmod$fit, data=tempmod$trimdat))
@@ -83,16 +83,12 @@ forecast_dat <- function(x,raw_ensembles=FALSE){
 	return(combodat)
 }
 
-ensembles_list <- mclapply(X=flist,FUN=function(x){forecast_dat(x,raw_ensembles = TRUE)},mc.cores = 3)
+ensembles_list <- mclapply(X=flist,FUN=function(x){forecast_dat(x,raw_ensembles = FALSE)},mc.cores = 3)
 ensembles_dat <- bind_rows(ensembles_list)
-write.csv(ensembles_dat,paste0("outputs/",end_date,".breaks.forecast.csv"))
+write.csv(ensembles_dat,paste0("cachestuff/breaks.forecast.csv"))
 
 table(ensembles_dat$province)
 
-#ensembles_list <- mclapply(X=flist,FUN=function(x){forecast_dat(x,raw_ensembles = FALSE)},mc.cores = 6)
-# ensembles_list <- lapply(X=flist,FUN=function(x){forecast_dat(x,raw_ensembles = FALSE)})
-
-#ensembles_dat <- bind_rows(ensembles_list)
 
 
 

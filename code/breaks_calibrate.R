@@ -1,5 +1,5 @@
 use_local_data_repo <- FALSE
-ON_only <- TRUE
+ON_only <- FALSE
 source("clean.R")
 source("batchtools.R")
 
@@ -25,17 +25,19 @@ end_date <- as.Date(max(all_sub$date))
 all_inputs <- read_csv("breaks.csv")
 
 calibrate_province <- function(x){
-    print(x)
+   print(x)
    info <- all_inputs[x,]
    print(info)
    prov = info[["province"]]
    params <- fix_pars(read_params(paste0(prov,".csv"))
                       , target = c(R0 = 1.3 , Gbar=6)
    )
-   params[["obs_disp_report"]] <- 40
-   params[["obs_disp_H"]] <- 7
-   params[["obs_disp_ICU"]] <- 7
-   params[["obs_disp_death"]] <- 7
+   params[["obs_disp"]] <- 40
+   # params[["obs_disp_report"]] <- 40
+   # params[["obs_disp_H"]] <- 7
+   # params[["obs_disp_ICU"]] <- 7
+   # params[["obs_disp_death"]] <- 7
+   params[["W_asymp"]] <- 0.001  ## Why do we need this?
    
    # Retrieve break dates:
    bd <- as.Date(unlist(strsplit(info[["break_dates"]],split = ";")))
@@ -61,6 +63,11 @@ calibrate_province <- function(x){
 	              , ~dnorm(rel_beta0[3], mean=0.8,sd=0.1)
 	              , ~dnorm(rel_beta0[4], mean=0.8,sd=0.5)
 	              , ~dnorm(rel_beta0[5], mean=0.6,sd=0.5)
+	              # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
+	              # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
 	              , ~dnorm(params[1],    mean=1,sd=0.5)
 	)
 	# Subset the data to the requested 
