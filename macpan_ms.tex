@@ -6,7 +6,7 @@
 
 \title{A compartmental model for epidemic parameter estimation and forecasting, with applications to COVID-19 variant-of-concern spread}
 
-\author{Michael Li, Jonathan Dushoff, David Earn, Nick Ogden and Benjamin M. Bolker\\
+\author{Michael Li, Jonathan Dushoff, David Earn, Irena Papst, Nick Ogden and Benjamin M. Bolker\\
   McMaster University\\
   \url{https://mac-theobio.github.io/covid-19/}
   }
@@ -168,6 +168,7 @@ after discharge from ICU (\code{H2}), and cumulative deaths
   \cref{fig:flowchart}.  \ben{do we want this? It's equivalent to
     the flowchart, could be used to show differences in magnitude (via shading)
   if we sorted out the details}
+  }
 \label{fig:flowmatrix}
 \end{figure}
 
@@ -334,13 +335,43 @@ day.\david{OK.  That's not how demographic stochasticity is
   implemented, which is part of process error.  Can't think of an
   elegant way of expressing this at this moment...}
 
-\section{ad-hoc VoC}
+\subsection*{Forecasting Variant of Concern}
+
+\mike{say something about VOC is already in Canada in the intro, that is why we are doing this.}
+To account for the introduction of a more transmissible variant, the transmission rate \B(t) is redefined as follows:
+
+\begin{equation}
+\B(t) = (1 -  P_{VOC}(t))\B_{WT}(t) + P_{VOC}(t)\B_{VOC}(t)
+\end{equation}
+where $P_{VOC}(t)$ is the fraction of VOC at time $t$.
+
+In the exponential growing phase of two variants, the speed of replacement of the more transmissible variant is exactly the logistic function:
+
+\begin{equation}
+P_{VOC}(t) = \frac{p_0}{(p_0+(1-p_0)e^{(-\Delta\littler*t))}}
+\end{equation}
+where $p0$ is the initial proportion of the more transmissible variant $\Delta\littler$ is the difference in growth rates.
+
+To estimate the growth rates \littlerwt(t) and \littlervoc(t), we ran a pure-exponential simulation with transmission rate \Bwt and \Bvoc.
+
+The VOC effect is implicitly captured in the estimate of the recent transmission rate (along with all other factors affecting transmission, like public health measures) as they are confounded in the calibrated reported cases. 
+However, this does not capture the replacement effect of VOC.
+To model VOC replacement, the follow assumptions are considered:
 
 \begin{itemize}
-\item{rR framework-- dushoff plot?}
-\item{transform beta to r and calculate delta r for logistic}
-\item{betaAvg assumption}
+\item{VOC was introduced into the provinces a week prior to the first reported VOC case in each province.}
+\item{The initial proportional of VOC is pegged to roughly match the point prevalence study estimated conducted on January 20th in Ontario.}
+\item{The speed of replacement of the wild type by the VOC is based on the assumption that VOC is 50\% more transmissible than the wild type (i.e. it increases the existing transmission rate by a factor of 1.5).}
 \end{itemize}
+
+\subsection*{Scenarios}
+
+Two scenarios are considered:
+
+\begin{enumerate}
+\item{Implicit effect of VOC: In this scenario, the effect of VOC replacement if not explicitly modeled. This is ``letting the data speak for itself'' and implicitly capturing the average effect of any VOC that is actually occurring reflected in the overall cases. This implicit effect is propagated forward for assuming the implicit VOC proportion remains the same and not replace the wild type.}
+\item{Replacement effect of VOC: In this scenario, we allow the effective \B(t) to diverge around in early-mid February which account for the estimated \B that implicitly captures for the average effect of VOC replacement that is implicit when calibrating to reported cases. This way, the model accounts for the fact that there is some VOC transmission implicitly captured into the estimate of \B(t)}
+\end{enumerate}
 
 \subsection{Data sources}
 
