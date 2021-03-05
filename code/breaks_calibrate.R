@@ -114,7 +114,6 @@ calibrate_province <- function(x){
 		, debug      = FALSE
 		, data       = fitdat
 		, opt_pars   = opt_pars
-		, DE_cores   = info$DE_cores
 		, sim_args   = list(ndt = 2)
 		, time_args  = list(break_dates = bd)
 		, mle2_control = list(maxit  = 1e4,   # default = 1e4
@@ -124,7 +123,8 @@ calibrate_province <- function(x){
 		                      )   
 		, priors     = priors
 		, start_date_offset = start_date_offset
-		, use_DEoptim = FALSE
+		, use_DEoptim = TRUE
+		, DE_cores = 4
 		# , extra_pars = list(rel_beta0=1)
 		)
 	
@@ -141,4 +141,6 @@ if(ON_only){
 all_inputs <- all_inputs[1,]  
 }
 
-future_map(1:nrow(all_inputs),function(x)calibrate_province(x))
+# future_map(1:nrow(all_inputs),function(x)calibrate_province(x))
+lapply(1:nrow(all_inputs),function(x)calibrate_province(x))
+
