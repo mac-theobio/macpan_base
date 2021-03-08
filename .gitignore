@@ -8,3 +8,12 @@
 \#*
 .#*
 *.out
+target.mk
+McMasterReport_preamble.tex.mk
+McMasterReport_preamble.tex.deps
+McMasterReport_preamble.subdeps
+makestuff/
+macpan_ms.tex.mk
+macpan_ms.tex.deps
+macpan_ms.subdeps
+.DS_Store
