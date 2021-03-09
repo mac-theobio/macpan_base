@@ -3,18 +3,16 @@ ON_only <- FALSE
 source("clean.R")
 source("batchtools.R")
 
-suppressMessages({
-    library(McMasterPandemic)
-    library(splines)
-    library(dplyr)
-    library(parallel)
-    library(readr)
-    library(tidyr)
-    library(zoo)
-    library(furrr)
-    library(future.batchtools)
-    library(ggplot2)
-})
+library(McMasterPandemic)
+library(splines)
+library(dplyr)
+library(parallel)
+library(readr)
+library(tidyr)
+library(zoo)
+library(furrr)
+library(future.batchtools)
+library(ggplot2)
 
 trim_date <- as.Date("2020-09-15")
 
@@ -37,7 +35,7 @@ calibrate_province <- function(x){
    # params[["obs_disp_H"]] <- 7
    # params[["obs_disp_ICU"]] <- 7
    # params[["obs_disp_death"]] <- 7
-   params[["W_asymp"]] <- 0.001  ## Why do we need this?
+   params[["W_asymp"]] <- 0.0001  ## Why do we need this?
    
    # Retrieve break dates:
    bd <- as.Date(unlist(strsplit(info[["break_dates"]],split = ";")))
@@ -54,22 +52,22 @@ calibrate_province <- function(x){
 	, logit_phi1 = lgf(params[["phi1"]])
 	)
 		, rel_beta0 = rep(1, length(bd))
-    , rel_mu = rep(1,length(bd))
-    , rel_phi1 = rep(1,length(bd))
+    # , rel_mu = rep(1,length(bd))
+    # , rel_phi1 = rep(1,length(bd))
 	)
 	
-	priors= list(  ~dnorm(rel_beta0[1], mean=0.8,sd=0.5)
-	              , ~dnorm(rel_beta0[2], mean=0.8,sd=0.5)
-	              , ~dnorm(rel_beta0[3], mean=0.8,sd=0.1)
-	              , ~dnorm(rel_beta0[4], mean=0.8,sd=0.5)
-	              , ~dnorm(rel_beta0[5], mean=0.6,sd=0.5)
-	              # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
-	              # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
-	              , ~dnorm(params[1],    mean=1,sd=0.5)
-	)
+	# priors= list(  ~dnorm(rel_beta0[1], mean=0.8,sd=0.5)
+	#               , ~dnorm(rel_beta0[2], mean=0.8,sd=0.5)
+	#               , ~dnorm(rel_beta0[3], mean=0.8,sd=0.1)
+	#               , ~dnorm(rel_beta0[4], mean=0.8,sd=0.5)
+	#               , ~dnorm(rel_beta0[5], mean=0.6,sd=0.5)
+	#               # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
+	#               # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
+	#               , ~dnorm(params[1],    mean=1,sd=0.5)
+	# )
 	# Subset the data to the requested 
 	# province and variables:
 	province_dat <- (all_sub
@@ -121,9 +119,9 @@ calibrate_province <- function(x){
 		                      beta   = NM.beta,
 		                      gamma  = NM.gamma
 		                      )   
-		, priors     = priors
+		# , priors     = priors
 		, start_date_offset = start_date_offset
-		, use_DEoptim = TRUE
+		, use_DEoptim = FALSE
 		, DE_cores = 4
 		# , extra_pars = list(rel_beta0=1)
 		)
@@ -141,6 +139,6 @@ if(ON_only){
 all_inputs <- all_inputs[1,]  
 }
 
-# future_map(1:nrow(all_inputs),function(x)calibrate_province(x))
-lapply(1:nrow(all_inputs),function(x)calibrate_province(x))
+future_map(1:nrow(all_inputs),function(x)calibrate_province(x))
+# lapply(1:nrow(all_inputs),function(x)calibrate_province(x))
 
