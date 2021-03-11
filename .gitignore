@@ -17,3 +17,6 @@ macpan_ms.tex.mk
 macpan_ms.tex.deps
 macpan_ms.subdeps
 .DS_Store
+*~
+.RData
+*.Rout

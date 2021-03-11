@@ -78,33 +78,31 @@ Response to the worldwide pandemic \cite{Li+20,Fauc+20} has been
 guided to a substantial extent by mathematical modelling
 \cite{Flax+20}.
 
-\jd{What are our actual plans for tracing? It's not much in the model now, but we seem to mention it whenever we mention testing.}
-\mike{The best we can do without extending the model is how we distribute the weights. In my mind, we expect the weights for Ia and Ip to be higher if contact tracing is effective.}
-\ben{Agree with JD, see my comments above; need to de-emphasize (right now introduction and
-  abstract are very similar, so not surprising that I made similar comments).}
+%% Virological testing and contact tracing have been conducted to varying
+%% degrees in different jurisdictions\david{REFS}.  While testing is
+%% imperative for surveillance, its value for control is less clear.
+%% Agent-based simulations indicate that the combination of testing and
+%% contact tracing can be very effective in mitigating spread of
+%% SARS-CoV-2 \cite{Ng+20}.  Emerging research is demonstrating that
+%% saliva-based tests, as opposed to naso-pharyngeal swabs for RT-qPCR,
+%% may be more effective, cheaper, and viable for the public to
+%% self-administer \cite{Will+20,Wyll+20}, potentially making very
+%% large-scale, frequent testing possible.
 
-Virological testing and contact tracing have been conducted to varying
-degrees in different jurisdictions\david{REFS}.  While testing is
-imperative for surveillance, its value for control is less clear.
-Agent-based simulations indicate that the combination of testing and
-contact tracing can be very effective in mitigating spread of
-SARS-CoV-2 \cite{Ng+20}.  Emerging research is demonstrating that
-saliva-based tests, as opposed to naso-pharyngeal swabs for RT-qPCR,
-may be more effective, cheaper, and viable for the public to
-self-administer \cite{Will+20,Wyll+20}, potentially making very
-large-scale, frequent testing possible.
-
-Here, we present a compartmental framework that includes explicit
-compartments that represent the process of testing and
-isolation; the impact of contact tracing can be studied
-by exploring the parameters that determine the bias of the
-testing process toward selecting people in different epidemiological compartments.
-The model and can be used as a tool for exploring the effects of
-testing and tracing on epidemic spread under various scenarios.
-More generally, by explicitly incorporating testing --- and by calibrating
-to multiple observed time series simultaneously (e.g. reported positive cases,
-hospitalizations, deaths) our model provides a way to estimate the true
-incidence of disease with less guesswork than other existing methods.
+Here, we present a compartmental framework that has been developed
+over the course of the pandemic. It incorporates the standard epidemiological compartments
+required to model COVID-19 as well as compartments that track health-care utilization and COVID-induced
+mortality. Case reporting can be modeled either as a time-delayed convolution
+of incidence or by enabling a factorial expansion of the model that accounts
+for the testing status of individuals [CITE Friston, ?]. The model also allows
+for time-dependent variation in any rate parameter --- particularly the transmission rate --- and
+allows this variation to be indexed by external covariates such as cellphone-based mobility
+metrics, or to follow smooth (spline) curves over time. The same model structure can be
+run as an ordinary differential equation, a discrete-time-step deterministic model, or
+stochastic process error can be included. Finally, the model can be used to
+(1) simulate specific scenarios for planning purposes; (2) calibrate parameters 
+to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
+(3) forecast future epidemic dynamics on the basis of past calibration.
 
 \section{Methods}
 
@@ -136,10 +134,8 @@ after discharge from ICU (\code{H2}), and cumulative deaths
 
 %%\begin{figure}[ht!]
 \begin{figure}
-\vspace{-5cm} % hack to get around extra space around diagram
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/flowchartdiagram-1.pdf} 
-\vspace{-3cm} % hack to get around extra space around diagram
+\includegraphics[width=\maxwidth]{figure/flowchart.pdf}
 \caption{Flow chart for basic compartmental mechanistic transmission
   model. Compartments: \code{S} (susceptible), \code{E} (exposed),
   \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic
@@ -148,20 +144,15 @@ after discharge from ICU (\code{H2}), and cumulative deaths
   [acute care]), \code{ICUs} (ICU with prognosis of survival),
   \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care
   after ICU stay), \code{R} (recovered), \code{D} (dead), \code{X}
-  (accumulator for cumulative hospital admissions).  \david{Issues
-    with flow chart: too much white space around diagram; circles too
-    small except for single letters; would be nice to have colours for
-    boxes} \ben{Fixing this precisely would be a nuisance (shifting
-    all the elements properly); if we wanted it pretty we would want a
-    proper tikz interface; don't know if one exists.  For now I
-    suppressed the flow symbols. How high a priority is prettifying this,
-    and who has time to work on it \ldots ?}}
+  (accumulator for cumulative hospital admissions).
+  \ben{possible tweaks: colour? straight arrows? restore flow symbols on arrows? adjust box widths based on chars in compartment
+name? lose the shadows?}}
 \label{fig:flowchart}
 \end{figure}
 
 \begin{figure}[ht!]
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/flowmatrix-1.pdf} 
+\includegraphics[width=\maxwidth]{figure/ratematrix.pdf} 
 
 \caption{Flow matrix for basic compartmental mechanistic transmission
   model.  Gray indicates non-zero flows: compartments as in
@@ -175,7 +166,7 @@ after discharge from ICU (\code{H2}), and cumulative deaths
 The model allows for time-varying, piecewise constant changes in any
 parameter. Our analyses have focused on changes in $R(t)$ due
 to behavour change and non-pharmaceutical interventions, which we model
-by changing the transmission rate $beta$: $\beta$
+by changing the transmission rate $\beta$: $\beta$
 is taken to be a time-varying function of the form
 \begin{equation}
   \beta_0 \beta_1(t)  \,
@@ -193,24 +184,32 @@ The time-varying (relative) transmission $\beta_1$ can incorporate a variety of 
   \beta_1(t) \propto (\text{relative mobility})^{p_{\rm mob}}
 \end{equation}
 for some power $p_{\rm mob}>0$;
-\item proportional to the exponential of a linear combination of
-  \href{https://en.wikipedia.org/wiki/B-spline}{B-splines}.
+\item according to an arbitrary spline curve, i.e. a linear combination
+  of components of a B-spline basis.
 \end{itemize}
 
-Most of these possible sub-models for temporal change in the transmission
-rate can be subsumed under a single log-line model:
+All of the sub-models for temporal change in the transmission
+rate can be subsumed under a single log-linear model:
 \begin{equation}\label{eq:betamodel}
 \log \beta(t) = \log \beta_0 + \boldsymbol{X}\boldsymbol{c}
 \,,
 \end{equation}
 where $\boldsymbol{X}$ is a model matrix that can contain any combination
-of covariates.
+of covariates and $\boldsymbol{c}$ is a vector of covariates determining
+differences in the log of the relative transmission rate.
+In particular, piecewise breaks correspond to indicator variables
+for which period an observation falls in; the mobility model corresponds to a column
+containing the log of relative mobility; and the spline model corresponds to a set of
+columns containing the basis vectors of a B-spline basis with specified knots.
 
-columns corresponding to B-splines (time is the covariate) and the
-vector $\boldsymbol{c}$ contains the coefficients of the B-splines.
-
-\ben{more tricks/details here: ODE vs discrete time, eigenvalue start, par\_adjust, ???}
-
+\ben{more tricks/details here:
+  \begin{itemize}
+  \item ODE vs discrete time
+  \item process and observation error
+  \item eigenvalue start,
+  \item fix\_pars (adjust parameters to a specified R0, GIbar)
+  \end{itemize}
+}
 \subsubsection*{Calibration}
 
 Our model framework allows us to fit to any number of observed time
