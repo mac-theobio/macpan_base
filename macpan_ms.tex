@@ -98,10 +98,12 @@ for the testing status of individuals [CITE Friston, ?]. The model also allows
 for time-dependent variation in any rate parameter --- particularly the transmission rate --- and
 allows this variation to be indexed by external covariates such as cellphone-based mobility
 metrics, or to follow smooth (spline) curves over time. The same model structure can be
-run as an ordinary differential equation, a discrete-time-step deterministic model, or
-stochastic process error can be included. Finally, the model can be used to
-(1) simulate specific scenarios for planning purposes; (2) calibrate parameters 
-to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
+run as an ordinary differential equation,
+a discrete-time-step deterministic model, or
+a discrete-time-step stochastic model with dynamical noise.
+Finally, the model can be used to
+(1) simulate specific scenarios for planning purposes; 
+(2) calibrate parameters to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
 (3) forecast future epidemic dynamics on the basis of past calibration.
 
 \section{Methods}
@@ -121,7 +123,7 @@ compartments for hospitalized individuals in acute care
 or intensive care. All symptomatic individuals are
 presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}). Infections can be
-asymptomatic (\code{a}), mildly symptomatic (\code{m}) or
+asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
 severely symptomatic (\code{s}); all individuals with severe symptoms
 go to the hospital (acute care or ICU), and all individuals who die (\code{d}) are assumed to have
 have spent time in the ICU.  Recovered individuals (\code{R}) are
@@ -158,7 +160,7 @@ name? lose the shadows?}}
   model.  Gray indicates non-zero flows: compartments as in
   \cref{fig:flowchart}.  \ben{do we want this? It's equivalent to
     the flowchart, could be used to show differences in magnitude (via shading)
-  if we sorted out the details}
+  if we sorted out the details} \jd{I think we don't.}
   }
 \label{fig:flowmatrix}
 \end{figure}
@@ -172,8 +174,9 @@ is taken to be a time-varying function of the form
   \beta_0 \beta_1(t)  \,
 \end{equation}
 where $\beta_0$ is the baseline value for transmission
-from symptomatic individuals. Presymptomatic and asymptomatic individuals have transmission
-lowered by a specified multiplier (given by a model parameter).
+from symptomatic individuals.
+Presymptomatic and asymptomatic individuals have transmission lowered by a specified multiplier (given by a model parameter).
+\jd{Does this mean that we don't have any option for multipliers for the different classes of symptomatic individuals?}
 The time-varying (relative) transmission $\beta_1$ can incorporate a variety of different effects, one at a time or in combination:
 \begin{itemize}
 \item abrupt (piecewise) changes on specified dates when control
@@ -213,24 +216,25 @@ columns containing the basis vectors of a B-spline basis with specified knots.
 }
 \subsubsection*{Calibration}
 
-Our model framework allows us to fit to any number of observed time
-series simultaneously.  We calibrate using
-maximum likelihood estimation (MLE) by matching deterministic
-trajectories to the observed time series \cite{Bolk08}.  We calibrate
+Our model framework allows us to fit to any number of observed incidence 
+series simultaneously (for example, case reports, total hospital admissions, and deaths).
+\jd{We need to think about how to explain fits to occupancy a bit?}
+We calibrate using
+maximum likelihood estimation (MLE) by treating deterministic
+trajectories of incidence as expected values of negative-binomial distributions with calibrated [JD: if that's correct] shape parameters \cite{Bolk08}.
+In Canada, we calibrate
 to deaths, hospital occupancy, and new confirmations, all of which are
 available publicly for all provinces (we have hospital admission data
 for Ontario only).  With the expanded model discussed below in
 \cref{sec:test.and.trace}, we can include time series of both positive
 and negative tests in our calibration.
 
-Reported new confirmations are subject to many inherent biases,
+Reported new confirmations are the most reliable and voluminous source of epidemic information. 
+Unfortunately, they are also subject to many inherent biases,
 including substantial variation over time in \term{testing intensity}
-(\ie tests \emph{per capita} per day); nevertheless, we include them
-in our calibrations because positive tests provide the largest sample
-of the epidemic.  We assume
+(\ie tests \emph{per capita} per day). We assume
 \protect{\href{https://en.wikipedia.org/wiki/Negative_binomial_distribution}{negative
     binomial}} observation error for all observed time series.
-\jd{Need to expand this and see that we sometimes now include testing intensity information.}
 
 In the basic model (which does not include mechanistic testing flows),
 we match the number of new positive tests per day (``new
