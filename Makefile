@@ -10,18 +10,17 @@ vim_session:
 
 ######################################################################
 
-Sources += $(wildcard *.tex)
+Sources += $(wildcard *.tex figure/*.R)
 
 pkg:
 	echo "remotes::install_github('bbolker/McMasterPandemic')" | R --slave
 
 macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/ratematrix.pdf
 
-figure/flowchart.pdf:
-	cd figure; R CMD BATCH flowmatrix.R
+figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
 
-figure/ratematrix.pdf:
-	cd figure; R CMD BATCH flowmatrix.R
+figure/flowmatrix.Rout: figure/flowmatrix.R
+	$(run-R)
 
 ######################################################################
 
@@ -39,7 +38,7 @@ makestuff/Makefile:
 
 -include makestuff/os.mk
 
-## -include makestuff/pipeR.mk
+-include makestuff/pipeR.mk
 -include makestuff/texi.mk
 
 -include makestuff/git.mk
