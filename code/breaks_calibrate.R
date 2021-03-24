@@ -1,5 +1,5 @@
 use_local_data_repo <- FALSE
-ON_only <- FALSE
+ON_only <- TRUE
 source("clean.R")
 source("batchtools.R")
 
@@ -31,6 +31,7 @@ calibrate_province <- function(x){
                       , target = c(R0 = 1.3 , Gbar=6)
    )
    params[["obs_disp"]] <- 40
+   params[["vacc"]] <- 1e-10
    # params[["obs_disp_report"]] <- 40
    # params[["obs_disp_H"]] <- 7
    # params[["obs_disp_ICU"]] <- 7
@@ -48,26 +49,29 @@ calibrate_province <- function(x){
 	lgf <- function(x){log(x/(1-x))}
 	
 	opt_pars <- list(params = c(log_beta0= log(params[["beta0"]])
-	,logit_mu = lgf(params[["mu"]])
-	, logit_phi1 = lgf(params[["phi1"]])
+	# ,logit_mu = lgf(params[["mu"]])
+	# , logit_phi1 = lgf(params[["phi1"]])
 	)
 		, rel_beta0 = rep(1, length(bd))
+	  , rel_vacc = c(1,1,1,1,0.0004/1e-10,0.0004/1e-10,0.0025/1e-10)
     # , rel_mu = rep(1,length(bd))
     # , rel_phi1 = rep(1,length(bd))
 	)
 	
-	# priors= list(  ~dnorm(rel_beta0[1], mean=0.8,sd=0.5)
-	#               , ~dnorm(rel_beta0[2], mean=0.8,sd=0.5)
-	#               , ~dnorm(rel_beta0[3], mean=0.8,sd=0.1)
-	#               , ~dnorm(rel_beta0[4], mean=0.8,sd=0.5)
-	#               , ~dnorm(rel_beta0[5], mean=0.6,sd=0.5)
-	#               # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
-	#               # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
-	#               , ~dnorm(params[1],    mean=1,sd=0.5)
-	# )
+	priors= list(  ~dnorm(rel_vacc[1], mean=1,sd=0.001)
+	              , ~dnorm(rel_vacc[2], mean=1,sd=0.001)
+	              , ~dnorm(rel_vacc[3], mean=1,sd=0.001)
+	              , ~dnorm(rel_vacc[4], mean=1,sd=0.001)
+	              , ~dnorm(rel_vacc[5], mean=0.0004/1e-10,sd=0.001)
+	              , ~dnorm(rel_vacc[6], mean=0.0004/1e-10,sd=0.001)
+	              , ~dnorm(rel_vacc[7], mean=0.0025/1e-10,sd=0.001)
+	              # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
+	              # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
+	              # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
+	              # , ~dnorm(params[1],    mean=1,sd=0.5)
+	)
 	# Subset the data to the requested 
 	# province and variables:
 	province_dat <- (all_sub
@@ -115,11 +119,11 @@ calibrate_province <- function(x){
 		, sim_args   = list(ndt = 2)
 		, time_args  = list(break_dates = bd)
 		, mle2_control = list(maxit  = 1e4,   # default = 1e4
-		                      reltol = 1e-6,  # default ~ 1e-8
+		                      reltol = 1e-8,  # default ~ 1e-8
 		                      beta   = NM.beta,
 		                      gamma  = NM.gamma
 		                      )   
-		# , priors     = priors
+		, priors     = priors
 		, start_date_offset = start_date_offset
 		, use_DEoptim = FALSE
 		, DE_cores = 4
