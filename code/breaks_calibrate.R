@@ -52,8 +52,8 @@ calibrate_province <- function(x){
 	# ,logit_mu = lgf(params[["mu"]])
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
-		, rel_beta0 = rep(1, length(bd))
-	  , rel_vacc = c(1,1,1,1,0.0004/1e-10,0.0004/1e-10,0.0025/1e-10)
+		, rel_beta0 = rep(.8, length(bd))
+	  , rel_vacc = c(1,1,1,1,0.7*0.00037/1e-10,0.7*0.00037/1e-10,0.7*0.0015/1e-10)
     # , rel_mu = rep(1,length(bd))
     # , rel_phi1 = rep(1,length(bd))
 	)
@@ -62,9 +62,9 @@ calibrate_province <- function(x){
 	              , ~dnorm(rel_vacc[2], mean=1,sd=0.001)
 	              , ~dnorm(rel_vacc[3], mean=1,sd=0.001)
 	              , ~dnorm(rel_vacc[4], mean=1,sd=0.001)
-	              , ~dnorm(rel_vacc[5], mean=0.0004/1e-10,sd=0.001)
-	              , ~dnorm(rel_vacc[6], mean=0.0004/1e-10,sd=0.001)
-	              , ~dnorm(rel_vacc[7], mean=0.0025/1e-10,sd=0.001)
+	              , ~dnorm(rel_vacc[5], mean=0.7*0.00037/1e-10,sd=0.001)
+	              , ~dnorm(rel_vacc[6], mean=0.7*0.00037/1e-10,sd=0.001)
+	              , ~dnorm(rel_vacc[7], mean=0.7*0.0015/1e-10,sd=0.001)
 	              # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
 	              # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
 	              # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
@@ -119,7 +119,7 @@ calibrate_province <- function(x){
 		, sim_args   = list(ndt = 2)
 		, time_args  = list(break_dates = bd)
 		, mle2_control = list(maxit  = 1e4,   # default = 1e4
-		                      reltol = 1e-8,  # default ~ 1e-8
+		                      reltol = 1e-6,  # default ~ 1e-8
 		                      beta   = NM.beta,
 		                      gamma  = NM.gamma
 		                      )   
@@ -129,13 +129,13 @@ calibrate_province <- function(x){
 		, DE_cores = 4
 		# , extra_pars = list(rel_beta0=1)
 		)
+# plot(res,data=fitdat)
 	
 	res_list <- list(fit=res, inputs=info, trimdat = fitdat, fulldat=dat)
 	saveRDS(object=res_list, 
 	        file=paste0("./cachestuff/",prov,".breaks.RDS"))
 }
 
-# plot(res,data=fitdat)
 
 batch_setup()
 
