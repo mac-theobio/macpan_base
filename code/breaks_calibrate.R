@@ -53,27 +53,19 @@ calibrate_province <- function(x){
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
 		, rel_beta0 = rep(.8, length(bd))
-	  , rel_vacc = c(1,1,1,1,0.7*0.00037/1e-10,0.7*0.00037/1e-10,0.7*0.0015/1e-10)
     # , rel_mu = rep(1,length(bd))
     # , rel_phi1 = rep(1,length(bd))
 	)
-	
-	priors= list(  ~dnorm(rel_vacc[1], mean=1,sd=0.001)
-	              , ~dnorm(rel_vacc[2], mean=1,sd=0.001)
-	              , ~dnorm(rel_vacc[3], mean=1,sd=0.001)
-	              , ~dnorm(rel_vacc[4], mean=1,sd=0.001)
-	              , ~dnorm(rel_vacc[5], mean=0.7*0.00037/1e-10,sd=0.001)
-	              , ~dnorm(rel_vacc[6], mean=0.7*0.00037/1e-10,sd=0.001)
-	              , ~dnorm(rel_vacc[7], mean=0.7*0.0015/1e-10,sd=0.001)
-	              # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
-	              # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
-	              # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
-	              # , ~dnorm(params[1],    mean=1,sd=0.5)
-	)
-	# Subset the data to the requested 
-	# province and variables:
+	# 
+	# priors= list( #~dnorm(rel_mu[1], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
+	#               # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
+	#               # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
+	#               # , ~dnorm(params[1],    mean=1,sd=0.5)
+	# )
+	# # Subset the data to the requested 
+	# # province and variables:
 	province_dat <- (all_sub
       %>% group_by(var)
       %>% filter(province == info[["province"]])
@@ -123,7 +115,7 @@ calibrate_province <- function(x){
 		                      beta   = NM.beta,
 		                      gamma  = NM.gamma
 		                      )   
-		, priors     = priors
+		# , priors     = priors
 		, start_date_offset = start_date_offset
 		, use_DEoptim = FALSE
 		, DE_cores = 4
