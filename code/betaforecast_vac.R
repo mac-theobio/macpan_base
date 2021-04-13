@@ -5,30 +5,40 @@ library(shellpipes)
 library(cowplot)
 library(zoo)
 
-flist <- list.files(path="cachestuff/",pattern="ON.breaks")
+end_date <- as.Date("2021-04-10")
 
-flist <- flist[grepl("ON",flist)]
+flist <- list.files(path="cachestuff/",pattern=as.character(end_date))
 
 vac <- read_csv("https://data.ontario.ca/dataset/752ce2b7-c15a-4965-a3dc-397bf405e7cc/resource/8a89caa9-511c-4568-af89-7f2174b4378c/download/vaccine_doses.csv")
 
 vaccdat <- (vac
   %>% transmute(Date = report_date+14
     , Symbol = "vacc"
-    , Relative_value = (previous_day_doses_administered/14570000)/1e-10
+    , Relative_value = (0.6*previous_day_doses_administered/14570000)/1e-10
   )
   %>% filter(complete.cases(.))
 )
 
 
 lift_frame <- data.frame(province = c("ON")
-                         , close_date = c("2021-04-05")
-                         , reopen_date = c("2021-05-05")
+                         , close_date = c("2021-04-09")
+                         , reopen_date = c("2021-05-09")
                          , voc_start = c("2020-12-19")
                          , pegprop = c(0.0016)
-                         , scale_factor = c(15)
+                         , scale_factor = c(20)
                          , vaccdate = c("2021-01-01")
                          , vaccrate = c(0.002)
 )
+
+# lift_frame <- data.frame(province = c("ON")
+#                          , close_date = c("2021-04-09")
+#                          , reopen_date = c("2021-05-23")
+#                          , voc_start = c("2020-12-19")
+#                          , pegprop = c(0.0016)
+#                          , scale_factor = c(15)
+#                          , vaccdate = c("2021-01-01")
+#                          , vaccrate = c(0.002)
+# )
 
 # x <- flist
 # voc=FALSE
@@ -38,7 +48,7 @@ lift_frame <- data.frame(province = c("ON")
 # nsim=20
 # vacc=TRUE
 
-betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,nsim=200,vacc=TRUE){
+betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,last_vac_factor=1,nsim=200,vacc=TRUE){
  	tempmod <- readRDS(paste0("./cachestuff/",x))
  	
  	end_date <- tempmod$fit$forecast_args$end_date
@@ -64,6 +74,9 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,ns
 		, Relative_value = 1
 		, VoCprop = 0
 	)
+	
+	vaccframe <- dateframe
+	
   ## Create a dataframe such that the relative values are in place
 	for(i in 1:length(tempmod$fit$forecast_args$time_args$break_dates)){
 		for(j in 1:nrow(dateframe)){
@@ -73,10 +86,19 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,ns
 		}
 	}
 	
+	for(i in 1:length(tempmod$fit$forecast_args$time_args$break_dates)){
+	  for(j in 1:nrow(vaccframe)){
+	    if(vaccframe[j,"Date"] >= as.Date(tempmod$fit$forecast_args$time_args$break_dates[i])){
+	      vaccframe[j,"Relative_value"] <- coef(tempmod$fit,"fitted")$rel_vacc[[i]]
+	    }
+	  }
+	}
+	
 	## If we are reopening, increase transmission by reopen_factor
 
 	dateframe <- (dateframe
-	      %>% mutate(Relative_value = ifelse(Date >= as.Date(close_date),Relative_value*close_factor,Relative_value)
+	      %>% mutate( Relative_value = ifelse(between(Date,as.Date(close_date),as.Date(close_date)) & (close_factor!=1),Relative_value*close_factor/2,Relative_value)
+	          , Relative_value = ifelse(Date > as.Date(close_date)+7,Relative_value*close_factor,Relative_value)
 	                  , Relative_value = ifelse(Date >= as.Date(reopen_date), Relative_value*reopen_factor,Relative_value))
 	   )
 			
@@ -146,17 +168,23 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,ns
 	dateframe = as.data.frame(dateframe)
 	fa <- tempmod$fit$forecast_args
 	fa$end_date <- max(dateframe$Date)
+	last_vac <- mean(tail(vaccdat,4)[["Relative_value"]]) * last_vac_factor
 	tempframe <- dateframe %>% select(Date,Symbol,Relative_value)
-	vaccframe <- data.frame()
 	if(vacc){
-	  vaccframe <- (tempframe
-	                %>% select(Date)
-	                %>% left_join(.,vaccdat)
-	                %>% mutate(Symbol = "vacc"
-	                           , Relative_value = ifelse(Date <= as.Date("2021-01-13"),1,Relative_value)
-	                           , Relative_value = ifelse(Date > as.Date("2021-04-12"),48043926,Relative_value)
-	                           , Relative_value = Relative_value*0.70
-	                )
+	  # vaccframe <- (tempframe
+	  #               %>% select(Date)
+	  #               %>% left_join(.,vaccdat)
+	  #               %>% mutate(Symbol = "vacc"
+	  #                          , Relative_value = ifelse(Date <= as.Date("2021-01-13"),1,Relative_value)
+	  #                          , Relative_value = ifelse(Date > max(vaccdat$Date),last_vac,Relative_value)
+	  #                          , Relative_value = Relative_value*0.6
+	  #               )
+	  # )
+	  vaccframe <- (vaccframe 
+	     %>% mutate(Symbol = "vacc"
+	       , Relative_value = ifelse(Date > end_date+14,last_vac,Relative_value)
+	       )
+	     %>% select(-VoCprop)
 	  )
 	}
 	
@@ -183,6 +211,7 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,ns
 					, reopen_factor = reopen_factor
 					, close_date = close_date
 					, close_factor = close_factor
+					, vacc_factor = last_vac_factor
 					, flip_date = flip_date
 					, R0 = get_R0(coef(tempmod$fit,"all"))
 					, pop = tempmod$inputs$population
@@ -195,9 +224,15 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,ns
 
 ## No Lift
 # sim0<- mclapply(flist,function(y){betaforecast(x=y,voc=FALSE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,vacc=TRUE)},mc.cores=4)
-sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,nsim=200,vacc=TRUE)},mc.cores=4)
-sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE)},mc.cores=4)
-sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE)},mc.cores=4)
+sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
+
+sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .8,reopen_factor = 1/.8, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim4<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .8,reopen_factor = 1/.8, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
+
+sim5<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim6<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
+
 
 # sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 1/0.6, Rmult = 1.5)},mc.cores=4)
 # sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 0.8/0.6, Rmult = 1.5)},mc.cores=4)
@@ -215,7 +250,7 @@ sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,r
 # 
 # all.equal(aa$value,aa2$value)
 
-betaforecast_dat <- bind_rows(sim1,sim2,sim3)
+betaforecast_dat <- bind_rows(sim1,sim2,sim3,sim4,sim5,sim6)
 use_local_data_repo <- FALSE
 source("clean.R")
 
@@ -227,9 +262,10 @@ betaforecast_dat2 <- (all_sub
 	%>% mutate( #new_strain_fraction = factor(new_strain_fraction)
 		VoC_effect = ifelse(new_strain_fraction == 0,"Implicit Vac","Replacement Vac")
 		# , VoC_effect = ifelse(vacc,"Vaccination",VoC_effect)
-		, VoC_effect = ifelse((close_factor == 0.6)&(reopen_factor == 1/0.6)&(reopen_date == as.Date("2021-04-19")), "Lock Down for 2 weeks", VoC_effect)
-		, VoC_effect = ifelse((close_factor == 0.6)&(reopen_factor == 1/0.6)&(reopen_date == as.Date("2021-05-05")), "Lock Down for 4 weeks", VoC_effect)
-		# , obs = ifelse(date > as.Date("2021-02-21"),NA,obs)
+		, VoC_effect = ifelse((close_factor == 1)&(reopen_factor == 1), "Lock Down for 4 weeks, ineffective reduction", VoC_effect)
+		, VoC_effect = ifelse((close_factor == 0.6)&(reopen_factor == 1/0.6), "Lock Down for 4 weeks, 40% reduction", VoC_effect)
+		, VoC_effect = ifelse((close_factor == 0.8)&(reopen_factor == 1/0.8), "Lock Down for 4 weeks, 20% reduction", VoC_effect)
+		, Vaccination = ifelse(vacc_factor == 1, "Curent","Increase 20%")
 		)
 	# %>% filter(var %in% c("report"))
 )
