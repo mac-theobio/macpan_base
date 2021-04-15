@@ -53,8 +53,9 @@ calibrate_province <- function(x){
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
 		, rel_beta0 = rep(.8, length(bd))
-    # , rel_mu = rep(1,length(bd))
-    # , rel_phi1 = rep(1,length(bd))
+    , rel_mu = rep(1,length(bd))
+    , rel_phi1 = rep(1,length(bd))
+	  , rel_nonhosp_mort = rep(1,length(bd))
 	)
 	# 
 	# priors= list( #~dnorm(rel_mu[1], mean=0.8,sd=0.5)
