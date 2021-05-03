@@ -1,4 +1,5 @@
 ## This is macpan_base 
+## A public repo to write our main macpan report paper
 
 current: target
 -include target.mk
