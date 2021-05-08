@@ -13,6 +13,8 @@ vim_session:
 
 Sources += $(wildcard *.tex figure/*.R)
 
+######################################################################
+
 pkg:
 	echo "remotes::install_github('bbolker/McMasterPandemic')" | R --slave
 
