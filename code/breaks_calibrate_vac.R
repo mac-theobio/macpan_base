@@ -31,7 +31,7 @@ use_reference <- TRUE
 
 immunity_lag <- 14
 vac_effect <- 0.6
-data_scale <- 2
+data_scale <- 1
 
 vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMdFSZgA-M8Esr6rbNjHiyfcXcBxPeMjselJIso/edit#gid=0"))
 
@@ -42,7 +42,12 @@ vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMd
    params <- fix_pars(read_params(paste0(prov,".csv"))
                       , target = c(R0 = 1.3 , Gbar=6)
    )
-   params[["obs_disp"]] <- 40
+   params[["obs_disp"]] <- 30
+   # params[["obs_disp_report"]] <- 40
+   # params[["obs_disp_H"]] <- 20
+   # params[["obs_disp_ICU"]] <- 20
+   
+   
    params[["vacc"]] <- 1e-10
    
    # params[["proc_disp"]] <- 0.01
@@ -62,8 +67,6 @@ vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMd
       %>% mutate(daily_vac = daily_vac/info$population/1e-10
                  , daily_vac = ifelse(is.na(daily_vac) | daily_vac==0,1,vac_effect*daily_vac*data_scale)
                  , daily_vac = ifelse(date < as.Date("2021-01-01"), 1, daily_vac)
-                 # , daily_vac = ifelse(date == as.Date("2021-02-08"),3500000,daily_vac)
-                 # , daily_vac = ifelse(date == as.Date("2021-03-05"),12000000,daily_vac)
                  )
    )
    print(clean_vac)
@@ -77,7 +80,7 @@ vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMd
 	# ,logit_mu = lgf(params[["mu"]])
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
-		, rel_beta0 = rep(0.8, length(bd))
+		, rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.7)
 	  , rel_vacc = clean_vac$daily_vac
 	
 	)
@@ -87,8 +90,8 @@ vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMd
 	               , ~dnorm(rel_vacc[4], mean=clean_vac$daily_vac[4],sd=0.001)
 	               , ~dnorm(rel_vacc[5], mean=clean_vac$daily_vac[5],sd=0.001)
 	               , ~dnorm(rel_vacc[6], mean=clean_vac$daily_vac[6],sd=0.001)
-	               , ~dnorm(rel_vacc[7], mean=clean_vac$daily_vac[7],sd=0.001)
-	               , ~dnorm(rel_vacc[8], mean=clean_vac$daily_vac[8],sd=0.001)
+	               # , ~dnorm(rel_vacc[7], mean=clean_vac$daily_vac[7],sd=0.001)
+	               # , ~dnorm(rel_vacc[8], mean=clean_vac$daily_vac[8],sd=0.001)
 	               # , ~dnorm(rel_mu[1], mean=0.8,sd=0.5)
 	               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
 	               # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)

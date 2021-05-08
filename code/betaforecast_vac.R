@@ -5,7 +5,7 @@ library(shellpipes)
 library(cowplot)
 library(zoo)
 
-end_date <- as.Date("2021-04-10")
+end_date <- as.Date("2021-05-02")
 
 flist <- list.files(path="cachestuff/",pattern=as.character(end_date))
 
@@ -19,26 +19,15 @@ vaccdat <- (vac
   %>% filter(complete.cases(.))
 )
 
-
 lift_frame <- data.frame(province = c("ON")
-                         , close_date = c("2021-04-09")
-                         , reopen_date = c("2021-05-09")
+                         , close_date = c("2021-04-08")
+                         , reopen_date = c("2021-05-20")
                          , voc_start = c("2020-12-19")
                          , pegprop = c(0.0016)
-                         , scale_factor = c(20)
+                         , scale_factor = c(15)
                          , vaccdate = c("2021-01-01")
                          , vaccrate = c(0.002)
 )
-
-# lift_frame <- data.frame(province = c("ON")
-#                          , close_date = c("2021-04-09")
-#                          , reopen_date = c("2021-05-23")
-#                          , voc_start = c("2020-12-19")
-#                          , pegprop = c(0.0016)
-#                          , scale_factor = c(15)
-#                          , vaccdate = c("2021-01-01")
-#                          , vaccrate = c(0.002)
-# )
 
 # x <- flist
 # voc=FALSE
@@ -55,6 +44,8 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
  	bd <- tempmod$fit$forecast_args$time_args$break_dates
  	last_break <- bd[length(bd)]
  	flip_date <- as.Date((as.numeric(end_date)+as.numeric(last_break))/2)
+ 	# flip_date <- as.Date(last_break)
+ 	
  	## getting all the switch dates
   scale_factor <- (lift_frame %>% filter(province == tempmod$inputs$province))[,"scale_factor"]
  	voc_start <- (lift_frame %>% filter(province == tempmod$inputs$province))[,"voc_start"] %>% as.Date()
@@ -97,10 +88,10 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 	## If we are reopening, increase transmission by reopen_factor
 
 	dateframe <- (dateframe
-	      %>% mutate( Relative_value = ifelse(between(Date,as.Date(close_date),as.Date(close_date)) & (close_factor!=1),Relative_value*close_factor/2,Relative_value)
-	          , Relative_value = ifelse(Date > as.Date(close_date)+7,Relative_value*close_factor,Relative_value)
-	                  , Relative_value = ifelse(Date >= as.Date(reopen_date), Relative_value*reopen_factor,Relative_value))
-	   )
+    %>% mutate(Relative_value = ifelse(Date >= as.Date(close_date),Relative_value*close_factor,Relative_value)
+	    , Relative_value = ifelse(Date >= as.Date(reopen_date), Relative_value*reopen_factor,Relative_value))
+	)
+	
 			
 	## creating a dummy frame, probably don't need
 	pp <- coef(tempmod$fit,"all")
@@ -168,7 +159,7 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 	dateframe = as.data.frame(dateframe)
 	fa <- tempmod$fit$forecast_args
 	fa$end_date <- max(dateframe$Date)
-	last_vac <- mean(tail(vaccdat,4)[["Relative_value"]]) * last_vac_factor
+	last_vac <- mean(tail(vaccdat,7)[["Relative_value"]]) * last_vac_factor
 	tempframe <- dateframe %>% select(Date,Symbol,Relative_value)
 	if(vacc){
 	  # vaccframe <- (tempframe
@@ -182,7 +173,7 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 	  # )
 	  vaccframe <- (vaccframe 
 	     %>% mutate(Symbol = "vacc"
-	       , Relative_value = ifelse(Date > end_date+14,last_vac,Relative_value)
+	       , Relative_value = ifelse(Date > end_date+16,last_vac,Relative_value)
 	       )
 	     %>% select(-VoCprop)
 	  )
@@ -224,33 +215,10 @@ betaforecast <- function(x,voc=FALSE, close_factor=1,reopen_factor=1, Rmult=1,la
 
 ## No Lift
 # sim0<- mclapply(flist,function(y){betaforecast(x=y,voc=FALSE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,vacc=TRUE)},mc.cores=4)
-sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
-sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
+sim1<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1/0.69, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
+sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 1,reopen_factor = 1/0.69, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.5)},mc.cores=4)
 
-sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .8,reopen_factor = 1/.8, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
-sim4<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .8,reopen_factor = 1/.8, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
-
-sim5<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1)},mc.cores=4)
-sim6<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = .6,reopen_factor = 1/.6, Rmult = 1.5,nsim=200,vacc=TRUE,last_vac_factor = 1.2)},mc.cores=4)
-
-
-# sim2<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 1/0.6, Rmult = 1.5)},mc.cores=4)
-# sim3<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 0.8/0.6, Rmult = 1.5)},mc.cores=4)
-# 
-# sim4<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 1/0.6, Rmult = 1.5)},mc.cores=4)
-# sim5<- mclapply(flist,function(y){betaforecast(x=y,voc=TRUE, close_factor = 0.6,reopen_factor = 0.8/0.6, Rmult = 1.5)},mc.cores=4)
-# 
-# aa <- sim0[[1]] %>% filter(var %in% c("S","R"))
-# aa2 <- sim1[[1]] %>% filter(var %in% c("S","R"))
-# gg <- ggplot(aa,aes(x=date,y=value,color=var)) + geom_line()
-# gg2 <- ggplot(aa2,aes(x=date,y=value,color=var)) + geom_line()
-# 
-# gg
-# gg2
-# 
-# all.equal(aa$value,aa2$value)
-
-betaforecast_dat <- bind_rows(sim1,sim2,sim3,sim4,sim5,sim6)
+betaforecast_dat <- bind_rows(sim1,sim2)
 use_local_data_repo <- FALSE
 source("clean.R")
 
@@ -260,12 +228,7 @@ betaforecast_dat2 <- (all_sub
 	%>% filter(date >= as.Date("2020-09-15"))
 	# %>% mutate(obstype = ifelse(date>= as.Date("2020-12-19"),"new_obs","fitted"))
 	%>% mutate( #new_strain_fraction = factor(new_strain_fraction)
-		VoC_effect = ifelse(new_strain_fraction == 0,"Implicit Vac","Replacement Vac")
-		# , VoC_effect = ifelse(vacc,"Vaccination",VoC_effect)
-		, VoC_effect = ifelse((close_factor == 1)&(reopen_factor == 1), "Lock Down for 4 weeks, ineffective reduction", VoC_effect)
-		, VoC_effect = ifelse((close_factor == 0.6)&(reopen_factor == 1/0.6), "Lock Down for 4 weeks, 40% reduction", VoC_effect)
-		, VoC_effect = ifelse((close_factor == 0.8)&(reopen_factor == 1/0.8), "Lock Down for 4 weeks, 20% reduction", VoC_effect)
-		, Vaccination = ifelse(vacc_factor == 1, "Curent","Increase 20%")
+		Vaccination = ifelse(vacc_factor == 1, "Current","Increase 50%")
 		)
 	# %>% filter(var %in% c("report"))
 )
