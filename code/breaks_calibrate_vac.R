@@ -80,7 +80,7 @@ vacdat <- data.frame(gsheet2tbl("https://docs.google.com/spreadsheets/d/1PjkemMd
 	# ,logit_mu = lgf(params[["mu"]])
 	# , logit_phi1 = lgf(params[["phi1"]])
 	)
-		, rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.7)
+		# , rel_beta0 = c(0.8,0.9,0.7,0.6,1,0.7)
 	  , rel_vacc = clean_vac$daily_vac
 	
 	)

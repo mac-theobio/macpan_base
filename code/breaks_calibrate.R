@@ -30,13 +30,12 @@ calibrate_province <- function(x){
    params <- fix_pars(read_params(paste0(prov,".csv"))
                       , target = c(R0 = 1.3 , Gbar=6)
    )
-   params[["obs_disp"]] <- 40
-   params[["vacc"]] <- 1e-10
-   # params[["obs_disp_report"]] <- 40
-   # params[["obs_disp_H"]] <- 7
-   # params[["obs_disp_ICU"]] <- 7
-   # params[["obs_disp_death"]] <- 7
-   params[["W_asymp"]] <- 0.0001  ## Why do we need this?
+   # params[["obs_disp"]] <- 40
+   # # params[["obs_disp_report"]] <- 40
+   # # params[["obs_disp_H"]] <- 7
+   # # params[["obs_disp_ICU"]] <- 7
+   # # params[["obs_disp_death"]] <- 7
+   # params[["W_asymp"]] <- 0.0001  ## Why do we need this?
    
    # Retrieve break dates:
    bd <- as.Date(unlist(strsplit(info[["break_dates"]],split = ";")))
@@ -48,15 +47,18 @@ calibrate_province <- function(x){
 		
 	lgf <- function(x){log(x/(1-x))}
 	
+	
+	time_pars <- data.frame(Date=rep(bd,3),
+	                        Symbol=rep(c("beta0","mu","phi1"),each=length(bd)),
+	                        Relative_value=rep(0.8,length(bd)*3)
+	)
 	opt_pars <- list(params = c(log_beta0= log(params[["beta0"]])
-	# ,logit_mu = lgf(params[["mu"]])
-	# , logit_phi1 = lgf(params[["phi1"]])
+	,logit_mu = lgf(params[["mu"]])
+	, logit_phi1 = lgf(params[["phi1"]]))
+	, log_value = log(time_pars$Relative_value)
+	, log_nb_disp = NULL
 	)
-		, rel_beta0 = rep(.8, length(bd))
-    , rel_mu = rep(1,length(bd))
-    , rel_phi1 = rep(1,length(bd))
-	  , rel_nonhosp_mort = rep(1,length(bd))
-	)
+	
 	# 
 	# priors= list( #~dnorm(rel_mu[1], mean=0.8,sd=0.5)
 	#               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
@@ -105,18 +107,13 @@ calibrate_province <- function(x){
 	
 	res <- calibrate(
 	    base_params  = params
+	    , time_args=list(break_dates=time_pars$Date,
+	                     Symbol=time_pars$Symbol)
 		, debug_plot = FALSE
 		, debug      = FALSE
 		, data       = fitdat
 		, opt_pars   = opt_pars
 		, sim_args   = list(ndt = 2)
-		, time_args  = list(break_dates = bd)
-		, mle2_control = list(maxit  = 1e4,   # default = 1e4
-		                      reltol = 1e-6,  # default ~ 1e-8
-		                      beta   = NM.beta,
-		                      gamma  = NM.gamma
-		                      )   
-		# , priors     = priors
 		, start_date_offset = start_date_offset
 		, use_DEoptim = FALSE
 		, DE_cores = 4
