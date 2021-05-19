@@ -1,3 +1,4 @@
+## this is left over pieces from DC that trys to clone the data repo install of using the url
 use_local_data_repo <- FALSE
 ON_only <- TRUE
 source("clean.R")
@@ -20,6 +21,7 @@ if(!exists("end_date")){
 end_date <- as.Date(max(all_sub$date))
 }
 
+# break dates
 all_inputs <- read_csv("breaks.csv")
 
 calibrate_province <- function(x){
@@ -48,9 +50,9 @@ calibrate_province <- function(x){
 	lgf <- function(x){log(x/(1-x))}
 	
 	
-	time_pars <- data.frame(Date=rep(bd,3),
-	                        Symbol=rep(c("beta0","mu","phi1"),each=length(bd)),
-	                        Relative_value=rep(0.8,length(bd)*3)
+	time_pars <- data.frame(Date=rep(bd,2),
+	                        Symbol=rep(c("beta0","mu"),each=length(bd)),
+	                        Relative_value=rep(0.8,length(bd)*2)
 	)
 	opt_pars <- list(params = c(log_beta0= log(params[["beta0"]])
 	,logit_mu = lgf(params[["mu"]])
@@ -58,17 +60,7 @@ calibrate_province <- function(x){
 	, log_value = log(time_pars$Relative_value)
 	, log_nb_disp = NULL
 	)
-	
-	# 
-	# priors= list( #~dnorm(rel_mu[1], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[2], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[3], mean=0.8,sd=0.1)
-	#               # , ~dnorm(rel_mu[4], mean=0.8,sd=0.5)
-	#               # , ~dnorm(rel_mu[5], mean=0.6,sd=0.5)
-	#               # , ~dnorm(params[1],    mean=1,sd=0.5)
-	# )
-	# # Subset the data to the requested 
-	# # province and variables:
+
 	province_dat <- (all_sub
       %>% group_by(var)
       %>% filter(province == info[["province"]])
@@ -87,18 +79,8 @@ calibrate_province <- function(x){
 		%>% mutate(value = ifelse(value == 0, NA, value))
 	)
 	
-	## ==== Model calibration ====
 	
 	fitdat <- dat
-	
-	## beta, gamma are the contraction and expansion
-	## for the Nelder-Mead algo (default used here).
-	## If reference params are used as starting values, 
-	## we don't want the optimizer to wander too far from
-	## those cherry picked values. Same if we start from
-	## yesterday's values.
-	## So, the expansion and contraction parameters should be 
-	## reduced from their default values.
 	
 	limit_explore_optim <- FALSE
 	
