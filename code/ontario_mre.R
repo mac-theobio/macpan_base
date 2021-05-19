@@ -70,7 +70,18 @@ dat <- (left_join(date_df, province_dat)
   
 fitdat <- dat
   
+### Do not run the calibration.
+### Here is the finish produce 
 
+
+
+run <- FALSE
+
+res_list <- readRDS("cachestuff/2021-05-18.ON.breaks.RDS")
+
+plot(res_list$fit,data=res_list$trimdat)
+
+if(run){
 res <- calibrate(base_params  = params
   , time_args=list(break_dates=time_pars$Date, Symbol=time_pars$Symbol)
   , debug_plot = FALSE
@@ -87,3 +98,4 @@ plot(res,data=fitdat)
   
 res_list <- list(fit=res, inputs=info, trimdat = fitdat, fulldat=dat)
 saveRDS(object=res_list, file=paste0("./cachestuff/",end_date,".ON.breaks.RDS"))
+}
