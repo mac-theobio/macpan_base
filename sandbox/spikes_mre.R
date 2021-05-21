@@ -22,3 +22,17 @@ gg0 + geom_line()
 ## jitter a bit so we can confirm that the manual differencing is
 ## really identical
 gg0 + geom_jitter(width=2)
+
+## try with ODE instead (bogus!)
+dd3 <- predict(ONfit$fit,keep_vars=c("death","D"),
+               sim_args=list(use_ode=TRUE)) %>%
+    mutate(diff=grepl("^death",var))
+
+gg0 %+% dd3 + geom_line()
+
+dd4 <- predict(ONfit$fit,keep_vars=c("death","D"),
+               sim_args=list(ndt=20)) %>%
+    mutate(diff=grepl("^death",var))
+
+gg0 %+% dd4 + geom_line()
+
