@@ -38,6 +38,7 @@ opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_
 	, log_nb_disp = c(report=20)
 )
 
+
 current <- do.call(calibrate_comb
 		, c(nlist(params=params
 		, debug_plot=FALSE
