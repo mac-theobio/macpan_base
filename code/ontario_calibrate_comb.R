@@ -1,8 +1,11 @@
 library(McMasterPandemic)
 library(tidyverse)
 
+source("calibrate_comb_setup.R")
+# load("calibrate_comb_setup.rda")
+
 stop_date <-  as.Date("2021-05-29")
-stop_date <-  as.Date("2020-02-29")
+stop_date <-  as.Date("2020-08-31")
 
 
 calibrate_data <- (calibrate_data_fill
@@ -19,16 +22,18 @@ calibrate_data <- (calibrate_data_fill
 ## loading parameters
 
 params <- fix_pars(read_params("ON.csv")
-	, target=c(Gbar=6)	
-	, pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
+	, target=c(R0=3, Gbar=6)	
+	# , pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
 )
 
+params[["E0"]] <- 5
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
-	params=c(log_beta0=-1)
+	params=c(log_E0 = log(5)
+		, log_beta0=log(5))
 	# , log_nb_disp = c(report=20, death=1,H=1)
 	, log_nb_disp = c(report=20)
 )
