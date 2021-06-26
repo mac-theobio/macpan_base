@@ -5,13 +5,13 @@ source("calibrate_comb_setup.R")
 # load("calibrate_comb_setup.rda")
 
 stop_date <-  as.Date("2021-05-29")
-stop_date <-  as.Date("2021-05-01")
+stop_date <-  as.Date("2021-06-15")
 
 
 calibrate_data <- (calibrate_data_fill
 	%>% filter(date <= stop_date)
 	%>% filter(var == "report")
-	%>% filter(date >= as.Date("2020-02-24"))
+	%>% filter(date >= as.Date("2020-02-25"))
 	# %>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
 	# %>% filter(date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
@@ -67,5 +67,5 @@ print(plot(current, data=calibrate_data_fill)
       + ggtitle("Current model: PH + mobility cap")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-
-
+ont_calib_comb <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
+saveRDS(ont_calib_comb,"cachestuff/ont_calib_comb.rds")
