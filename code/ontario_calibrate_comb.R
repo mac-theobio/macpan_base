@@ -51,7 +51,7 @@ current <- do.call(calibrate_comb
 		, use_phenomhet = FALSE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
-		, mob_breaks = c("2020-04-05","2020-08-07","2020-10-01","2021-01-14")
+		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
 		, use_spline = FALSE
