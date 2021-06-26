@@ -11,7 +11,7 @@ stop_date <-  as.Date("2021-06-15")
 calibrate_data <- (calibrate_data_fill
 	%>% filter(date <= stop_date)
 	%>% filter(var == "report")
-	%>% filter(date >= as.Date("2020-02-25"))
+	%>% filter(date >= as.Date("2020-02-24"))
 	# %>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
 	# %>% filter(date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
@@ -51,7 +51,7 @@ current <- do.call(calibrate_comb
 		, use_phenomhet = FALSE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
-		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
+		, mob_breaks = c("2020-04-05","2020-08-07","2020-10-01","2021-01-14")
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
 		, use_spline = FALSE
