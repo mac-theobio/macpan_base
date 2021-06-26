@@ -64,7 +64,7 @@ current <- do.call(calibrate_comb
 )
 
 print(plot(current, data=calibrate_data_fill) 
-      + ggtitle("Current model: PH + mobility cap")
+      + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
 ont_calib_comb <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
