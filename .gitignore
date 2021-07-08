@@ -20,3 +20,6 @@ macpan_ms.subdeps
 *~
 .RData
 *.Rout
+.Rproj.user
+macpan_base.Rproj
+.Rhistory
