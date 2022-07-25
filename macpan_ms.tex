@@ -89,7 +89,7 @@ over the course of the pandemic. It incorporates the standard epidemiological co
 required to model COVID-19 as well as compartments that track health-care utilization and COVID-induced
 mortality. Case reporting can be modeled either as a time-delayed convolution
 of incidence or by enabling a factorial expansion of the model that accounts
-for the testing status of individuals \cite{Fris+20} \ben{need to update Friston ref from arxiv to journal article}. The model also allows
+for the testing status of individuals \cite{Fris+20}. The model also allows
 for time-dependent variation in any rate parameter --- particularly the transmission rate --- and
 allows this variation to be indexed by external covariates such as cellphone-based mobility
 metrics, or to follow smooth (spline) curves over time. The same model structure can be
@@ -144,9 +144,11 @@ but here we report on the original version.)
   \code{Is} (severely symptomatic infection), \code{H} (hospitalized
   [acute care]), \code{ICUs} (ICU with prognosis of survival),
   \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care
-  after ICU stay), \code{R} (recovered), \code{D} (dead), \code{X}
+  after ICU stay). Compartments denoted by rectangles are
+  accumulators, primarily used in the condensation step to compute
+  incidences: \code{R} (recovered), \code{D} (dead), \code{X}
   (accumulator for cumulative hospital admissions).
-  \ben{prettify this, \textbf{or} steal something better from Irena?}}
+  \ben{prettify this further, \textbf{or} steal something better from Irena?}}
 \label{fig:flowchart}
 \end{figure}
 
@@ -187,7 +189,7 @@ This set-up allows for considerable flexibility.
   the effects of depletion during the course of a time step and prevents negative values
   in the state vector.
 \item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is
-  what we need to sample the flows between compartments as Euler-multinomial deviates \ben{CITE King/POMP; is there a peer-reviewed pub or do we cite the package?}, which take the
+  what we need to sample the flows between compartments as Euler-multinomial deviates \cite{breto+09}, which take the
   hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
 \end{itemize}
 
@@ -223,9 +225,9 @@ The time-varying (relative) transmission $\beta_1$ can incorporate a variety of 
   measures are known to have been implemented;
 \item proportional to a power of observed mobility or some other
   exogenous proxy for contact behaviour
-\begin{equation}\label{eq:pmob}
+\[
   \beta_1(t) \propto (\textrm{relative mobility})^{\pmob}
-\end{equation}
+\]
 for some power $\pmob>0$;
 \item according to an arbitrary spline curve, i.e. a linear combination
   of components of a B-spline basis.
@@ -298,7 +300,11 @@ are taken from the literature (\cref{litparmtab}).
 We do not include ICU occupancy in our calibration because
 our model assumes all severe cases go through ICU, whereas
 many severe cases actually occur entirely in Long Term Care Facilities
-(LTCFs).
+(LTCFs). \ben{not sure what this means; is this really the reason
+  that we exclude ICU, or do we exclude it because the data are
+  wonky? Before we added the non-hospital mortality flow, this
+  would have been a reason not to calibrate to \emph{deaths}, but
+  otherwise I don't understand this \ldots}
 
 \hypertarget{Rt}{}
 \subsubsection*{Estimation of effective reproduction number $\R_t$}

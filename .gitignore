@@ -23,3 +23,5 @@ macpan_ms.subdeps
 .Rproj.user
 macpan_base.Rproj
 .Rhistory
+*.Rlog
+*.rda
