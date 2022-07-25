@@ -6,10 +6,9 @@
 
 \title{A compartmental model for epidemic parameter estimation and forecasting, with applications to COVID-19 variant-of-concern spread}
 
-\author{Michael Li, Jonathan Dushoff, David Earn, Irena Papst, Nick Ogden and Benjamin M. Bolker\\
+\author{Michael Li \and Jonathan Dushoff \and David Earn \and Irena Papst \and Nick Ogden \and Benjamin M. Bolker \\
   McMaster University\\
-  \url{https://mac-theobio.github.io/covid-19/}
-  }
+}
 
 
 \begin{document}
@@ -25,31 +24,27 @@
 \end{enumerate}
 
 \begin{abstract}
-\mike{NEED TO FIX! What is the story we are trying to tell?}
-  Virological testing and contact tracing are being used by many
-  jurisdictions that are attempting to mitigate the spread of
-  SARS-CoV-2.  How much testing and tracing is necessary for control
-  is not clear and must be explored with models.  We show how testing
-  and tracing can be integrated in a compartmental epidemic model, and
-  find that without contact tracing, testing and isolation of infected
-  individuals is unlikely to have a significant impact on the spread
-  of SARS-CoV-2.  We use maximum likelihood estimation to calibrate
-  the model to multiple COVID-19 time series (positive tests, negative
+  Compartmental epidemiological models are widely used to understand, 
+  manage, and forecast the COVID-19 pandemic. We introduce a new
+  compartmental modeling framework that shares many characteristics with existing
+  models, but includes a number of new and noteworthy features.
+  In particular, it includes a flexible structure based on the \emph{flow matrix}
+  (the \emph{per capita} rates of transitions between compartments) that allows
+  it to be used interchangeably for differential-equation-based or discrete-state
+  stochastic models; the capacity to set starting conditions based on the expected
+  distribution of states during the exponential phase of the epidemic; automatic computation
+  of $R_0$ and the mean and dispersion of the generation interval for specified
+  parameters; explicit structures incorporating the intensity of testing and delays
+  between test administration and reporting; time-varying parameters based on
+  breakpoints, spline bases, or external covariates such as cellphone-based mobility indices;
+  and the ability to calibrate model parameters by maximum likelihood
+  trajectory-matching to multiple data streams such as
+  case reports, hospitalization and ICU admission rates.
+  We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative 
   tests, hospitalizations, and deaths) for each of the Canadian
   provinces from 2020-02-27 to 2020-08-30.  We
   estimate epidemiological parameters, including the effective
   reproduction number $\R_t$ over the course of the epidemic.
-  %% 
-  \david{mention mobility data? epidemiologically salient parameters
-    that we estimate? \dots}
-  \ben{tempted to wordsmith like crazy, should resist the urge and
-    work on the body of text instead. Quick comments: (1) should say
-    a little less about tracing, since that part really isn't in our
-    model explicitly (implicit via the weights, we can talk about that
-    a bit, but it seems like false advertising to discuss it in the abstract);
-    (2) A little bit more emphasis on the fact that we have built a flexible,
-    generally useful model for simulation and calibration (time-varying parameters,
-    incorporation of covariates on transmission rate, etc.)}
 \end{abstract}
 
 %%\vfill
@@ -94,7 +89,7 @@ over the course of the pandemic. It incorporates the standard epidemiological co
 required to model COVID-19 as well as compartments that track health-care utilization and COVID-induced
 mortality. Case reporting can be modeled either as a time-delayed convolution
 of incidence or by enabling a factorial expansion of the model that accounts
-for the testing status of individuals [CITE Friston, ?]. The model also allows
+for the testing status of individuals \cite{Fris+20} \ben{need to update Friston ref from arxiv to journal article}. The model also allows
 for time-dependent variation in any rate parameter --- particularly the transmission rate --- and
 allows this variation to be indexed by external covariates such as cellphone-based mobility
 metrics, or to follow smooth (spline) curves over time. The same model structure can be
@@ -108,15 +103,14 @@ Finally, the model can be used to
 
 \section{Methods}
 
-\subsubsection*{Compartmental mechanistic model}
+\subsection*{Compartmental structure}
 
 The epidemiological structure of the model is based on
 a susceptible-exposed-infectious-removed (SEIR) model with
 additional compartments reflecting the biology of COVID-19 and the
 structure of the health-care system. The COVID-19-specific compartmental structure
 of the model resembles many other COVID-19 models
-\ben{orig Stanford model is at \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7276010/}, preprint only? Feeling
-  lazy, but we should probably dig up 2 or 3 examples}
+\ben{find some refs/examples}
 in splitting the usual single infectious compartment into sub-compartments reflective
 of the epidemiology of COVID-19; it additionally adds
 compartments for hospitalized individuals in acute care
@@ -125,16 +119,21 @@ presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}). Infections can be
 asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
 severely symptomatic (\code{s}); all individuals with severe symptoms
-go to the hospital (acute care or ICU), and all individuals who die (\code{d}) are assumed to have
-have spent time in the ICU.  Recovered individuals (\code{R}) are
-assumed to be immune.  The model flow chart
-(\cref{fig:flowchart}) and flow matrix (\cref{fig:flowmatrix})
-include additional compartments which facilitate book-keeping:
+go to the hospital (acute care or ICU).
+Some fraction of individuals who go to the ICU die,
+as do some (smaller) fraction of severely symptomatic individuals who
+never go to the hospital (e.g., individuals who die in long-term care facilities).
+Recovered individuals (\code{R}) are
+assumed to be immune.  The model
+includes additional compartments which facilitate book-keeping:
 cumulative hospital admissions (\code{X}), individuals in acute care
 after discharge from ICU (\code{H2}), and cumulative deaths
-(\code{D}).
+(\code{D}) (\cref{fig:flowchart}).
+(The version of the model we describe here was developed and used before vaccines
+were available; we have since expanded the model to include relevant compartments,
+but here we report on the original version.)
 
-%%\begin{figure}[ht!]
+%\begin{figure}[ht!]
 \begin{figure}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/flowchart.pdf}
@@ -147,36 +146,77 @@ after discharge from ICU (\code{H2}), and cumulative deaths
   \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care
   after ICU stay), \code{R} (recovered), \code{D} (dead), \code{X}
   (accumulator for cumulative hospital admissions).
-  \ben{possible tweaks: colour? straight arrows? restore flow symbols on arrows? adjust box widths based on chars in compartment
-name? lose the shadows?}}
+  \ben{prettify this, \textbf{or} steal something better from Irena?}}
 \label{fig:flowchart}
 \end{figure}
 
-\begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/ratematrix.pdf} 
+%% \begin{figure}[ht!]
+%% \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+%% \includegraphics[width=\maxwidth]{figure/ratematrix.pdf} 
 
-\caption{Flow matrix for basic compartmental mechanistic transmission
-  model.  Gray indicates non-zero flows: compartments as in
-  \cref{fig:flowchart}.  \ben{do we want this? It's equivalent to
-    the flowchart, could be used to show differences in magnitude (via shading)
-  if we sorted out the details} \jd{I think we don't.}
-  }
-\label{fig:flowmatrix}
-\end{figure}
+%% \caption{Flow matrix for basic compartmental mechanistic transmission
+%%   model.  Gray indicates non-zero flows: compartments as in
+%%   \cref{fig:flowchart}.  \ben{do we want this? It's equivalent to
+%%     the flowchart, could be used to show differences in magnitude (via shading)
+%%   if we sorted out the details} \jd{I think we don't.}
+%%   }
+%% \label{fig:flowmatrix}
+%% \end{figure}
+
+Internally, the model is defined by a \emph{flow matrix} $\mathbf{M}$, whose elements specify
+the \emph{per capita} rates at which individuals move from one compartment to another.
+For the basic model, the only element of the flow matrix that needs to be recomputed
+at each time step is the incidence (flow from $S$ to $E$); all other rates are constant
+except when the model specifies a piecewise change.
+
+This set-up allows for considerable flexibility.
+\begin{itemize}
+\item For a numerical differential equation solver, we need the time derivatives
+  of each compartment. The absolute rates are computed by columnwise multiplication by the state vector
+  $\mathbf s$ (${\mathbf F}_{ij} = \mathbf{M}_{ij} \mathbf{s}_j$).
+  The gradient is the difference between the total flows into
+  (column sums of $\mathbf F$) and out of (row sums of $\mathbf F$) each compartment.
+\item For a discrete-time model, we compute the vectors of outflows and inflows as above,
+  but simply compute the new states as (original state - outflow + inflow).
+\item In practice, we usually use a discrete-time model with a \emph{hazard correction} to
+  the flows to prevent the possibility that a state will go negative due to an overly
+  large outflow. Instead of the total \emph{per capita} outflow of a compartment being
+  equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$),
+  we let the total outflow be $\textsub{f}{tot}' = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f}{tot}'/\textsub{f}{tot}$.
+  This adjustment accounts for
+  the effects of depletion during the course of a time step and prevents negative values
+  in the state vector.
+\item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is
+  what we need to sample the flows between compartments as Euler-multinomial deviates \ben{CITE King/POMP; is there a peer-reviewed pub or do we cite the package?}, which take the
+  hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
+\end{itemize}
+
+We typically compute the model dynamics deterministically, as a discrete-time model with a hazard
+correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for
+example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
+As well as allowing us to visualize model results more conveniently, condensation also allows us to
+convert the simulated state vector to a form that corresponds to available data streams.
+For example, in addition to summing compartments, we can also difference compartments (for example, differencing
+the accumulated-deaths compartment $D$ or the accumulated-hospitalizations compartment $X$ to
+derive a mortality or hospital admission rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25.
+
+Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
+
+\subsection*{Model parameterization}
 
 The model allows for time-varying, piecewise constant changes in any
-parameter. Our analyses have focused on changes in $R(t)$ due
-to behavour change and non-pharmaceutical interventions, which we model
-by changing the transmission rate $\beta$: $\beta$
+parameter. Our early analyses focused on changes in time-varying effective reproductive
+number (\Rt) due
+to behaviour change and non-pharmaceutical interventions, which we model
+by changing the transmission rate.
+The transmission rate $\beta(t)$
 is taken to be a time-varying function of the form
-\begin{equation}
-  \beta_0 \beta_1(t)  \,
-\end{equation}
+$\beta_0 \beta_1(t)$ 
 where $\beta_0$ is the baseline value for transmission
 from symptomatic individuals.
-Presymptomatic and asymptomatic individuals have transmission lowered by a specified multiplier (given by a model parameter).
-\jd{Does this mean that we don't have any option for multipliers for the different classes of symptomatic individuals?}
+Individuals in different symptomatic classes (presymptomatic, asymptomatic, mild, severe)
+may have their transmission modified by a specified multiplier (given as model parameters);
+we assume that hospital transmission is negligible.
 The time-varying (relative) transmission $\beta_1$ can incorporate a variety of different effects, one at a time or in combination:
 \begin{itemize}
 \item abrupt (piecewise) changes on specified dates when control
@@ -184,9 +224,9 @@ The time-varying (relative) transmission $\beta_1$ can incorporate a variety of 
 \item proportional to a power of observed mobility or some other
   exogenous proxy for contact behaviour
 \begin{equation}\label{eq:pmob}
-  \beta_1(t) \propto (\text{relative mobility})^{p_{\rm mob}}
+  \beta_1(t) \propto (\textrm{relative mobility})^{\pmob}
 \end{equation}
-for some power $p_{\rm mob}>0$;
+for some power $\pmob>0$;
 \item according to an arbitrary spline curve, i.e. a linear combination
   of components of a B-spline basis.
 \end{itemize}
@@ -207,14 +247,12 @@ columns containing the basis vectors of a B-spline basis with specified knots.
 
 \ben{more tricks/details here:
   \begin{itemize}
-  \item flexibility of per-capita rate matrix (allows computation of Euler step/discrete-time; hazard or matrix exponential; full ODE)
-  \item process and observation error
   \item fix\_pars (adjust parameters to a specified R0, GIbar)
   \item eigenvalue start
-  \item time variation via linear model (splines etc.)
   \item priors
   \end{itemize}
 }
+
 \subsubsection*{Calibration}
 
 Our model framework allows us to fit to any number of observed incidence 
@@ -616,7 +654,7 @@ and
 our mobility index for the province.
 \david{[temporarily deleted because we don't have $\R_t$ in the plots]
 , and our inferred value of \Rt
-(\cref{eq:Rt}). Note that in our current model \Rt\ depends
+(\cref{eq:Rt}). Note that in our current model \Rt depends
 \emph{only} on the mobility index, the time period (early or late) and
 the direct and indirect effects of susceptible depletion.}
 

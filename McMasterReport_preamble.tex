@@ -48,15 +48,18 @@
 \newcommand{\etc}{\emph{etc.}\xspace}
 
 %% notation
-\newcommand{\R}{{\mathcal R}}
-\newcommand{\littler}{\ensuremath{r}\xspace}
-\newcommand{\littlerwt}{\ensuremath{r_{WT}}\xspace}
-\newcommand{\littlervoc}{\ensuremath{r_{VOC}}\xspace}
-\newcommand{\Rt}{\ensuremath{\R_t}}
-\newcommand{\B}{\ensuremath{\beta}\xspace}
-\newcommand{\Bwt}{\ensuremath{\beta_{WT}}\xspace}
-\newcommand{\Bvoc}{\ensuremath{\beta_{VOC}}\xspace}
-
+\newcommand{\emx}[1]{\ensuremath{#1}\xspace}
+\newcommand{\R}{\emx{{\mathcal R}}}
+\newcommand{\Rzero}{{\mathcal R}_0}
+\newcommand{\Rt}{\emx{{\mathcal R}_t}}
+\newcommand{\littler}{\emx{r}}
+\newcommand{\littlerwt}{\emx{r_{WT}}}
+\newcommand{\littlervoc}{\emx{r_{VOC}}}
+\newcommand{\B}{\emx{\beta}}
+\newcommand{\Bwt}{\emx{\beta_{WT}}}
+\newcommand{\Bvoc}{\emx{\beta_{VOC}}}
+\newcommand{\textsub}[2]{\emx{{#1}_{\textrm{\small #2}}}}
+\newcommand{\pmob}{\textsub{p}{mob}}
 
 
 %% settings

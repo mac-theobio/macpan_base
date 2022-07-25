@@ -9,7 +9,10 @@ par(mar=rep(0,4))
 vis_model(pp,method="diagram",
           do_symbols=FALSE,
           box.prop=0.5,
-          box.size=0.05
+          box.size=0.05,
+          curve = 0,
+          arr.type = "triangle",
+          shadow.size = 0
 )
 dev.off()
 knitr::plot_crop("figure/flowchart.pdf")

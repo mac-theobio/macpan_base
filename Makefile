@@ -18,13 +18,15 @@ Sources += $(wildcard *.tex figure/*.R)
 pkg:
 	echo "remotes::install_github('bbolker/McMasterPandemic')" | R --slave
 
-macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/ratematrix.pdf
+macpan_ms.pdf: shellpipes.out macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/ratematrix.pdf
 
 figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
 
 figure/flowmatrix.Rout: figure/flowmatrix.R
 	$(run-R)
 
+shellpipes.out:
+	Rscript -e 'remotes::install_github("dushoff/shellpipes")'
 ######################################################################
 
 ### Makestuff
