@@ -193,6 +193,8 @@ This set-up allows for considerable flexibility.
   hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
 \end{itemize}
 
+\ben{comment on awkwardness of incorporating absolute rates (vax, birth) in this framework?}
+
 We typically compute the model dynamics deterministically, as a discrete-time model with a hazard
 correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for
 example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
@@ -246,6 +248,16 @@ In particular, piecewise breaks correspond to indicator variables
 for which period an observation falls in; the mobility model corresponds to a column
 containing the log of relative mobility; and the spline model corresponds to a set of
 columns containing the basis vectors of a B-spline basis with specified knots.
+
+In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- equivalent to, but simpler to implement than the more general log-linear model.
+
+\ben{Could mention the possibility of alternate link functions (logit etc.) but maybe don't bother?}
+
+\subsection*{Derived parameters and parameter setting}
+
+It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero; (3) the mean and coefficient of variation of the generation interval. In principle we could compute these values directly from the flow matrix, by constructing the Jacobian matrix and the next-generation matrix and performing the appropriate eigenvector/eigenvalue calculations (as discussed by \cite{VandWatm02} for differential equations and \cite{Casw00} for discrete-time systems). However, we found it simpler to derive these values by simulation. For the eigenvector, we run a simulation
+\ben{JD: refs on computing generation interval (supporting the fact that it's tricky)? Easy ref for deriving \Rzero, gbar etc. from the kernel?}
+
 
 \ben{more tricks/details here:
   \begin{itemize}
