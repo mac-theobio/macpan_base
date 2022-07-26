@@ -19,7 +19,11 @@ Sources += $(wildcard *.tex figure/*.R)
 
 macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/ratematrix.pdf
 
+## figure/testing_flow_graph.pdf	
+
 figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
+
+## figure/testing_flow_graph.pdf: figure/testing_flow_graph.R ;
 
 figure/flowmatrix.Rout: figure/flowmatrix.R
 	$(run-R)

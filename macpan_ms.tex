@@ -6,7 +6,7 @@
 
 \title{A compartmental model for epidemic parameter estimation and forecasting, with applications to COVID-19 variant-of-concern spread}
 
-\author{Michael Li \and Jonathan Dushoff \and David Earn \and Irena Papst \and Nick Ogden \and Benjamin M. Bolker \\
+\author{Michael Li \and Jonathan Dushoff \and David Earn \and Irena Papst \and Benjamin M. Bolker \\
   McMaster University\\
 }
 
@@ -142,7 +142,8 @@ factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of 
 force of infection decrease as the remaining fraction susceptible decreases, capturing the fact
 that as the most susceptible individuals are infected, they lower the average level of susceptibility
 in the remaining population.
-\ben{JD, reference for $S^\zeta$ to capture heterogeneity please? (I know we keep asking, but I keep forgetting the answer.)}
+\ben{JD, reference for $S^\zeta$ to capture heterogeneity please? \cite{WilsWorc+45} uses $S^p$ but doesn't say
+  anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law \ldots I know we keep asking, but I keep forgetting the answer.)}
 
 %\begin{figure}[ht!]
 \begin{figure}
@@ -223,6 +224,24 @@ the accumulated-deaths compartment $D$ or the accumulated-hospitalizations compa
 derive a mortality or hospital admission rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}. When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
 Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
+
+\subsection*{Expansion to accomodate testing}
+
+At the cost of additional complexity, we can add explicit testing compartments to the model.
+Rather than assuming (or calibrating) that a specified fraction of infections are reported as cases, and imposing a
+distributed delay between infection and reporting (i.e. via convolution), we multiply the susceptible
+and all infected compartments to include the possibility that individuals in those epidemiological classes
+are untested; tested and awaiting negative results; tested and awaiting positive results; or tested positive.
+After receiving negative results (whether \ldots STOPPED HERE)
+
+\ben{mention/cite Gharouni et al.}
+
+\begin{figure}
+  %% skip until make-flow is OK
+%  \includegraphics{figure/testing_flow_graph.pdf.pdf}
+  \caption{Testing flow}
+  \label{fig:testing_flow}
+\end{figure}
 
 \subsection*{Model parameterization}
 
