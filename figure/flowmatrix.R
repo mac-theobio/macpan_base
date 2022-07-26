@@ -25,3 +25,11 @@ knitr::plot_crop("figure/flowchart.pdf")
 pdf("figure/ratematrix.pdf",height=6,width=6)
 vis_model(pp,method="Matrix")
 dev.off()
+
+if (FALSE) {
+    ## useful, but we might not need to actually show it:
+    ## full flow matrix for testify
+    pp2 <- read_params("PHAC_testify.csv")
+    ## block_size = 4 would be nice but offsets aren't right ... fix?
+    vis_model(pp2, testify = TRUE, method = "Matrix")
+}

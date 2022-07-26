@@ -1,6 +1,8 @@
-library(shellpipes)
 library(diagram)
-startGraphics()
+## library(shellpipes)
+## startGraphics()
+
+pdf("figure/testing_flow_graph.pdf", width = 6, height = 6)
 version <- 1
 ## version 2 (unfinished) implements DJDE picture with L-to-R flow and no epi transitions
 
@@ -97,3 +99,4 @@ if (version == 1) {
 curvedarrow(c(0.37, 0.62), m[1, ], lty = 2, curve = 0.5)
 curvedarrow(c(0.62, 0.38), m[6, ], lty = 2, curve = -0.3)
 p(add = TRUE) ## repeat plot to mask arrow stuff
+dev.off()

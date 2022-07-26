@@ -14,16 +14,26 @@ vim_session:
 ######################################################################
 
 Sources += $(wildcard *.tex figure/*.R)
+## can I do this?
 
 ######################################################################
 
-macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/ratematrix.pdf
+## BMB: is there a way to automate this/auto-generate .deps to
+##  find files referred to in uncommented \includegraphics{} calls??
+macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/testing_flow_graph.pdf
 
-## figure/testing_flow_graph.pdf	
+figure/testing_flow_graph.pdf: figure/flowmatrix.Rout ;
 
 figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
 
-## figure/testing_flow_graph.pdf: figure/testing_flow_graph.R ;
+## BMB: do this the hard way because I don't understand makestuff/shellpipes
+## using $(run-R) here results in creating the file
+## figure/testing_flow_graph.pdf.pdf ??
+figure/testing_flow_graph.pdf: figure/testing_flow_graph.R
+	R --vanilla --slave <figure/testing_flow_graph.R
+##	$(run-R)
+
+
 
 figure/flowmatrix.Rout: figure/flowmatrix.R
 	$(run-R)

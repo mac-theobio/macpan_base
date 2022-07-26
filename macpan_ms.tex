@@ -238,17 +238,49 @@ are untested; tested and awaiting negative results; tested and awaiting positive
 After receiving negative results (whether true negatives, from individuals in $S$, or false negatives,
 from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment
 where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment;
-depending on the model parameters, their transmission may be reduced partly or completely due to self-isolation.
-\cite{Ghar+22} analyze the epidemiological consequences of this structure in a simpler framework that uses
+depending on the model parameters, their transmission may be reduced partly or completely due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
+\cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses
 a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational
 epidemiological model.
+Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering)
+while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment (e.g.,
+from \code{Im}, negative-waiting to \code{R}, negative-waiting).
 
-\ben{Finish describing details/special cases, e.g. what happens to people once they go to the hospital/etc.}
+We define a weight vector $w$ across epidemic compartments that gives weight $w_a$
+to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and
+1 to symptomatic classes (all others, including \code{R}).
+If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$),
+then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding
+\emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. However, under some
+extreme conditions (if testing is so extreme that few untested symptomatic people are left)
+this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem
+we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
+\[
+T_i = \frac{\rho \tau w_i}{\tau W + \rho} .
+\]
+(see \cite{Ghar+22} appendix A.5 for more details).
+The testing flows out of each untested subcompartment are divided into flows to ``positive waiting''
+and ``negative waiting'' compartments according to the infection status of the relevant compartment
+and specificity/sensitivity parameters. If tests are assumed to be perfectly specific and sensitive,
+then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the
+``negative waiting'' and those from infectious compartments enter the ``positive waiting'' compartment.
+
+We assume that all individuals admitted to the hospital for COVID-19 are immediately tested. (These tests
+are not included in the accounting of test distribution above, but in the COVID setting
+they represent a small fraction of the overall number of tests administered.)
+\ben{I think this is right \ldots ??}
 
 \begin{figure}
   %% skip until make-flow is OK
-%  \includegraphics{figure/testing_flow_graph.pdf.pdf}
-  \caption{Testing flow}
+  \includegraphics{figure/testing_flow_graph.pdf}
+  \caption{Testing flow. Every epidemiological compartment
+    is subdivided into the four subcompartments shown.
+    Black arrows represent flows between subcompartments
+    due to testing processes (test administration, reporting of tests);
+    blue arrows represent progression between epidemiological compartments.
+    Dashed arrows represent the accumulation of negative and positive test reports,
+    which can be compared against data.
+    \ben{is there a better version of this somewhere?}}
   \label{fig:testing_flow}
 \end{figure}
 
