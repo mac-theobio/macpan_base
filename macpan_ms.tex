@@ -228,13 +228,22 @@ Once condensation is done, the model also allows us to add observation error, wh
 \subsection*{Expansion to accomodate testing}
 
 At the cost of additional complexity, we can add explicit testing compartments to the model.
-Rather than assuming (or calibrating) that a specified fraction of infections are reported as cases, and imposing a
-distributed delay between infection and reporting (i.e. via convolution), we multiply the susceptible
-and all infected compartments to include the possibility that individuals in those epidemiological classes
+In the simpler version of the model, we assume that a specified fraction of infections
+are reported as cases (or calibrating this value
+from joint data on cases and hospitalizations), and imposing a
+distributed delay between infection and reporting (i.e. via convolution).
+Here we instead expand the susceptible
+and all infected compartments factorially to include the possibilities that individuals in those epidemiological classes
 are untested; tested and awaiting negative results; tested and awaiting positive results; or tested positive.
-After receiving negative results (whether \ldots STOPPED HERE)
+After receiving negative results (whether true negatives, from individuals in $S$, or false negatives,
+from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment
+where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment;
+depending on the model parameters, their transmission may be reduced partly or completely due to self-isolation.
+\cite{Ghar+22} analyze the epidemiological consequences of this structure in a simpler framework that uses
+a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational
+epidemiological model.
 
-\ben{mention/cite Gharouni et al.}
+\ben{Finish describing details/special cases, e.g. what happens to people once they go to the hospital/etc.}
 
 \begin{figure}
   %% skip until make-flow is OK
@@ -435,46 +444,6 @@ Our calibrations yield values for the parameters of our
 deterministic model.
 \ben{Mike: need a correct description of what we are actually doing here
   (specifically, what we were doing 18 months ago ...)!}
-
-
-\subsection*{Forecasting Variant of Concern}
-
-\mike{say something about VOC is already in Canada in the intro, that is why we are doing this.}
-\mike{do we even want this? if not remove and put in in IP's paper.}
-To account for the introduction of a more transmissible variant, the transmission rate \B(t) is redefined as follows:
-
-\begin{equation}
-\B(t) = (1 -  P_{VOC}(t))\B_{WT}(t) + P_{VOC}(t)\B_{VOC}(t)
-\end{equation}
-where $P_{VOC}(t)$ is the fraction of VOC at time $t$.
-
-In the exponential growing phase of two variants, the speed of replacement of the more transmissible variant is exactly the logistic function:
-
-\begin{equation}
-P_{VOC}(t) = \frac{p_0}{(p_0+(1-p_0)e^{(-(\Delta r)t))}}
-\end{equation}
-where $p_0$ is the initial proportion of the more transmissible variant and $\Delta r$ is the difference in growth rates.
-
-To estimate the growth rates \littlerwt(t) and \littlervoc(t), we ran a pure-exponential simulation with transmission rate \Bwt and \Bvoc.
-
-The VOC effect is implicitly captured in the estimate of the recent transmission rate (along with all other factors affecting transmission, like public health measures) as they are confounded in the calibrated reported cases. 
-However, this does not capture the replacement effect of VOC.
-To model VOC replacement, the follow assumptions are considered:
-
-\begin{itemize}
-\item{VOC was introduced into the provinces a week prior to the first reported VOC case in each province.}
-\item{The initial proportional of VOC is pegged to roughly match the point prevalence study estimated conducted on January 20th in Ontario.}
-\item{The speed of replacement of the wild type by the VOC is based on the assumption that VOC is 50\% more transmissible than the wild type (i.e. it increases the existing transmission rate by a factor of 1.5).}
-\end{itemize}
-
-\subsection*{Scenarios}
-
-Two scenarios are considered:
-
-\begin{enumerate}
-\item{Implicit effect of VOC: In this scenario, the effect of VOC replacement if not explicitly modeled. This is ``letting the data speak for itself'' and implicitly capturing the average effect of any VOC that is actually occurring reflected in the overall cases. This implicit effect is propagated forward for assuming the implicit VOC proportion remains the same and not replace the wild type.}
-\item{Replacement effect of VOC: In this scenario, we allow the effective \B(t) to diverge around in early-mid February which account for the estimated \B that implicitly captures for the average effect of VOC replacement that is implicit when calibrating to reported cases. This way, the model accounts for the fact that there is some VOC transmission implicitly captured into the estimate of \B(t)}
-\end{enumerate}
 
 \subsection{Data sources}
 
