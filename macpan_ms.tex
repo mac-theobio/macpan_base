@@ -308,17 +308,33 @@ estimates; when we have had difficulty with numerical instability, we
 have performed an initial fit with differential evolution
 \cite{Mull+11} followed by a final fit with Nelder-Mead.
 
-The model includes a general framework for adding a prior probability
-distribution for any parameter, using any distribution availabe in R.
+A link function can be added for any parameter in the model to constrain it to
+a sensible domain; the user specifies this by adding an appropriate prefix to
+the name of the parameter in the list of starting values for parameters to be calibrated. For example,
+specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$
+should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive,
+and using a starting value of -1 on the log scale. Specifying \code{logit\_phi1 = -0.2} would specify
+that the value of \code{phi1} (the fraction of hospitalized cases going to the ICU) should be fitted
+on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1.
 
-\jd{We need to think about how to explain fits to occupancy a bit?} \ben{not sure what this means --- what is the tricky part of this?}
+The model includes a general framework for adding a prior probability
+distribution for any parameter, using any distribution available in R. For example,
+\code{dbeta(phi1, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{phi1}.
+We do not need to adopt a fully Bayesian framework to make use of priors; instead, we
+can think of them as convenient regularizing factors to keep the model-fitting process
+numerically stable. If we do want to be Bayesian, then the fitting procedure described
+above will return maximum \emph{a posteriori} (MAP) parameter values, not a sample from the full
+posterior distribution as is standard with frameworks that use Markov chain Monte Carlo.
+
 
 In Canada, we calibrate
 to deaths, hospital occupancy, and new confirmations, all of which are
 available publicly for all provinces (we have hospital admission data
-for Ontario only).  With the expanded model discussed below in
-\cref{sec:test.and.trace}, we can include time series of both positive
+for Ontario only).  With the expanded model discussed below [SECTION??],
+we can include time series of both positive
 and negative tests in our calibration. \ben{are we still doing this??}
+
+\jd{We need to think about how to explain fits to occupancy a bit?} \ben{not sure what this means --- what is the tricky part of this?}
 
 \ben{what are we doing with this?}
 Reported new confirmations are the most reliable and voluminous source of epidemic information. 
@@ -683,8 +699,7 @@ The bottom row shows inferred total disease incidence,
 and 
 our mobility index for the province.
 \david{[temporarily deleted because we don't have $\R_t$ in the plots]
-, and our inferred value of \Rt
-(\cref{eq:Rt}). Note that in our current model \Rt depends
+, and our inferred value of \Rt. Note that in our current model \Rt depends
 \emph{only} on the mobility index, the time period (early or late) and
 the direct and indirect effects of susceptible depletion.}
 
