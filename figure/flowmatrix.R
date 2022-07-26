@@ -15,7 +15,8 @@ vis_model(pp,method="diagram",
           arr.type = "triangle",
           shadow.size = 0,
           arr.length = 0.2,
-          arr.width = 0.2
+          arr.width = 0.2,
+          y_space = 0.7
           )
 
 dev.off()
