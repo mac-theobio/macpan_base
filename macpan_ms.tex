@@ -29,15 +29,14 @@
   models, but includes a number of new and noteworthy features.
   In particular, it includes a flexible structure based on the \emph{flow matrix}
   (the \emph{per capita} rates of transitions between compartments) that allows
-  it to be used interchangeably for differential-equation-based or discrete-state
+  it to be used interchangeably for deterministic or discrete-state
   stochastic models; the capacity to set starting conditions based on the expected
   distribution of states during the exponential phase of the epidemic; automatic computation
   of $R_0$ and the mean and dispersion of the generation interval for specified
   parameters; explicit structures incorporating the intensity of testing and delays
   between test administration and reporting; time-varying parameters based on
   breakpoints, spline bases, or external covariates such as cellphone-based mobility indices;
-  and the ability to calibrate model parameters by maximum likelihood
-  trajectory-matching to multiple data streams such as
+  and the ability to calibrate model parameters to multiple data streams such as
   case reports, hospitalization and ICU admission rates.
   We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative 
   tests, hospitalizations, and deaths) for each of the Canadian
@@ -110,18 +109,18 @@ additional compartments reflecting the biology of COVID-19 and the
 structure of the health-care system. The COVID-19-specific compartmental structure
 of the model resembles many other COVID-19 models
 \ben{find some refs/examples}
-in splitting the usual single infectious compartment into sub-compartments reflective
+in splitting infectious individuals into sub-compartments reflective
 of the epidemiology of COVID-19; it additionally adds
 compartments for hospitalized individuals in acute care
 or intensive care. All symptomatic individuals are
 presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}). Infections can be
 asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
-severely symptomatic (\code{s}); all individuals with severe symptoms
-go to the hospital (acute care or ICU).
+severely symptomatic (\code{s}); \jd{Contradiction (see below): all individuals with severe symptoms
+go to the hospital (acute care or ICU)}.
 Some fraction of individuals who go to the ICU die,
-as do some (smaller) fraction of severely symptomatic individuals who
-never go to the hospital (e.g., individuals who die in long-term care facilities).
+as do some (smaller) fraction of \jd{Contradiction (see above): severely symptomatic individuals who
+never go to the hospital} (e.g., individuals who die in long-term care facilities).
 Recovered individuals (\code{R}) are
 assumed to be immune.  The model
 includes additional compartments which facilitate book-keeping:
@@ -191,15 +190,14 @@ This set-up allows for considerable flexibility.
   The gradient is the difference between the total flows into
   (column sums of $\mathbf F$) and out of (row sums of $\mathbf F$) each compartment.
 \item For a discrete-time model, we compute the vectors of outflows and inflows as above,
-  but simply compute the new states as (original state - outflow + inflow).
-\item In practice, we usually use a discrete-time model with a \emph{hazard correction} to
-  the flows to prevent the possibility that a state will go negative due to an overly
+  but simply compute the new states as (original state + (inflow - outflow)$\Delta t$).
+\item We can also use a discrete-time model with a \emph{hazard correction} to
+  the flows to address the possibility that a state will go negative due to an overly
   large outflow. Instead of the total \emph{per capita} outflow of a compartment being
   equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$),
   we let the total outflow be $\textsub{f}{tot}' = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f}{tot}'/\textsub{f}{tot}$.
   This adjustment accounts for
-  the effects of depletion during the course of a time step and prevents negative values
-  in the state vector.
+  the effects of depletion during the course of a time step.
 \item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is
   what we need to sample the flows between compartments as Euler-multinomial deviates \cite{breto+09}, which take the
   hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
@@ -218,8 +216,8 @@ We typically compute the model dynamics deterministically, as a discrete-time mo
 correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for
 example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments. 
 As well as allowing us to visualize model results more conveniently, condensation also allows us to
-convert the simulated state vector to a form that corresponds to available data streams.
-For example, in addition to summing compartments, we can also difference compartments (for example, differencing
+compare the simulated state vector to available data streams.
+In addition to summing compartments, we can also difference compartments (for example, differencing
 the accumulated-deaths compartment $D$ or the accumulated-hospitalizations compartment $X$ to
 derive a mortality or hospital admission rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}. When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
@@ -238,7 +236,7 @@ are untested; tested and awaiting negative results; tested and awaiting positive
 After receiving negative results (whether true negatives, from individuals in $S$, or false negatives,
 from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment
 where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment;
-depending on the model parameters, their transmission may be reduced partly or completely due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
+depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
 \cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses
 a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational
 epidemiological model.

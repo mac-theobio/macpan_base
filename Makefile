@@ -14,7 +14,6 @@ vim_session:
 ######################################################################
 
 Sources += $(wildcard *.tex figure/*.R)
-## can I do this?
 
 ######################################################################
 
@@ -22,7 +21,8 @@ Sources += $(wildcard *.tex figure/*.R)
 ##  find files referred to in uncommented \includegraphics{} calls??
 macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/testing_flow_graph.pdf
 
-figure/testing_flow_graph.pdf: figure/flowmatrix.Rout ;
+## JD: De-recipe-ed this 2022 Jul 27 (Wed); should figure out why it's here
+figure/testing_flow_graph.pdf: figure/flowmatrix.Rout
 
 figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
 
