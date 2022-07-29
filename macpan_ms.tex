@@ -29,7 +29,7 @@
   models, but includes a number of new and noteworthy features.
   In particular, it includes a flexible structure based on the \emph{flow matrix}
   (the \emph{per capita} rates of transitions between compartments) that allows
-  it to be used interchangeably for deterministic or discrete-state
+  it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state
   stochastic models; the capacity to set starting conditions based on the expected
   distribution of states during the exponential phase of the epidemic; automatic computation
   of $R_0$ and the mean and dispersion of the generation interval for specified
@@ -116,11 +116,9 @@ or intensive care. All symptomatic individuals are
 presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}). Infections can be
 asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
-severely symptomatic (\code{s}); \jd{Contradiction (see below): all individuals with severe symptoms
-go to the hospital (acute care or ICU)}.
-Some fraction of individuals who go to the ICU die,
-as do some (smaller) fraction of \jd{Contradiction (see above): severely symptomatic individuals who
-never go to the hospital} (e.g., individuals who die in long-term care facilities).
+severely symptomatic (\code{s}); all individuals with severe symptoms
+die (e.g., individuals who die in long-term care facilities) or go to the hospital (acute care or ICU).
+Some fraction of individuals who go to the ICU die.
 Recovered individuals (\code{R}) are
 assumed to be immune.  The model
 includes additional compartments which facilitate book-keeping:
