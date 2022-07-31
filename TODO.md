@@ -20,3 +20,6 @@
 - NB observation error?
 - quantile-based envelopes? (mention Juul et al.?)
 
+## BB
+
+- "ascertainment ratio" is a term I couldn't remember. Use it where appropriate.
