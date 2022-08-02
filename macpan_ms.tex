@@ -23,7 +23,7 @@
 \end{enumerate}
 
 \begin{abstract}
-  Compartmental epidemiological models are widely used to understand, 
+  Compartmental epidemiological models are widely used to understand,
   manage, and forecast the COVID-19 pandemic. We introduce a new
   compartmental modeling framework that shares many characteristics with existing
   models, but includes a number of new and noteworthy features.
@@ -38,7 +38,7 @@
   breakpoints, spline bases, or external covariates such as cellphone-based mobility indices;
   and the ability to calibrate model parameters to multiple data streams such as
   case reports, hospitalization and ICU admission rates.
-  We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative 
+  We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative
   tests, hospitalizations, and deaths) for each of the Canadian
   provinces from 2020-02-27 to 2020-08-30.  We
   estimate epidemiological parameters, including the effective
@@ -95,7 +95,7 @@ run as an ordinary differential equation,
 a discrete-time-step deterministic model, or
 a discrete-time-step stochastic model with dynamical noise.
 Finally, the model can be used to
-(1) simulate specific scenarios for planning purposes; 
+(1) simulate specific scenarios for planning purposes;
 (2) calibrate parameters to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
 (3) forecast future epidemic dynamics on the basis of past calibration.
 
@@ -140,7 +140,7 @@ force of infection decrease as the remaining fraction susceptible decreases, cap
 that as the most susceptible individuals are infected, they lower the average level of susceptibility
 in the remaining population.
 \ben{JD, reference for $S^\zeta$ to capture heterogeneity please? \cite{WilsWorc+45} uses $S^p$ but doesn't say
-  anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law \ldots I know we keep asking, but I keep forgetting the answer.)}
+  anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law \ldots I know we keep asking, but I keep forgetting the answer.)} \irena{DE suggested \cite{Liu+87} as well.}
 
 %\begin{figure}[ht!]
 \begin{figure}
@@ -163,7 +163,7 @@ in the remaining population.
 
 %% \begin{figure}[ht!]
 %% \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-%% \includegraphics[width=\maxwidth]{figure/ratematrix.pdf} 
+%% \includegraphics[width=\maxwidth]{figure/ratematrix.pdf}
 
 %% \caption{Flow matrix for basic compartmental mechanistic transmission
 %%   model.  Gray indicates non-zero flows: compartments as in
@@ -212,7 +212,7 @@ we have not yet tried to build models including inflows from outside the system 
 
 We typically compute the model dynamics deterministically, as a discrete-time model with a hazard
 correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for
-example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments. 
+example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
 As well as allowing us to visualize model results more conveniently, condensation also allows us to
 compare the simulated state vector to available data streams.
 In addition to summing compartments, we can also difference compartments (for example, differencing
@@ -289,7 +289,7 @@ to behaviour change and non-pharmaceutical interventions, which we model
 by changing the transmission rate.
 The transmission rate $\beta(t)$
 is taken to be a time-varying function of the form
-$\beta_0 \beta_1(t)$ 
+$\beta_0 \beta_1(t)$
 where $\beta_0$ is the baseline value for transmission
 from symptomatic individuals.
 Individuals in different symptomatic classes (presymptomatic, asymptomatic, mild, severe)
@@ -393,7 +393,7 @@ and negative tests in our calibration. \ben{are we still doing this??}
 \jd{We need to think about how to explain fits to occupancy a bit?} \ben{not sure what this means --- what is the tricky part of this?}
 
 \ben{what are we doing with this?}
-Reported new confirmations are the most reliable and voluminous source of epidemic information. 
+Reported new confirmations are the most reliable and voluminous source of epidemic information.
 Unfortunately, they are also subject to many inherent biases,
 including substantial variation over time in \term{testing intensity}
 (\ie tests \emph{per capita} per day).
@@ -487,7 +487,7 @@ from a variety of sources and cleaned.  See
 \url{https://wzmli.github.io/COVID19-Canada/}.
 
 While the public data do include line lists of records for individual
-patients, there are several important limitations: 
+patients, there are several important limitations:
 \begin{itemize}
 \item A single \term{episode date} is given, with no indication of
   whether this refers to the date of onset of symptoms, date of
@@ -590,7 +590,7 @@ official policies.
   \renewcommand{\arraystretch}{1.5}
   \small
 \begin{tabular}{ c | p{7cm} | p{6cm} }
-{\bfseries Date} & {\bfseries Event} & {\bfseries Comment} \\ \hline 
+{\bfseries Date} & {\bfseries Event} & {\bfseries Comment} \\ \hline
 
 11 March 2020 &
                 \href{https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020}{W.H.O.~declares COVID-19 pandemic} \\
@@ -601,7 +601,7 @@ official policies.
 23 March 2020 & Ontario orders workplaces to close & Initially
                                                     \href{https://news.ontario.ca/opo/en/2020/03/ontario-closing-at-risk-workplaces-to-protect-health-and-safety.html}{At-Risk
                                                     Workplaces} and
-                                                    then 
+                                                    then
 \href{https://news.ontario.ca/opo/en/2020/03/ontario-orders-the-mandatory-closure-of-all-non-essential-workplaces-to-fight-spread-of-covid-19.html}{All
                                                     Non-Essential
                                                     Workplaces}. \\
@@ -658,7 +658,7 @@ point.}
 
 \begin{figure}[ht!]
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{code/cachestuff/ontario.png} 
+\includegraphics[width=\maxwidth]{code/cachestuff/ontario.png}
 
 \caption{Ontario calibration}
 \label{fig:Ont_calibration}
@@ -711,8 +711,8 @@ The data to which we calibrated the model are shown with dots.
 We fitted to hospital occupancy rather than admissions because
 we have admissions data only for Ontario.  The fitted model
 is shown with solid curves in each panel.
-The bottom row shows inferred total disease incidence, 
-and 
+The bottom row shows inferred total disease incidence,
+and
 our mobility index for the province.
 \david{[temporarily deleted because we don't have $\R_t$ in the plots]
 , and our inferred value of \Rt. Note that in our current model \Rt depends
