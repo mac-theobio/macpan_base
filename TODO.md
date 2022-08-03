@@ -1,6 +1,5 @@
 ## everyone
 
-- authorship?
 - what are we including in the actual example?
    - testify?
    - fitting with mobility?
@@ -23,3 +22,4 @@
 ## BB
 
 - "ascertainment ratio" is a term I couldn't remember. Use it where appropriate.
+- discuss calculation of $R_t$ (i.e., by scaling $R_0$ by $\beta(t)$ ?
