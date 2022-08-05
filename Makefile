@@ -19,7 +19,7 @@ Sources += $(wildcard *.tex figure/*.R)
 
 ## BMB: is there a way to automate this/auto-generate .deps to
 ##  find files referred to in uncommented \includegraphics{} calls??
-macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/testing_flow_graph.pdf
+## macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/testing_flow_graph.pdf
 
 ## JD: De-recipe-ed this 2022 Jul 27 (Wed); should figure out why it's here
 figure/testing_flow_graph.pdf: figure/flowmatrix.Rout
