@@ -17,26 +17,21 @@ Sources += $(wildcard *.tex figure/*.R)
 
 ######################################################################
 
-## BMB: is there a way to automate this/auto-generate .deps to
-##  find files referred to in uncommented \includegraphics{} calls??
-## macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex figure/flowchart.pdf figure/testing_flow_graph.pdf
+## MS
 
-## JD: De-recipe-ed this 2022 Jul 27 (Wed); should figure out why it's here
-figure/testing_flow_graph.pdf: figure/flowmatrix.Rout
+## JD: This seems to chain without being uncommented; 
+## let me know if you have a reproducible bug
+## macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex
+
+######################################################################
+
+figure/testing_flow_graph.pdf: figure/testing_flow_graph.Rout ;
+figure/testing_flow_graph.Rout: figure/testing_flow_graph.R
+	$(pipeR)
 
 figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
-
-## BMB: do this the hard way because I don't understand makestuff/shellpipes
-## using $(run-R) here results in creating the file
-## figure/testing_flow_graph.pdf.pdf ??
-figure/testing_flow_graph.pdf: figure/testing_flow_graph.R
-	R --vanilla --slave <figure/testing_flow_graph.R
-##	$(run-R)
-
-
-
 figure/flowmatrix.Rout: figure/flowmatrix.R
-	$(run-R)
+	$(pipeR)
 
 shellpipes.out:
 	Rscript -e 'remotes::install_github("dushoff/shellpipes")'

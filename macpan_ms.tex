@@ -31,7 +31,7 @@
   (the \emph{per capita} rates of transitions between compartments) that allows
   it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state
   stochastic models; the capacity to set starting conditions based on the expected
-  distribution of states during the exponential phase of the epidemic; automatic computation
+  distribution of states during an exponential phase of the epidemic; automatic computation
   of $R_0$ and the mean and dispersion of the generation interval for specified
   parameters; explicit structures incorporating the intensity of testing and delays
   between test administration and reporting; time-varying parameters based on
@@ -116,22 +116,21 @@ or intensive care. All symptomatic individuals are
 presumed to have undergone a period of pre-symptomatic infectiousness
 (\code{p}). Infections can be
 asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
-severely symptomatic (\code{s}); all individuals with severe symptoms
-die (e.g., individuals who die in long-term care facilities) or go to the hospital (acute care or ICU).
+severely symptomatic (\code{s});
+all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
 Some fraction of individuals who go to the ICU die.
-Recovered individuals (\code{R}) are
-assumed to be immune.  The model
+Recovered individuals (\code{R}) are assumed to be immune.  
+The model
 includes additional compartments which facilitate book-keeping:
 cumulative hospital admissions (\code{X}), individuals in acute care
 after discharge from ICU (\code{H2}), and cumulative deaths
 (\code{D}) (\cref{fig:flowchart}).
-(The version of the model we describe here was developed and used before vaccines
-were available; we have since expanded the model to include relevant compartments,
-but here we report on the original version.)
+(The version of the model discussed here was developed and used before vaccines
+were available; we have since expanded the model to include relevant compartments.)
 
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute
 additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
-We did add one feature to the model to allow for heterogeneity in susceptibility in the population,
+We did add one feature to the model to account for heterogeneity in susceptibility in the population,
 which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential
 workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
 A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a
@@ -139,8 +138,8 @@ factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of 
 force of infection decrease as the remaining fraction susceptible decreases, capturing the fact
 that as the most susceptible individuals are infected, they lower the average level of susceptibility
 in the remaining population.
-\ben{JD, reference for $S^\zeta$ to capture heterogeneity please? \cite{WilsWorc+45} uses $S^p$ but doesn't say
-  anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law \ldots I know we keep asking, but I keep forgetting the answer.)} \irena{DE suggested \cite{Liu+87} as well.}
+\jd{Somebody said they would work on this and then hand it to me?} \ben{\cite{WilsWorc+45} uses $S^p$ but doesn't say
+  anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law.} \irena{DE suggested \cite{Liu+87} as well.}
 
 %\begin{figure}[ht!]
 \begin{figure}

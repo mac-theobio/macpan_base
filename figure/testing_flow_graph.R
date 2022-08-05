@@ -1,8 +1,11 @@
 library(diagram)
-## library(shellpipes)
-## startGraphics()
 
-pdf("figure/testing_flow_graph.pdf", width = 6, height = 6)
+library(shellpipes)
+
+## The desc="" is necessary to drop "Rout" from the pdf; this also slightly complicates the Makefile.
+## I'm curious how much you care about this.
+startGraphics(desc="", width = 6, height = 6)
+
 version <- 1
 ## version 2 (unfinished) implements DJDE picture with L-to-R flow and no epi transitions
 
