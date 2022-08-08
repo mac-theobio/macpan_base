@@ -33,6 +33,22 @@ figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
 figure/flowmatrix.Rout: figure/flowmatrix.R
 	$(pipeR)
 
+######################################################################
+
+## repiping flowmatrix
+pipeRdesc += figure/flow
+figure/flow.Rout: figure/flow.R
+	$(pipeR)
+
+## figure/flow.chart.crop.pdf:
+
+## %.crop.pdf: %.pdf
+figure/flow.chart.crop.pdf: figure/flow.chart.pdf
+	Rscript -e 'knitr::plot_crop("$<")'
+	$(copy)
+
+######################################################################
+
 shellpipes.out:
 	Rscript -e 'remotes::install_github("dushoff/shellpipes")'
 
