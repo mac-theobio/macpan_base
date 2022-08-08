@@ -35,12 +35,17 @@ figure/flowmatrix.Rout: figure/flowmatrix.R
 
 ######################################################################
 
-## repiping flowmatrix
+## repiping figures
 pipeRdesc += figure/flow
 figure/flow.Rout: figure/flow.R
 	$(pipeR)
 
 ## figure/flow.chart.crop.pdf:
+
+pipeRdesc += figure/testFlow
+## figure/testFlow.1.Rout: figure/testFlow.R
+figure/testFlow.%.Rout: figure/testFlow.R
+	$(pipeR)
 
 ## %.crop.pdf: %.pdf
 figure/flow.chart.crop.pdf: figure/flow.chart.pdf
