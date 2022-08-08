@@ -25,6 +25,8 @@ Sources += $(wildcard *.tex figure/*.R)
 
 ######################################################################
 
+## Deprecated figures
+
 figure/testing_flow_graph.pdf: figure/testing_flow_graph.Rout ;
 figure/testing_flow_graph.Rout: figure/testing_flow_graph.R
 	$(pipeR)
@@ -35,7 +37,7 @@ figure/flowmatrix.Rout: figure/flowmatrix.R
 
 ######################################################################
 
-## repiping figures
+## repiped figures
 pipeRdesc += figure/flow
 figure/flow.Rout: figure/flow.R
 	$(pipeR)
