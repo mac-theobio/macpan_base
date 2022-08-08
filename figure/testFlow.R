@@ -1,6 +1,7 @@
 library(diagram)
 
 library(shellpipes)
+rpcall("figure/testFlow.1.Rout figure/testFlow.R")
 
 startGraphics(width = 6, height = 6)
 
