@@ -192,7 +192,7 @@ This set-up allows for considerable flexibility.
   the flows to address the possibility that a state will go negative due to an overly
   large outflow. Instead of the total \emph{per capita} outflow of a compartment being
   equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$),
-  we let the total outflow be $\textsub{f}{tot}' = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f}{tot}'/\textsub{f}{tot}$.
+  we let the total outflow be $\textsub{f'}{tot} = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f'}{tot}/\textsub{f}{tot}$.
   This adjustment accounts for
   the effects of depletion during the course of a time step.
 \item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is
@@ -214,9 +214,9 @@ correction (the third option above).  Once the trajectories are computed, we red
 example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
 As well as allowing us to visualize model results more conveniently, condensation also allows us to
 compare the simulated state vector to available data streams.
-In addition to summing compartments, we can also difference compartments (for example, differencing
-the accumulated-deaths compartment $D$ or the accumulated-hospitalizations compartment $X$ to
-derive a mortality or hospital admission rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}. When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
+In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing
+accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
+\jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>} When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
 Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
 
@@ -243,7 +243,7 @@ from \code{Im}, negative-waiting to \code{R}, negative-waiting).
 
 We define a weight vector $w$ across epidemic compartments that gives weight $w_a$
 to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and
-1 to symptomatic classes (all others, including \code{R}).
+1 to symptomatic classes (all others, including \code{R} \jd{??}).
 If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$),
 then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding
 \emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. However, under some
@@ -280,7 +280,7 @@ they represent a small fraction of the overall number of tests administered.)
 
 \subsection*{Model parameterization}
 
-The model allows for time-varying, piecewise constant changes in any
+The model allows for time-varying, piecewise-constant changes in any
 parameter. Our early analyses focused on changes in time-varying effective reproductive
 number (\Rt) due
 to behaviour change and non-pharmaceutical interventions, which we model
@@ -329,9 +329,9 @@ In practice, when we use the model without incorporating covariates we adopt a s
 
 It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. In principle we could compute these values directly from the flow matrix, by constructing the Jacobian matrix and the next-generation matrix and performing the appropriate eigenvector/eigenvalue calculations (as discussed by \cite{VandWatm02} for differential equations and \cite{Casw00} for discrete-time systems). However, we found it simpler to derive these values by simulation.
 
-To compute the eigenvector, we run a simulation where we set the outflow from the susceptible compartment to zero (while maintaining the \emph{inflow} from $S$ to $E$), which mimics the dynamics near the disease-free equilibrium where susceptible depletion is unimportant. After running the simulation for a long time (100 steps by default), the state vector is close to the eigenvector.  We use this value to set starting conditions when starting near the beginning of the epidemic. It is easy to specify a scalar value (say, 1\% of the population) to indicate the initial size of the epidemic, but putting all of these individuals in one compartment ($E$, or one of the infective compartments) represents an unrealistic state --- while this is not biologically important when the total number is small, it can contribute to numerical instability, making calibration more difficult.
+To compute the eigenvector, we run a simulation where we set the outflow from the susceptible compartment to zero (while maintaining the \emph{inflow} from $S$ to $E$), which mimics the dynamics near the disease-free equilibrium where susceptible depletion is negligible. After running the simulation for a long time (100 steps by default), the state vector is close to the eigenvector.  We use this value to set starting conditions when starting near the beginning of the epidemic. It is easy to specify a scalar value (say, 1\% of the population) to indicate the initial size of the epidemic; by distributing these individuals according to the calculated eigenvector, we reduce numerical instability at the beginning of our simulations. 
 
-To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. We simulate the progression of a \emph{single} individual through the infection process, i.e. setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. This procedure thus computes a vector of the expected force of infection generated by a single infectious individual over their lifetime, as a function of time since infection. This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient
+To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. We simulate the progression of a \emph{single} individual through the infection process, i.e. setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age of infetion, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient
 \[
 \textrm{CV}(G) = \frac{\sqrt{\sum_t K(t)/\Rzero (t- \bar G)^2}}{\bar G} .
 \]
@@ -341,8 +341,13 @@ The growth rate $r$ can be computed by numerically solving the Euler-Lotka equat
 \]
 for $r$.
 
-\ben{JD: refs on computing generation interval (supporting the fact that it's tricky)? Easy ref for deriving \Rzero, gbar etc. from the kernel --- is \cite{Cham+18} appropriate? I haven't included $\kappa$ computation in this list; what is our normal procedure? Mike?}
+\jd{Suggest dropping the detailed equations for Gbar and CV, but instead adding $g(t)$ and saying that we also calculate its mean and CV.}
+
+\jd{Suggested easy ref is ChamDush15: http://dx.doi.org/10.1098/rspb.2015.2026 (instead of current Cham18)}
+
 \ben{check: what do we do about phenom het/$\zeta$ in these procedures, esp about incorporating it in any computation of \Rt?}
+
+\jd{$\zeta$ should not pose any special problems here; when $S\approx N$ its effect is negligible. At other times (if any), it should be handled correctly by setting $S$ and $N$ correctly and suppressing outflow from $S$ as described.}
 
 In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. Estimates of these summary statistics are more broadly available \ben{REFS?}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{gamma}{a}) by a single factor until the target values are achieved.
 
