@@ -25,18 +25,6 @@ Sources += $(wildcard *.tex figure/*.R)
 
 ######################################################################
 
-## Deprecated figures
-
-figure/testing_flow_graph.pdf: figure/testing_flow_graph.Rout ;
-figure/testing_flow_graph.Rout: figure/testing_flow_graph.R
-	$(pipeR)
-
-figure/flowchart.pdf figure/ratematrix.pdf: figure/flowmatrix.Rout ;
-figure/flowmatrix.Rout: figure/flowmatrix.R
-	$(pipeR)
-
-######################################################################
-
 ## repiped figures
 pipeRdesc += figure/flow
 figure/flow.Rout: figure/flow.R
@@ -53,6 +41,9 @@ figure/testFlow.%.Rout: figure/testFlow.R
 figure/flow.chart.crop.pdf: figure/flow.chart.pdf
 	Rscript -e 'knitr::plot_crop("$<")'
 	$(copy)
+
+## pre-piping versions
+## git rm figure/testing_flow_graph.R figure/flowmatrix.R 2022 Aug 09 (Tue)
 
 ######################################################################
 
