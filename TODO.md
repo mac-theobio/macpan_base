@@ -7,6 +7,13 @@
    - fitting with breakpoints?
    - fitting with splines?
 
+## MLi
+
+- I like it to be a bit more formal with a simulation component with testify.
+- See https://github.com/mac-theobio/PHAC_covid/blob/master/reports/McMasterFinalReport2020-08-31.pdf
+- todo: locate the code to reproduce the ontario plot in PHAC_covid
+- What is the code directory and why is there no Makefile? Are we doing it via the top/main repo?
+
 ## JD
 
 - Check "kernel moments calculation" section for accuracy and completeness
