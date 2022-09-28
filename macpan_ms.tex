@@ -64,12 +64,8 @@
 
 \section{Introduction}
 
-SARS-CoV-2, the
-etiological agent of coronavirus disease 2019 (COVID-19), has been
-circulating in Canada since at least January 2020 \cite{onpr_200125}.
-Response to the worldwide pandemic \cite{Li+20,Fauc+20} has been
-guided to a substantial extent by mathematical modelling
-\cite{Flax+20}.
+SARS-CoV-2, the etiological agent of coronavirus disease 2019 (COVID-19), has been circulating in Canada since at least January 2020 \cite{onpr_200125}.
+Response to the worldwide pandemic \cite{Li+20,Fauc+20} has been guided to a substantial extent by mathematical modelling \cite{Flax+20}.
 
 %% Virological testing and contact tracing have been conducted to varying
 %% degrees in different jurisdictions\david{REFS}.  While testing is
@@ -82,18 +78,12 @@ guided to a substantial extent by mathematical modelling
 %% self-administer \cite{Will+20,Wyll+20}, potentially making very
 %% large-scale, frequent testing possible.
 
-Here, we present a compartmental framework that has been developed
-over the course of the pandemic. It incorporates the standard epidemiological compartments
-required to model COVID-19 as well as compartments that track health-care utilization and COVID-induced
-mortality. Case reporting can be modeled either as a time-delayed convolution
-of incidence or by enabling a factorial expansion of the model that accounts
-for the testing status of individuals \cite{Fris+20}. The model also allows
-for time-dependent variation in any rate parameter --- particularly the transmission rate --- and
-allows this variation to be indexed by external covariates such as cellphone-based mobility
-metrics, or to follow smooth (spline) curves over time. The same model structure can be
-run as an ordinary differential equation,
-a discrete-time-step deterministic model, or
-a discrete-time-step stochastic model with dynamical noise.
+Here, we present a compartmental framework that has been developed over the course of the pandemic. 
+It incorporates the standard epidemiological compartments required to model COVID-19 as well as compartments that track health-care utilization and COVID-induced
+mortality. 
+Case reporting can be modeled either as a time-delayed convolution of incidence or by enabling a factorial expansion of the model that accounts for the testing status of individuals \cite{Fris+20}. 
+The model also allows for time-dependent variation in any rate parameter --- particularly the transmission rate --- and allows this variation to be indexed by external covariates such as cellphone-based mobility metrics, or to follow smooth (spline) curves over time. 
+The same model structure can be run as an ordinary differential equation, a discrete-time-step deterministic model, or a discrete-time-step stochastic model with dynamical noise.
 Finally, the model can be used to
 (1) simulate specific scenarios for planning purposes;
 (2) calibrate parameters to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
@@ -107,7 +97,7 @@ The epidemiological structure of the model is based on
 a susceptible-exposed-infectious-removed (SEIR) model with
 additional compartments reflecting the biology of COVID-19 and the
 structure of the health-care system. The COVID-19-specific compartmental structure
-of the model resembles many other COVID-19 models
+of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical}
 \ben{find some refs/examples}
 in splitting infectious individuals into sub-compartments reflective
 of the epidemiology of COVID-19; it additionally adds
