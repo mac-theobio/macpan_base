@@ -93,41 +93,20 @@ Finally, the model can be used to
 
 \subsection*{Compartmental structure}
 
-The epidemiological structure of the model is based on
-a susceptible-exposed-infectious-removed (SEIR) model with
-additional compartments reflecting the biology of COVID-19 and the
-structure of the health-care system. The COVID-19-specific compartmental structure
-of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical}
-\ben{find some refs/examples}
-in splitting infectious individuals into sub-compartments reflective
-of the epidemiology of COVID-19; it additionally adds
-compartments for hospitalized individuals in acute care
-or intensive care. All symptomatic individuals are
-presumed to have undergone a period of pre-symptomatic infectiousness
-(\code{p}). Infections can be
-asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
-severely symptomatic (\code{s});
-all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
-Some fraction of individuals who go to the ICU die.
-Recovered individuals (\code{R}) are assumed to be immune.  
-The model
-includes additional compartments which facilitate book-keeping:
-cumulative hospital admissions (\code{X}), individuals in acute care
-after discharge from ICU (\code{H2}), and cumulative deaths
-(\code{D}) (\cref{fig:flowchart}).
+The epidemiological structure of the model is based on a susceptible-exposed-infectious-removed (SEIR) model with additional compartments reflecting the biology of COVID-19 and the
+structure of the health-care system. 
+The COVID-19-specific compartmental structure
+of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical} \ben{find some refs/examples} in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. All symptomatic individuals are presumed to have undergone a period of pre-symptomatic infectiousness (\code{p}). 
+Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
+severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
+Some fraction of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
+The model includes additional compartments which facilitate book-keeping: cumulative hospital admissions (\code{X}), individuals in acute care after discharge from ICU (\code{H2}), and cumulative deaths (\code{D}) (\cref{fig:flowchart}).
 (The version of the model discussed here was developed and used before vaccines
 were available; we have since expanded the model to include relevant compartments.)
 
-This version of the model assumes homogeneous mixing --- all classes of infectives contribute
-additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
-We did add one feature to the model to account for heterogeneity in susceptibility in the population,
-which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential
-workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
-A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a
-factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the
-force of infection decrease as the remaining fraction susceptible decreases, capturing the fact
-that as the most susceptible individuals are infected, they lower the average level of susceptibility
-in the remaining population.
+This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
+We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
+A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that as the most susceptible individuals are infected, they lower the average level of susceptibility in the remaining population.
 \jd{Somebody said they would work on this and then hand it to me?} \ben{\cite{WilsWorc+45} uses $S^p$ but doesn't say
   anything about it: \cite{Will+06} (preceding \cite{Gran+09}) use an exponential decay rather than a power law.} \irena{DE suggested \cite{Liu+87} as well.}
 
