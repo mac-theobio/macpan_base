@@ -23,26 +23,11 @@
 \end{enumerate}
 
 \begin{abstract}
-  Compartmental epidemiological models are widely used to understand,
-  manage, and forecast the COVID-19 pandemic. We introduce a new
-  compartmental modeling framework that shares many characteristics with existing
-  models, but includes a number of new and noteworthy features.
-  In particular, it includes a flexible structure based on the \emph{flow matrix}
-  (the \emph{per capita} rates of transitions between compartments) that allows
-  it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state
-  stochastic models; the capacity to set starting conditions based on the expected
-  distribution of states during an exponential phase of the epidemic; automatic computation
-  of $R_0$ and the mean and dispersion of the generation interval for specified
-  parameters; explicit structures incorporating the intensity of testing and delays
-  between test administration and reporting; time-varying parameters based on
-  breakpoints, spline bases, or external covariates such as cellphone-based mobility indices;
-  and the ability to calibrate model parameters to multiple data streams such as
-  case reports, hospitalization and ICU admission rates.
-  We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative
-  tests, hospitalizations, and deaths) for each of the Canadian
-  provinces from 2020-02-27 to 2020-08-30.  We
-  estimate epidemiological parameters, including the effective
-  reproduction number $\R_t$ over the course of the epidemic.
+Compartmental epidemiological models are widely used to understand, manage, and forecast the COVID-19 pandemic. 
+We introduce a new compartmental modeling framework that shares many characteristics with existing models, but includes a number of new and noteworthy features.
+In particular, it includes a flexible structure based on the \emph{flow matrix} (the \emph{per capita} rates of transitions between compartments) that allows it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state stochastic models; the capacity to set starting conditions based on the expected distribution of states during an exponential phase of the epidemic; automatic computation of $R_0$ and the mean and dispersion of the generation interval for specified parameters; explicit structures incorporating the intensity of testing and delays between test administration and reporting; time-varying parameters based on breakpoints, spline bases, or external covariates such as cellphone-based mobility indices; and the ability to calibrate model parameters to multiple data streams such as case reports, hospitalization and ICU admission rates.
+We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative tests, hospitalizations, and deaths) for each of the Canadian provinces from 2020-02-27 to 2020-08-30.  
+We estimate epidemiological parameters, including the effective reproduction number $\R_t$ over the course of the epidemic.
 \end{abstract}
 
 %%\vfill
@@ -93,16 +78,13 @@ Finally, the model can be used to
 
 \subsection*{Compartmental structure}
 
-The epidemiological structure of the model is based on a susceptible-exposed-infectious-removed (SEIR) model with additional compartments reflecting the biology of COVID-19 and the
-structure of the health-care system. 
-The COVID-19-specific compartmental structure
-of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical} \ben{find some refs/examples} in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. All symptomatic individuals are presumed to have undergone a period of pre-symptomatic infectiousness (\code{p}). 
-Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or
-severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
+The epidemiological structure of the model is based on a susceptible-exposed-infectious-removed (SEIR) model with additional compartments reflecting the biology of COVID-19 and the structure of the health-care system. 
+The COVID-19-specific compartmental structure of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical} \ben{find some refs/examples} in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. 
+All symptomatic individuals are presumed to have undergone a period of pre-symptomatic infectiousness (\code{p}). 
+Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
 Some fraction of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
 The model includes additional compartments which facilitate book-keeping: cumulative hospital admissions (\code{X}), individuals in acute care after discharge from ICU (\code{H2}), and cumulative deaths (\code{D}) (\cref{fig:flowchart}).
-(The version of the model discussed here was developed and used before vaccines
-were available; we have since expanded the model to include relevant compartments.)
+(The version of the model discussed here was developed and used before vaccines were available; we have since expanded the model to include relevant compartments.)
 
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
 We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
@@ -114,18 +96,10 @@ A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of in
 \begin{figure}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/flow.chart.crop.pdf}
-\caption{Flow chart for basic compartmental mechanistic transmission
-  model. Compartments: \code{S} (susceptible), \code{E} (exposed),
-  \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic
-  infection), \code{Im} (mild/moderately symptomatic infection),
-  \code{Is} (severely symptomatic infection), \code{H} (hospitalized
-  [acute care]), \code{ICUs} (ICU with prognosis of survival),
-  \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care
-  after ICU stay). Compartments denoted by rectangles are
-  accumulators, primarily used in the condensation step to compute
-  incidences: \code{R} (recovered), \code{D} (dead), \code{X}
-  (accumulator for cumulative hospital admissions).
-  \ben{prettify this further, \textbf{or} steal something better from Irena?}}
+\caption{Flow chart for basic compartmental mechanistic transmission model. 
+Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs} (ICU with prognosis of survival), \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care after ICU stay). 
+Compartments denoted by rectangles are accumulators, primarily used in the condensation step to compute incidences: \code{R} (recovered), \code{D} (dead), \code{X} (accumulator for cumulative hospital admissions).
+\ben{prettify this further, \textbf{or} steal something better from Irena?}}
 \label{fig:flowchart}
 \end{figure}
 
@@ -142,49 +116,27 @@ A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of in
 %% \label{fig:flowmatrix}
 %% \end{figure}
 
-Internally, the model is defined by a \emph{flow matrix} $\mathbf{M}$, whose elements specify
-the \emph{per capita} rates at which individuals move from one compartment to another.
-For the basic model, the only element of the flow matrix that needs to be recomputed
-at each time step is the incidence (flow from $S$ to $E$); all other rates are constant
-except when the model specifies a piecewise change.
+Internally, the model is defined by a \emph{flow matrix} $\mathbf{M}$, whose elements specify the \emph{per capita} rates at which individuals move from one compartment to another.
+For the basic model, the only element of the flow matrix that needs to be recomputed at each time step is the incidence (flow from $S$ to $E$); all other rates are constant except when the model specifies a piecewise change.
 
 This set-up allows for considerable flexibility.
 \begin{itemize}
-\item For a numerical differential equation solver, we need the time derivatives
-  of each compartment. The absolute rates are computed by columnwise multiplication by the state vector
-  $\mathbf s$ (${\mathbf F}_{ij} = \mathbf{M}_{ij} \mathbf{s}_j$).
-  The gradient is the difference between the total flows into
-  (column sums of $\mathbf F$) and out of (row sums of $\mathbf F$) each compartment.
-\item For a discrete-time model, we compute the vectors of outflows and inflows as above,
-  but simply compute the new states as (original state + (inflow - outflow)$\Delta t$).
-\item We can also use a discrete-time model with a \emph{hazard correction} to
-  the flows to address the possibility that a state will go negative due to an overly
-  large outflow. Instead of the total \emph{per capita} outflow of a compartment being
-  equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$),
-  we let the total outflow be $\textsub{f'}{tot} = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f'}{tot}/\textsub{f}{tot}$.
-  This adjustment accounts for
-  the effects of depletion during the course of a time step.
-\item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is
-  what we need to sample the flows between compartments as Euler-multinomial deviates \cite{breto+09}, which take the
-  hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
+\item For a numerical differential equation solver, we need the time derivatives of each compartment. The absolute rates are computed by columnwise multiplication by the state vector $\mathbf s$ (${\mathbf F}_{ij} = \mathbf{M}_{ij} \mathbf{s}_j$).
+The gradient is the difference between the total flows into (column sums of $\mathbf F$) and out of (row sums of $\mathbf F$) each compartment.
+\item For a discrete-time model, we compute the vectors of outflows and inflows as above, but simply compute the new states as (original state + (inflow - outflow)$\Delta t$).
+\item We can also use a discrete-time model with a \emph{hazard correction} to the flows to address the possibility that a state will go negative due to an overly large outflow. Instead of the total \emph{per capita} outflow of a compartment being equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$), we let the total outflow be $\textsub{f'}{tot} = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f'}{tot}/\textsub{f}{tot}$.
+This adjustment accounts for the effects of depletion during the course of a time step.
+\item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is what we need to sample the flows between compartments as Euler-multinomial deviates \cite{breto+09}, which take the hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
 \end{itemize}
 
-While the flow matrix description is convenient for most epidemiological dynamics, there are a few
-epidemiological processes that are more naturally captured by absolute rather than \emph{per capita} rates,
-for example (1) when intensities of public health interventions such as numbers of tests or
-vaccines administered are reported by public health agencies;
-or (2) in models incorporating births or immigration.
-We have typically handled the former case by taking observed vaccination or testing rates and
-dividing them by current compartment sizes in order to set the relevant entries in the flow matrix;
-we have not yet tried to build models including inflows from outside the system (the latter case).
+While the flow matrix description is convenient for most epidemiological dynamics, there are a few epidemiological processes that are more naturally captured by absolute rather than \emph{per capita} rates, for example (1) when intensities of public health interventions such as numbers of tests or vaccines administered are reported by public health agencies; or (2) in models incorporating births or immigration.
+We have typically handled the former case by taking observed vaccination or testing rates and dividing them by current compartment sizes in order to set the relevant entries in the flow matrix; we have not yet tried to build models including inflows from outside the system (the latter case).
 
-We typically compute the model dynamics deterministically, as a discrete-time model with a hazard
-correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for
-example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
-As well as allowing us to visualize model results more conveniently, condensation also allows us to
-compare the simulated state vector to available data streams.
-In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing
-accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution. Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
+We typically compute the model dynamics deterministically, as a discrete-time model with a hazard correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
+As well as allowing us to visualize model results more conveniently, condensation also allows us to compare the simulated state vector to available data streams.
+In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution. 
+Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? 
+Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
 \jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>} When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
 Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
@@ -192,115 +144,76 @@ Once condensation is done, the model also allows us to add observation error, wh
 \subsection*{Expansion to accomodate testing}
 
 At the cost of additional complexity, we can add explicit testing compartments to the model.
-In the simpler version of the model, we assume that a specified fraction of infections
-are reported as cases (or calibrating this value
-from joint data on cases and hospitalizations), and imposing a
-distributed delay between infection and reporting (i.e. via convolution).
-Here we instead expand the susceptible
-and all infected compartments factorially to include the possibilities that individuals in those epidemiological classes
-are untested; tested and awaiting negative results; tested and awaiting positive results; or tested positive.
-After receiving negative results (whether true negatives, from individuals in $S$, or false negatives,
-from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment
-where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment;
-depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
-\cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses
-a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational
-epidemiological model.
-Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering)
-while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment (e.g.,
-from \code{Im}, negative-waiting to \code{R}, negative-waiting).
+In the simpler version of the model, we assume that a specified fraction of infections are reported as cases (or calibrating this value from joint data on cases and hospitalizations), and imposing a distributed delay between infection and reporting (i.e. via convolution).
+Here we instead expand the susceptible and all infected compartments factorially to include the possibilities that individuals in those epidemiological classes are untested; tested and awaiting negative results; tested and awaiting positive results; or tested positive.
+After receiving negative results (whether true negatives, from individuals in $S$, or false negatives, from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment; depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
+\cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational epidemiological model.
+Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering) while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment (e.g., from \code{Im}, negative-waiting to \code{R}, negative-waiting).
 
-We define a weight vector $w$ across epidemic compartments that gives weight $w_a$
-to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and
-1 to symptomatic classes (all others, including \code{R} \jd{??}).
-If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$),
-then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding
-\emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. However, under some
-extreme conditions (if testing is so extreme that few untested symptomatic people are left)
-this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem
-we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
-\[
-T_i = \frac{\rho \tau w_i}{\tau W + \rho} .
-\]
-(see \cite{Ghar+22} appendix A.5 for more details).
-The testing flows out of each untested subcompartment are divided into flows to ``positive waiting''
-and ``negative waiting'' compartments according to the infection status of the relevant compartment
-and specificity/sensitivity parameters. If tests are assumed to be perfectly specific and sensitive,
-then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the
-``negative waiting'' and those from infectious compartments enter the ``positive waiting'' compartment.
+We define a weight vector $w$ across epidemic compartments that gives weight $w_a$ to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and 1 to symptomatic classes (all others, including \code{R} \jd{??}).
+If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$), then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding \emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. 
+However, under some extreme conditions (if testing is so extreme that few untested symptomatic people are left) this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
+\[T_i = \frac{\rho \tau w_i}{\tau W + \rho} .\] (see \cite{Ghar+22} appendix A.5 for more details).
+The testing flows out of each untested subcompartment are divided into flows to ``positive waiting'' and ``negative waiting'' compartments according to the infection status of the relevant compartment and specificity/sensitivity parameters. If tests are assumed to be perfectly specific and sensitive, then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the ``negative waiting'' and those from infectious compartments enter the ``positive waiting'' compartment.
 
-We assume that all individuals admitted to the hospital for COVID-19 are immediately tested. (These tests
-are not included in the accounting of test distribution above, but in the COVID setting
-they represent a small fraction of the overall number of tests administered.)
+We assume that all individuals admitted to the hospital for COVID-19 are immediately tested. (These tests are not included in the accounting of test distribution above, but in the COVID setting they represent a small fraction of the overall number of tests administered.)
 \ben{I think this is right \ldots ??}
+\mike{Correct}
 
 \begin{figure}
   \includegraphics{figure/testFlow.1.Rout.pdf}
-  \caption{Testing flow. Every epidemiological compartment
-    is subdivided into the four subcompartments shown.
-    Black arrows represent flows between subcompartments
-    due to testing processes (test administration, reporting of tests);
-    blue arrows represent progression between epidemiological compartments.
-    Dashed arrows represent the accumulation of negative and positive test reports,
-    which can be compared against data.
+  \caption{Testing flow. Every epidemiological compartment is subdivided into the four subcompartments shown.
+    Black arrows represent flows between subcompartments due to testing processes (test administration, reporting of tests); blue arrows represent progression between epidemiological compartments.
+    Dashed arrows represent the accumulation of negative and positive test reports, which can be compared against data.
     \ben{is there a better version of this somewhere?}}
+	 \mike{Irena}
   \label{fig:testing_flow}
 \end{figure}
 
 \subsection*{Model parameterization}
 
-The model allows for time-varying, piecewise-constant changes in any
-parameter. Our early analyses focused on changes in time-varying effective reproductive
-number (\Rt) due
-to behaviour change and non-pharmaceutical interventions, which we model
-by changing the transmission rate.
-The transmission rate $\beta(t)$
-is taken to be a time-varying function of the form
-$\beta_0 \beta_1(t)$
-where $\beta_0$ is the baseline value for transmission
-from symptomatic individuals.
-Individuals in different symptomatic classes (presymptomatic, asymptomatic, mild, severe)
-may have their transmission modified by a specified multiplier (given as model parameters);
-we assume that hospital transmission is negligible.
+The model allows for time-varying, piecewise-constant changes in any parameter. 
+Our early analyses focused on changes in time-varying effective reproductive number (\Rt) due to behaviour change and non-pharmaceutical interventions, which we model by changing the transmission rate.
+The transmission rate $\beta(t)$ is taken to be a time-varying function of the form $\beta_0 \beta_1(t)$ where $\beta_0$ is the baseline value for transmission from symptomatic individuals.
+Individuals in different symptomatic classes (presymptomatic, asymptomatic, mild, severe) may have their transmission modified by a specified multiplier (given as model parameters); we assume that hospital transmission is negligible.
 The time-varying (relative) transmission $\beta_1$ can incorporate a variety of different effects, one at a time or in combination:
 \begin{itemize}
-\item abrupt (piecewise) changes on specified dates when control
-  measures are known to have been implemented;
-\item proportional to a power of observed mobility or some other
-  exogenous proxy for contact behaviour
+\item abrupt (piecewise) changes on specified dates when control measures are known to have been implemented;
+\item proportional to a power of observed mobility or some other exogenous proxy for contact behaviour
 \[
   \beta_1(t) \propto (\textrm{relative mobility})^{\pmob}
 \]
 for some power $\pmob>0$;
-\item according to an arbitrary spline curve, i.e. a linear combination
-  of components of a B-spline basis.
+\item according to an arbitrary spline curve, i.e. a linear combination of components of a B-spline basis.
 \end{itemize}
 
-All of the sub-models for temporal change in the transmission
-rate can be subsumed under a single log-linear model:
+All of the sub-models for temporal change in the transmission rate can be subsumed under a single log-linear model:
 \begin{equation}\label{eq:betamodel}
 \log \beta(t) = \log \beta_0 + \boldsymbol{X}\boldsymbol{c}
 \,,
 \end{equation}
-where $\boldsymbol{X}$ is a model matrix that can contain any combination
-of covariates and $\boldsymbol{c}$ is a vector of covariates determining
-differences in the log of the relative transmission rate.
-In particular, piecewise breaks correspond to indicator variables
-for which period an observation falls in; the mobility model corresponds to a column
-containing the log of relative mobility; and the spline model corresponds to a set of
-columns containing the basis vectors of a B-spline basis with specified knots.
+where $\boldsymbol{X}$ is a model matrix that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
+In particular, piecewise breaks correspond to indicator variables for which period an observation falls in; the mobility model corresponds to a column containing the log of relative mobility; and the spline model corresponds to a set of columns containing the basis vectors of a B-spline basis with specified knots.
 
 In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- equivalent to, but simpler to implement than the more general log-linear model.
 
 \ben{Could mention the possibility of alternate link functions (logit etc.) but maybe don't bother?}
+\mike{Don't bother}
 
 \subsection*{Derived parameters and parameter setting}
 
-It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. In principle we could compute these values directly from the flow matrix, by constructing the Jacobian matrix and the next-generation matrix and performing the appropriate eigenvector/eigenvalue calculations (as discussed by \cite{VandWatm02} for differential equations and \cite{Casw00} for discrete-time systems). However, we found it simpler to derive these values by simulation.
+It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. 
+In principle we could compute these values directly from the flow matrix, by constructing the Jacobian matrix and the next-generation matrix and performing the appropriate eigenvector/eigenvalue calculations (as discussed by \cite{VandWatm02} for differential equations and \cite{Casw00} for discrete-time systems). However, we found it simpler to derive these values by simulation.
 
-To compute the eigenvector, we run a simulation where we set the outflow from the susceptible compartment to zero (while maintaining the \emph{inflow} from $S$ to $E$), which mimics the dynamics near the disease-free equilibrium where susceptible depletion is negligible. After running the simulation for a long time (100 steps by default), the state vector is close to the eigenvector.  We use this value to set starting conditions when starting near the beginning of the epidemic. It is easy to specify a scalar value (say, 1\% of the population) to indicate the initial size of the epidemic; by distributing these individuals according to the calculated eigenvector, we reduce numerical instability at the beginning of our simulations. 
+To compute the eigenvector, we run a simulation where we set the outflow from the susceptible compartment to zero (while maintaining the \emph{inflow} from $S$ to $E$), which mimics the dynamics near the disease-free equilibrium where susceptible depletion is negligible. After running the simulation for a long time (100 steps by default), the state vector is close to the eigenvector.  
+We use this value to set starting conditions when starting near the beginning of the epidemic. 
+It is easy to specify a scalar value (say, 1\% of the population) to indicate the initial size of the epidemic; by distributing these individuals according to the calculated eigenvector, we reduce numerical instability at the beginning of our simulations. 
 
-To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. We simulate the progression of a \emph{single} individual through the infection process, i.e. setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age of infetion, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient
+To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. 
+We simulate the progression of a \emph{single} individual through the infection process, i.e. setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. 
+Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age of infetion, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. 
+This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. 
+We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient
 \[
 \textrm{CV}(G) = \frac{\sqrt{\sum_t K(t)/\Rzero (t- \bar G)^2}}{\bar G} .
 \]
@@ -318,73 +231,45 @@ for $r$.
 
 \jd{$\zeta$ should not pose any special problems here; when $S\approx N$ its effect is negligible. At other times (if any), it should be handled correctly by setting $S$ and $N$ correctly and suppressing outflow from $S$ as described.}
 
-In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. Estimates of these summary statistics are more broadly available \ben{REFS?}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{gamma}{a}) by a single factor until the target values are achieved.
+In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. 
+Estimates of these summary statistics are more broadly available \cite{park2020reconciling} \ben{REFS?}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
+We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{gamma}{a}) by a single factor until the target values are achieved.
 
 \subsubsection*{Calibration}
 
-Once we have run a deterministic model simulation for a particular
-set of parameters (including a starting number infected, distributed
-across non-susceptible classes according to the exponential-phase eigenvector
-computed as described above) and we have some set of time series data to
-calibrate against (for example, case reports and hospital admissions),
-we can calculate a log-likelihood. We assume that every observation
-is independently negative binomially distributed, with a series-specific
-estimated dispersion parameter (i.e. the variability in cases, hospital
-admissions, etc. will differ). We use standard nonlinear optimization
-algorithms built into R, such as Nelder-Mead, to find the maximum likelihood
-estimates; when we have had difficulty with numerical instability, we
-have performed an initial fit with differential evolution
-\cite{Mull+11} followed by a final fit with Nelder-Mead.
+Once we have run a deterministic model simulation for a particular set of parameters (including a starting number infected, distributed across non-susceptible classes according to the exponential-phase eigenvector computed as described above) and we have some set of time series data to calibrate against (for example, case reports and hospital admissions), we can calculate a log-likelihood. 
+We assume that every observation is independently negative binomially distributed, with a series-specific estimated dispersion parameter (i.e. the variability in cases, hospital admissions, etc. will differ). 
+We use standard nonlinear optimization algorithms built into R, such as Nelder-Mead, to find the maximum likelihood estimates; when we have had difficulty with numerical instability, we have performed an initial fit with differential evolution \cite{Mull+11} followed by a final fit with Nelder-Mead.
 
-A link function can be added for any parameter in the model to constrain it to
-a sensible domain; the user specifies this by adding an appropriate prefix to
-the name of the parameter in the list of starting values for parameters to be calibrated. For example,
-specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$
-should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive,
-and using a starting value of -1 on the log scale. Specifying \code{logit\_phi1 = -0.2} would specify
-that the value of \code{phi1} (the fraction of hospitalized cases going to the ICU) should be fitted
-on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1.
+A link function can be added for any parameter in the model to constrain it to a sensible domain; the user specifies this by adding an appropriate prefix to the name of the parameter in the list of starting values for parameters to be calibrated. 
+For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive, and using a starting value of -1 on the log scale. 
+Specifying \code{logit\_phi1 = -0.2} would specify that the value of \code{phi1} (the fraction of hospitalized cases going to the ICU) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1.
 
-The model includes a general framework for adding a prior probability
-distribution for any parameter, using any distribution available in R. For example,
-\code{dbeta(phi1, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{phi1}.
-We do not need to adopt a fully Bayesian framework to make use of priors; instead, we
-can think of them as convenient regularizing factors to keep the model-fitting process
-numerically stable. If we do want to be Bayesian, then the fitting procedure described
-above will return maximum \emph{a posteriori} (MAP) parameter values, not a sample from the full
-posterior distribution as is standard with frameworks that use Markov chain Monte Carlo.
+The model includes a general framework for adding a prior probability distribution for any parameter, using any distribution available in R. 
+For example, \code{dbeta(phi1, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{phi1}.
+\mike{Do we have a parameter table?}
+We do not need to adopt a fully Bayesian framework to make use of priors; instead, we can think of them as convenient regularizing factors to keep the model-fitting process numerically stable. If we do want to be Bayesian, then the fitting procedure described above will return maximum \emph{a posteriori} (MAP) parameter values, not a sample from the full posterior distribution as is standard with frameworks that use Markov chain Monte Carlo.
 
 
-In Canada, we calibrate
-to deaths, hospital occupancy, and new confirmations, all of which are
-available publicly for all provinces (we have hospital admission data
-for Ontario only).  With the expanded model discussed below [SECTION??],
-we can include time series of both positive
-and negative tests in our calibration. \ben{are we still doing this??}
+In Canada, we calibrate to deaths, hospital occupancy, and new confirmations, all of which are available publicly for all provinces (we have hospital admission data for Ontario only).  
+With the expanded model discussed below [SECTION??], we can include time series of both positive and negative tests in our calibration. \ben{are we still doing this??}
+\mike{Yes, I would like to use testify as the main example, if not, the work will be buried forever}
 
 \jd{We need to think about how to explain fits to occupancy a bit?} \ben{not sure what this means --- what is the tricky part of this?}
 
 \ben{what are we doing with this?}
 Reported new confirmations are the most reliable and voluminous source of epidemic information.
-Unfortunately, they are also subject to many inherent biases,
-including substantial variation over time in \term{testing intensity}
-(\ie tests \emph{per capita} per day).
+Unfortunately, they are also subject to many inherent biases, including substantial variation over time in \term{testing intensity} (\ie tests \emph{per capita} per day).
 
-We simultaneously estimate the temporal pattern of the transmission
-rate [Equation~\eqref{eq:betamodel}], and several basic model
-parameters (\cref{estparmtab}).  Other model parameters
-are taken from the literature (\cref{litparmtab}).
+We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}], and several basic model parameters (\cref{estparmtab}).  
+Other model parameters are taken from the literature (\cref{litparmtab}).
 \ben{need more details: which parameters are estimated? what are the
   rules about breakpoints? Are we using mobility, phenom het, etc., or not?}
+\mike{This will be obvious when we determine the main model}
 
-We do not include ICU occupancy in our calibration because
-our model assumes all severe cases go through ICU, whereas
-many severe cases actually occur entirely in Long Term Care Facilities
-(LTCFs). \ben{not sure what this means; is this really the reason
-  that we exclude ICU, or do we exclude it because the data are
-  wonky? Before we added the non-hospital mortality flow, this
-  would have been a reason not to calibrate to \emph{deaths}, but
-  otherwise I don't understand this \ldots}
+We do not include ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas many severe cases actually occur entirely in Long Term Care Facilities (LTCFs). 
+\ben{not sure what this means; is this really the reason that we exclude ICU, or do we exclude it because the data are wonky? Before we added the non-hospital mortality flow, this would have been a reason not to calibrate to \emph{deaths}, but otherwise I don't understand this \ldots}
+\mike{same}
 
 
 \ben{commented out section on estimation of $R_t$, covered above --- and
