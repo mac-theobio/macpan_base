@@ -6,6 +6,8 @@ source("calibrate_comb_setup.R")
 
 stop_date <-  as.Date("2021-05-29")
 stop_date <-  as.Date("2021-06-15")
+stop_date <-  as.Date("2020-08-30")
+
 
 
 calibrate_data <- (calibrate_data_fill
@@ -67,5 +69,5 @@ print(plot(current, data=calibrate_data_fill)
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-ont_calib_comb <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
-saveRDS(ont_calib_comb,"cachestuff/ont_calib_comb.rds")
+ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
+saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")

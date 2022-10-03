@@ -106,4 +106,8 @@ calibrate_data_fill <- (left_join(date_df,calibrate_data)
 												%>% mutate(value = ifelse(is.na(value),0,value))
 )
 
+ll <- list(calibrate_data_fill = calibrate_data_fill
+	, test_data_fill = test_data_fill
+	, clean_mobility = clean_mobility)
 
+saveRDS(ll,"cachestuff/calibrate_comb_setup.rds")
