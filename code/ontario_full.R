@@ -15,7 +15,7 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
-	%>% filter(var == "report")
+	%>% filter(var %in% c("report","H","death"))
 	%>% filter(date >= as.Date("2020-02-24"))
 	# %>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
@@ -39,7 +39,9 @@ params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
 	params=c(log_E0 = log(5)
-		, log_beta0=log(5))
+		, log_beta0=log(5)
+	  , mu = 0.99
+	)
 	# , log_nb_disp = c(report=20, death=1,H=1)
 	, log_nb_disp = c(report=20)
 )
@@ -68,7 +70,7 @@ current <- do.call(calibrate_comb
 	)
 )
 
-print(plot(current, data=calibrate_data_fill) 
+print(plot(current, data=cachedat$calibrate_data_fill) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 

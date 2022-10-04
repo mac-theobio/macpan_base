@@ -15,15 +15,22 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
-	%>% filter(var == "report")
+	# %>% filter(var %in% c("report","H","death"))
+	%>% filter(var %in% c("report"))
 	%>% filter(date >= as.Date("2020-02-24"))
-	# %>% mutate(var = ifelse(var == "report", "postest", var))
+	%>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
-	# %>% filter(date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
+	%>% filter(date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]])
 )
 
-# test_data_fill <- test_data_fill %>% filter(Date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
+test_data_fill <- (cachedat$test_data_fill 
+	%>% filter(Date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]]
+			)
+	%>% filter(Date >= as.Date("2020-02-24"))
+	%>% filter(Date <= stop_date)
+	
 
+)
 
 ## loading parameters
 
@@ -34,15 +41,23 @@ params <- fix_pars(read_params("ON.csv")
 
 params[["E0"]] <- 5
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
+params[["omega"]] <- 0.25
 
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
 	params=c(log_E0 = log(5)
-		, log_beta0=log(5))
+		, log_beta0=log(5)
+	  # , mu = 0.99
+	)
 	# , log_nb_disp = c(report=20, death=1,H=1)
 	, log_nb_disp = c(report=20)
 )
+
+sim_args <- list(ratemat_args = list(testify=TRUE
+	, testing_time="sample")
+	, step_arg = list(testwt_scale = "N")
+	, use_eigvec = NULL)
 
 
 current <- do.call(calibrate_comb
@@ -63,12 +78,14 @@ current <- do.call(calibrate_comb
 		, spline_type = "ns"
 		, spline_df = NA
 		, spline_days = 14
-		, use_testing = FALSE
+		, use_testing = TRUE
+		, testing_dat = test_data_fill
+		, sim_args = sim_args		
 		)
 	)
 )
 
-print(plot(current, data=calibrate_data_fill) 
+print(plot(current, data=cachedat$calibrate_data_fill) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
