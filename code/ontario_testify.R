@@ -98,5 +98,5 @@ print(plot(current, data=cachedat$calibrate_data_fill)
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-# ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
-# saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
+ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
+saveRDS(ont_calib_testify,"cachestuff/ont_calib_testify.rds")
