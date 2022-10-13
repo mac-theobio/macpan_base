@@ -17,47 +17,56 @@ calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
 	# %>% filter(var %in% c("report","H","death"))
 	%>% filter(var %in% c("report"))
-	%>% filter(date >= as.Date("2020-02-24"))
+	%>% filter(date >= as.Date("2020-03-01"))
 	%>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
 	%>% filter(date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]])
 )
 
+
+
+## loading parameters
+
+params <- fix_pars(read_params("PHAC_testify.csv")
+	, target=c(R0=2, Gbar=6)	
+	# , pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
+)
+
+params[["E0"]] <- 20
+params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
+params[["mu"]] <- 0.998
+# params[["testing_intensity"]] <- 2e-3
+
 test_data_fill <- (cachedat$test_data_fill 
 	%>% filter(Date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]]
 			)
 	%>% filter(Date >= as.Date("2020-02-24"))
+	# %>% filter(Date <= as.Date("2020-08-27"))
 	%>% filter(Date <= stop_date)
-	
-
+	%>% mutate(NULL
+			, intensity = intensity/params[["N"]]
+			# , intensity = zoo::rollmean(intensity,k=7,fill=NA)
+	)
+	%>% filter(!is.na(intensity))
 )
-
-## loading parameters
-
-params <- fix_pars(read_params("ON.csv")
-	, target=c(R0=3, Gbar=6)	
-	# , pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
-)
-
-params[["E0"]] <- 5
-params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
-params[["omega"]] <- 0.25
 
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
-	params=c(log_E0 = log(5)
-		, log_beta0=log(5)
+	params=c(log_beta0=-1.5
 	  # , mu = 0.99
 	)
 	# , log_nb_disp = c(report=20, death=1,H=1)
-	, log_nb_disp = c(report=20)
+	, log_nb_disp = c(postest=20)
+	# , log_nb_disp = 10
+	
 )
 
 sim_args <- list(ratemat_args = list(testify=TRUE
 	, testing_time="sample")
 	, step_arg = list(testwt_scale = "N")
-	, use_eigvec = NULL)
+	, use_eigvec = NULL
+	)
 
 
 current <- do.call(calibrate_comb
@@ -89,5 +98,5 @@ print(plot(current, data=cachedat$calibrate_data_fill)
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
-saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
+# ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
+# saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
