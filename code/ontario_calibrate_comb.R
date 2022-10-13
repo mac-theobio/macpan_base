@@ -33,6 +33,8 @@ params <- fix_pars(read_params("ON.csv")
 )
 
 params[["E0"]] <- 5
+params[["mu"]] <- 0.9
+
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
 ### What parameters do we want to optimize?
@@ -68,9 +70,9 @@ current <- do.call(calibrate_comb
 	)
 )
 
-print(plot(current, data=calibrate_data_fill) 
+print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("2020-09-01"))) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
+ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
 saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
