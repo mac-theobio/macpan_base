@@ -1,6 +1,10 @@
 library(McMasterPandemic)
 library(tidyverse)
 
+run <- FALSE
+
+if(run){
+
 # source("calibrate_comb_setup.R")
 ## This is a very slow step because it is downloading large mobility csvs
 # load("calibrate_comb_setup.rda")
@@ -55,7 +59,7 @@ current <- do.call(calibrate_comb
 		, opt_pars = opt_pars
 		, use_DEoptim = FALSE
 		, DE_cores = 1
-		, use_phenomhet = FALSE
+		, use_phenomhet = TRUE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
 		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
@@ -76,3 +80,5 @@ print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("20
 
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
 saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
+
+}

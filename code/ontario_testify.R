@@ -5,6 +5,10 @@ library(tidyverse)
 ## This is a very slow step because it is downloading large mobility csvs
 # load("calibrate_comb_setup.rda")
 
+run <- FALSE
+
+if(run){
+
 stop_date <-  as.Date("2021-05-29")
 stop_date <-  as.Date("2021-06-15")
 stop_date <-  as.Date("2020-08-30")
@@ -77,13 +81,13 @@ current <- do.call(calibrate_comb
 		, opt_pars = opt_pars
 		, use_DEoptim = FALSE
 		, DE_cores = 1
-		, use_phenomhet = FALSE
+		, use_phenomhet = TRUE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
 		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
-		, use_spline = FALSE
+		, use_spline = TRUE
 		, spline_type = "ns"
 		, spline_df = NA
 		, spline_days = 14
@@ -100,3 +104,4 @@ print(plot(current, data=cachedat$calibrate_data_fill)
 
 ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
 saveRDS(ont_calib_testify,"cachestuff/ont_calib_testify.rds")
+}
