@@ -4,7 +4,7 @@
 
 \input{McMasterReport_preamble.tex}
 
-\title{A compartmental model for epidemic parameter estimation and forecasting, with applications to COVID-19 variant-of-concern spread}
+\title{A compartmental model for epidemic parameter estimation and forecasting, with applications to SARS-CoV-2}
 
 \author{Michael Li \and Jonathan Dushoff \and David Earn \and Irena Papst \and Benjamin M. Bolker \\
   McMaster University\\
@@ -19,11 +19,10 @@
 \begin{enumerate}
 \item{Basic macpan}
 \item{time-varying parameters to model the effect of shutdowns and reopening}
-\item{ad-hoc VOC}
 \end{enumerate}
 
 \begin{abstract}
-Compartmental epidemiological models are widely used to understand, manage, and forecast the COVID-19 pandemic. 
+Compartmental epidemiological models are widely used to understand, manage, and forecast the SARS-CoV-2 (COVID-19) pandemic. 
 We introduce a new compartmental modeling framework that shares many characteristics with existing models, but includes a number of new and noteworthy features.
 In particular, it includes a flexible structure based on the \emph{flow matrix} (the \emph{per capita} rates of transitions between compartments) that allows it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state stochastic models; the capacity to set starting conditions based on the expected distribution of states during an exponential phase of the epidemic; automatic computation of $R_0$ and the mean and dispersion of the generation interval for specified parameters; explicit structures incorporating the intensity of testing and delays between test administration and reporting; time-varying parameters based on breakpoints, spline bases, or external covariates such as cellphone-based mobility indices; and the ability to calibrate model parameters to multiple data streams such as case reports, hospitalization and ICU admission rates.
 We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative tests, hospitalizations, and deaths) for each of the Canadian provinces from 2020-02-27 to 2020-08-30.  
@@ -157,8 +156,6 @@ However, under some extreme conditions (if testing is so extreme that few untest
 The testing flows out of each untested subcompartment are divided into flows to ``positive waiting'' and ``negative waiting'' compartments according to the infection status of the relevant compartment and specificity/sensitivity parameters. If tests are assumed to be perfectly specific and sensitive, then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the ``negative waiting'' and those from infectious compartments enter the ``positive waiting'' compartment.
 
 We assume that all individuals admitted to the hospital for COVID-19 are immediately tested. (These tests are not included in the accounting of test distribution above, but in the COVID setting they represent a small fraction of the overall number of tests administered.)
-\ben{I think this is right \ldots ??}
-\mike{Correct}
 
 \begin{figure}
   \includegraphics{figure/testFlow.1.Rout.pdf}
@@ -197,9 +194,6 @@ In particular, piecewise breaks correspond to indicator variables for which peri
 
 In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- equivalent to, but simpler to implement than the more general log-linear model.
 
-\ben{Could mention the possibility of alternate link functions (logit etc.) but maybe don't bother?}
-\mike{Don't bother}
-
 \subsection*{Derived parameters and parameter setting}
 
 It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. 
@@ -232,7 +226,7 @@ for $r$.
 \jd{$\zeta$ should not pose any special problems here; when $S\approx N$ its effect is negligible. At other times (if any), it should be handled correctly by setting $S$ and $N$ correctly and suppressing outflow from $S$ as described.}
 
 In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. 
-Estimates of these summary statistics are more broadly available \cite{park2020reconciling} \ben{REFS?}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
+Estimates of these summary statistics are more broadly available \cite{park2020reconciling}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
 We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{gamma}{a}) by a single factor until the target values are achieved.
 
 \subsubsection*{Calibration}
