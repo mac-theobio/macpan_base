@@ -2,6 +2,7 @@ library(McMasterPandemic)
 library(tidyverse)
 
 run <- FALSE
+save <- FALSE
 
 if(run){
 
@@ -19,7 +20,9 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
-	%>% filter(var == "report")
+	# %>% filter(var == "report")
+	# %>% filter(var %in% c("report","death","H"))
+	%>% filter(var %in% c("report","death"))
 	%>% filter(date >= as.Date("2020-02-24"))
 	# %>% mutate(var = ifelse(var == "report", "postest", var))
 	## first intensity cannot be zero
@@ -37,7 +40,9 @@ params <- fix_pars(read_params("ON.csv")
 )
 
 params[["E0"]] <- 5
-params[["mu"]] <- 0.9
+params[["mu"]] <- 0.98
+params[["rho"]] <- 1/10
+params[["delta"]] <- 0.2
 
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
@@ -45,9 +50,13 @@ params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
 	params=c(log_E0 = log(5)
-		, log_beta0=log(5))
-	# , log_nb_disp = c(report=20, death=1,H=1)
-	, log_nb_disp = c(report=20)
+		, log_beta0=log(5)
+		# , mu = 0.8
+		, nonhosp_mort = 0.1
+		)
+	# , log_nb_disp = c(report=30, death=10,H=10)
+	, log_nb_disp = c(report=30, death=10)
+	# , log_nb_disp = c(report=20)
 )
 
 
@@ -77,8 +86,9 @@ current <- do.call(calibrate_comb
 print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("2020-09-01"))) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
+}
 
+if(save){
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
 saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
-
 }

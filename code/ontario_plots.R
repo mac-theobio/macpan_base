@@ -5,8 +5,8 @@ base <- readRDS("cachestuff/ont_calib_comb_mobbreaks.rds")
 plot(base$fit,data=filter(base$data,date<=as.Date("2020-08-30")))
 ggsave("ontario_base.png")
 
-testify <- readRDS("cachestuff/ont_calib_testify.rds")
 
+testify <- readRDS("cachestuff/ont_calib_testify.rds")
 dd <- predict(testify$fit
 			  , ensemble=FALSE
 			  , keep_vars=c("postest","death","H")
@@ -15,6 +15,7 @@ dd <- predict(testify$fit
 ddcombo <- (testify$data
 	%>% mutate(var = ifelse(var == "report","postest",var))
 	%>% transmute(date, var,data=value)
+	
 	# %>% gather(key = "var", value="data",-date)
 	%>% left_join(dd,.)
 )

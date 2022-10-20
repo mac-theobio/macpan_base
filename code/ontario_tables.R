@@ -21,4 +21,5 @@ get_params_table <- function(x){
 
 base_table <- get_params_table(base$fit)
 testify_table <- get_params_table(testify$fit)
+base_table
 testify_table

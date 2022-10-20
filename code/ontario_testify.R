@@ -6,6 +6,8 @@ library(tidyverse)
 # load("calibrate_comb_setup.rda")
 
 run <- FALSE
+save <- FALSE
+
 
 if(run){
 
@@ -20,6 +22,7 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
 	# %>% filter(var %in% c("report","H","death"))
+	# %>% filter(var %in% c("report","death"))
 	%>% filter(var %in% c("report"))
 	%>% filter(date >= as.Date("2020-03-01"))
 	%>% mutate(var = ifelse(var == "report", "postest", var))
@@ -38,7 +41,11 @@ params <- fix_pars(read_params("PHAC_testify.csv")
 
 params[["E0"]] <- 20
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
-params[["mu"]] <- 0.998
+params[["mu"]] <- 0.98
+params[["nonhosp_mort"]] <- 0.1
+params[["rho"]] <- 1/10
+params[["testing_tau"]] <- 1
+
 # params[["testing_intensity"]] <- 2e-3
 
 test_data_fill <- (cachedat$test_data_fill 
@@ -49,6 +56,7 @@ test_data_fill <- (cachedat$test_data_fill
 	%>% filter(Date <= stop_date)
 	%>% mutate(NULL
 			, intensity = intensity/params[["N"]]
+			# , Date = Date + 4
 			# , intensity = zoo::rollmean(intensity,k=7,fill=NA)
 	)
 	%>% filter(!is.na(intensity))
@@ -57,11 +65,14 @@ test_data_fill <- (cachedat$test_data_fill
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
-	params=c(log_beta0=-1.5
-	  # , mu = 0.99
+	params=c(log_E0 = log(20)
+		, log_beta0=-1.5
+	  # , nonhosp_mort = 0.1
 	)
 	# , log_nb_disp = c(report=20, death=1,H=1)
+	# , log_nb_disp = c(postest=20, death = 1)
 	, log_nb_disp = c(postest=20)
+	
 	# , log_nb_disp = 10
 	
 )
@@ -101,7 +112,11 @@ current <- do.call(calibrate_comb
 print(plot(current, data=cachedat$calibrate_data_fill) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
+}
+
+if(save){
 
 ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
 saveRDS(ont_calib_testify,"cachestuff/ont_calib_testify.rds")
+
 }
