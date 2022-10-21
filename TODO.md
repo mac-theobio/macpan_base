@@ -1,18 +1,18 @@
+# TODOs 
+	- Do the forecasting part (find or write new code).
+	- make better looking plots
+	- make latex tables (grab tables from code/ontario_tables.R and kable it?) 
+	- Need to write a better results section!
+
 ## everyone
 
 - what are we including in the actual example?
-   - testify?
-   - fitting with mobility?
-   - fitting with phenomhet?
-   - fitting with breakpoints?
-   - fitting with splines?
 
-## MLi
+MLi:
+	- fitting with mobility (with mobility breaks) + phenomhet to reports and death
+	- testify
+	- splines: currently not doing, but I did run testify spline and it is in cache.
 
-- I like it to be a bit more formal with a simulation component with testify.
-- See https://github.com/mac-theobio/PHAC_covid/blob/master/reports/McMasterFinalReport2020-08-31.pdf
-- todo: locate the code to reproduce the ontario plot in PHAC_covid
-- What is the code directory and why is there no Makefile? Are we doing it via the top/main repo?
 
 ## JD
 

@@ -20,27 +20,21 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
-	# %>% filter(var == "report")
-	# %>% filter(var %in% c("report","death","H"))
 	%>% filter(var %in% c("report","death"))
 	%>% filter(date >= as.Date("2020-02-24"))
-	# %>% mutate(var = ifelse(var == "report", "postest", var))
-	## first intensity cannot be zero
-	# %>% filter(date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
 )
-
-# test_data_fill <- test_data_fill %>% filter(Date >= test_data_fill$Date[which(test_data_fill$intensity>0)[1]])
 
 
 ## loading parameters
 
 params <- fix_pars(read_params("ON.csv")
 	, target=c(R0=3, Gbar=6)	
-	# , pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
 )
 
+
+## Clean or relocate this?
 params[["E0"]] <- 5
-params[["mu"]] <- 0.98
+params[["mu"]] <- 0.9
 params[["rho"]] <- 1/10
 params[["delta"]] <- 0.2
 
@@ -52,10 +46,10 @@ opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_
 	params=c(log_E0 = log(5)
 		, log_beta0=log(5)
 		# , mu = 0.8
-		, nonhosp_mort = 0.1
+		, logit_nonhosp_mort = -1
 		)
-	# , log_nb_disp = c(report=30, death=10,H=10)
 	, log_nb_disp = c(report=30, death=10)
+	# , log_nb_disp = c(report=30, death=10)
 	# , log_nb_disp = c(report=20)
 )
 
@@ -71,7 +65,8 @@ current <- do.call(calibrate_comb
 		, use_phenomhet = TRUE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
-		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
+		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
+		, mob_breaks = c("2020-04-01","2020-08-07")
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
 		, use_spline = FALSE

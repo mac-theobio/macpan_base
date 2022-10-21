@@ -10,9 +10,6 @@ save <- FALSE
 
 
 if(run){
-
-stop_date <-  as.Date("2021-05-29")
-stop_date <-  as.Date("2021-06-15")
 stop_date <-  as.Date("2020-08-30")
 
 cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
@@ -21,8 +18,6 @@ cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
 
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
-	# %>% filter(var %in% c("report","H","death"))
-	# %>% filter(var %in% c("report","death"))
 	%>% filter(var %in% c("report"))
 	%>% filter(date >= as.Date("2020-03-01"))
 	%>% mutate(var = ifelse(var == "report", "postest", var))
@@ -41,7 +36,7 @@ params <- fix_pars(read_params("PHAC_testify.csv")
 
 params[["E0"]] <- 20
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
-params[["mu"]] <- 0.98
+params[["mu"]] <- 0.97
 params[["nonhosp_mort"]] <- 0.1
 params[["rho"]] <- 1/10
 params[["testing_tau"]] <- 1
@@ -95,10 +90,11 @@ current <- do.call(calibrate_comb
 		, use_phenomhet = TRUE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
-		, mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
+		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
+		, mob_breaks = c("2020-04-01","2020-08-07")
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
-		, use_spline = TRUE
+		, use_spline = FALSE
 		, spline_type = "ns"
 		, spline_df = NA
 		, spline_days = 14
@@ -116,7 +112,8 @@ print(plot(current, data=cachedat$calibrate_data_fill)
 
 if(save){
 
-ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
+ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility
+													, testdat = test_data_fill)
 saveRDS(ont_calib_testify,"cachestuff/ont_calib_testify.rds")
 
 }
