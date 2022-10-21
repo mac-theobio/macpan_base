@@ -1,8 +1,9 @@
 # TODOs 
 	- Do the forecasting part (find or write new code).
-	- make better looking plots
 	- make latex tables (grab tables from code/ontario_tables.R and kable it?) All the pieces should be there, if it doesn't work, please check out testify_eigvec branch and reinstall macpan. 
+	- make better looking plots (the code is in code/ontario_plots.R)
 	- Need to write a better results section!
+	- clean the repo! 
 
 ## everyone
 
