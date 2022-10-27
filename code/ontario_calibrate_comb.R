@@ -34,7 +34,7 @@ params <- fix_pars(read_params("ON.csv")
 
 ## Clean or relocate this?
 params[["E0"]] <- 5
-params[["mu"]] <- 0.9
+params[["mu"]] <- 0.85
 params[["rho"]] <- 1/10
 params[["delta"]] <- 0.2
 
@@ -46,9 +46,9 @@ opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_
 	params=c(log_E0 = log(5)
 		, log_beta0=log(5)
 		# , mu = 0.8
-		, logit_nonhosp_mort = -1
+		, logit_nonhosp_mort = -0.5
 		)
-	, log_nb_disp = c(report=30, death=10)
+	, log_nb_disp = c(report=30, death=15)
 	# , log_nb_disp = c(report=30, death=10)
 	# , log_nb_disp = c(report=20)
 )

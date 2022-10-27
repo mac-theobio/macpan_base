@@ -1,9 +1,9 @@
 # TODOs 
-	- Do the forecasting part (find or write new code).
-	- make latex tables (grab tables from code/ontario_tables.R and kable it?) All the pieces should be there, if it doesn't work, please check out testify_eigvec branch and reinstall macpan. 
+	- Parmater estimate table: does it make sense and fix the greater than symbol
 	- make better looking plots (the code is in code/ontario_plots.R)
 	- Need to write a better results section!
-	- clean the repo! 
+	- clean the repo and use make?!?
+	- Look into technical problems with the forecasting machine (forecast window)
 
 ## everyone
 

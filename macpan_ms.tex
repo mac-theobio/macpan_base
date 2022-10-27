@@ -526,6 +526,7 @@ We did not explicitly include break dates (i.e. time-varying transmission rates)
 Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
 
 \mike{add a mobility plot and describe the mobility parameters in more detail}
+\mike{keep only forecast plot?}
 
 
 \begin{figure}[ht!]
@@ -535,6 +536,22 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \caption{Ontario calibration}
 \label{fig:Ont_calibration}
 \end{figure}
+
+\begin{figure}[ht!]
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{code/ontario_base_forecast.png}
+
+\caption{Ontario Testify}
+\label{fig:Ont_calibration_base_forecast}
+\end{figure}
+
+\begin{table}
+\centering
+\input{"code/base_table.tex"}
+\caption{Parameter estimates for base model calibration}
+\label{table:base}
+\end{table}
+
 
 \FloatBarrier
 
@@ -567,8 +584,25 @@ Unlike, the base model, when we control for testing, it will provide a more real
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
+\begin{figure}[ht!]
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{code/ontario_testify_forecast.png}
+
+\caption{Ontario Testify}
+\label{fig:Ont_calibration_testify_forecast}
+\end{figure}
+
+\begin{table}
+\centering
+\input{"code/testify_table.tex"}
+\caption{Parameter estimates for testify model calibration}
+\label{table:testify}
+
+\end{table}
+
 \FloatBarrier
 
+\mike{How is testify being handled in the forecasting window?!?}
 
 \subsection{Limitations}
 
