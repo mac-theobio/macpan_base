@@ -5,8 +5,9 @@ library(shellpipes)
 library(cowplot)
 library(zoo)
 library(gtable)
+library(shellpipes)
 
-mod <- readRDS("cachestuff/ont_calib_testify.rds")
+mod <- readRDS("code/cachestuff/ont_calib_testify.rds")
 
 fit <- mod$fit
 
@@ -35,4 +36,4 @@ gg <- (ggplot(postest,aes(x=date,y=value))
 gg <- gg + coord_cartesian(ylim = c(0,1500))
 
 gg
-ggsave("ontario_testify_forecast.png",width = 10, height = 10)
+ggsave("figure/ontario_testify_forecast.png",width = 10, height = 10)

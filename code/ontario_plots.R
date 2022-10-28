@@ -1,12 +1,15 @@
 library(tidyverse); theme_set(theme_bw(base_size = 10))
 library(McMasterPandemic)
+library(shellpipes)
 
-base <- readRDS("cachestuff/ont_calib_comb_mobbreaks.rds")
+## How do I read in two rds again in shellpipe-verse?
+
+base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 plot(base$fit,data=filter(base$data,date<=as.Date("2020-08-30")))
-ggsave("ontario_base.png",width = 10,height = 6)
+ggsave("figure/ontario_base.png",width = 10,height = 6)
 
 
-testify <- readRDS("cachestuff/ont_calib_testify.rds")
+testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
 dd <- predict(testify$fit
 			  , ensemble=FALSE
 			  , keep_vars=c("postest")
@@ -28,7 +31,7 @@ gg <- (ggplot(ddcombo, aes(x=date, color=var))
 )
 
 print(gg)
-ggsave("ontario_testify.png",width = 10,height = 6)
+ggsave("figure/ontario_testify.png",width = 10,height = 6)
 
 testing <- (ggplot(testify$testdat,aes(x=Date,y=intensity))
 	+ geom_point()
@@ -36,5 +39,5 @@ testing <- (ggplot(testify$testdat,aes(x=Date,y=intensity))
 )
 
 print(testing)
-ggsave("ontario_testing.png",width = 10,height = 6)
+ggsave("figure/ontario_testing.png",width = 10,height = 6)
 

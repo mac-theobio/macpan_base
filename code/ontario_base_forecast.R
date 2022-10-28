@@ -5,8 +5,9 @@ library(shellpipes)
 library(cowplot)
 library(zoo)
 library(gtable)
+library(shellpipes)
 
-mod <- readRDS("cachestuff/ont_calib_comb_mobbreaks.rds")
+mod <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 
 fit <- mod$fit
 
@@ -49,4 +50,4 @@ gg_death
 ggcombo <- plot_grid(gg_report,gg_death,nrow=2)
 ggcombo
 
-ggsave("ontario_base_forecast.png",width = 10, height = 10)
+ggsave("figure/ontario_base_forecast.png",width = 10, height = 10)

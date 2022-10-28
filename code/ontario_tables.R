@@ -1,9 +1,10 @@
 library(McMasterPandemic)
 library(tidyverse)
 library(knitr)
+library(shellpipes)
 
-base <- readRDS("cachestuff/ont_calib_comb_mobbreaks.rds")
-testify <- readRDS("cachestuff/ont_calib_testify.rds")
+base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
+testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
 
 get_params_table <- function(x){
 	coef_table <- data.frame()
@@ -55,8 +56,8 @@ base_pardf <- data.frame(pars = base_table$pars
 base_table_rename <- (left_join(base_table,base_pardf)
 	%>% transmute(NULL
 			, Parameter = names
-			, value = ifelse(value > 1000,1000,value)
-			, Estimate = as.character(format(round(value,3)),nsmall=3)
+			, Estimate = ifelse(value > 1000,1000,value)
+			, Estimate = as.character(format(round(Estimate,3)),nsmall=3)
 			, Estimate = ifelse(as.numeric(Estimate) == 1e3, "\\gg 1000",Estimate)
 	)
 )

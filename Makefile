@@ -19,9 +19,26 @@ Sources += $(wildcard *.tex figure/*.R)
 
 ## MS
 
+## dependencies
+
+code/ontario_plots.Rout: code/ontario_plots.R 
+	$(pipeR)
+
+code/ontario_tables.Rout: code/ontario_tables.R
+	$(pipeR)
+
+code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
+	$(pipeR)
+
+code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
+	$(pipeR)
+
+ontario_deps: code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_base_forecast.Rout code/ontario_testify_forecast.Rout
+
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug
-## macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex
+macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps
+	pdflatex macpan_ms.tex
 
 ######################################################################
 
