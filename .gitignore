@@ -26,3 +26,5 @@ macpan_base.Rproj
 *.Rlog
 *.rda
 *.rtmp
+*.args
+*.png

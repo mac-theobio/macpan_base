@@ -40,7 +40,7 @@ ontario_deps: code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_base
 
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug
-macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps
+macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps figure/flow.chart.crop.pdf
 	pdflatex macpan_ms.tex
 
 ######################################################################
