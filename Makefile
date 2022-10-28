@@ -33,7 +33,10 @@ code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
 code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
 	$(pipeR)
 
-ontario_deps: code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_base_forecast.Rout code/ontario_testify_forecast.Rout
+code/ontario_mobility.Rout: code/ontario_mobility.R
+	$(pipeR)
+
+ontario_deps: code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_base_forecast.Rout code/ontario_testify_forecast.Rout code/ontario_mobility.Rout
 
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug

@@ -316,10 +316,9 @@ We do not include hospitalization and ICU occupancy in our calibration because o
 
 \subsubsection*{Forecasting}
 
-Our calibrations yield values for the parameters of our deterministic model.
-\ben{Mike: need a correct description of what we are actually doing here
-  (specifically, what we were doing 18 months ago ...)!}
-\mike{err, need to go back and figure out. For base, it is what happens if we have status quo/changes in beta. For testify, status quo is testing intensity changes or constant}
+Our calibrations yield values for the parameters of our deterministic model. 
+Using the calibrated parameters, we generate 1000 multivariate normal sets of parameters and feed it into the deterministic model to generate an ensemble of forecast. We extend the end date of the calibration window (i.e. the last observed data point for calibration) to create a forecast window. Inside the forecast window, the user either input non-calibrated data (i.e. mobility, testing and etc) or assumed the last set of inputs and calibrated parameters be constant throughout the forecasting window. 
+\mike{Please check guts and see if it is doing this.}
 
 \subsection{Data sources}
 
@@ -526,6 +525,17 @@ We did not explicitly include break dates (i.e. time-varying transmission rates)
 Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
 
 \mike{add a mobility plot and describe the mobility parameters in more detail}
+
+\begin{figure}[ht!]
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
+
+\caption{Ontario mobility}
+\label{fig:Ont_mobility}
+\end{figure}
+
+\mike{the plot doesn't look very 7-days-moving-average like, check pipeline}
+
 \mike{keep only forecast plot?}
 
 
@@ -606,8 +616,8 @@ Unlike, the base model, when we control for testing, it will provide a more real
 
 \subsection{Limitations}
 
-Our model assumes homogeneous mixing of the population.  No
-age-related or spatial contact structure is considered.  In addition,
+Our model assumes homogeneous mixing of the population. No
+age-related or spatial contact structure is considered. In addition,
 long-term care facilities (LTCFs), where many elderly people in Canada
 have died without going to hospital, have not been modelled
 explicitly.  While we do not anticipate any qualitative differences in
