@@ -12,7 +12,7 @@ save <- FALSE
 if(run){
 stop_date <-  as.Date("2020-08-30")
 
-cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
+cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
 
 
 
@@ -34,14 +34,17 @@ params <- fix_pars(read_params("PHAC_testify.csv")
 	# , pars_adj=list(c("sigma","gamma_s","gamma_m","gamma_a"))
 )
 
-params[["E0"]] <- 20
+params[["E0"]] <- 5
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
+# params[["N"]] <- 14.57e7 ## testing if we have delepetion of S
 params[["mu"]] <- 0.97
 params[["nonhosp_mort"]] <- 0.1
 params[["rho"]] <- 1/10
 params[["testing_tau"]] <- 1
+params[["c_prop"]] <- 1
 
-# params[["testing_intensity"]] <- 2e-3
+
+params[["testing_intensity"]] <- 2e-5
 
 test_data_fill <- (cachedat$test_data_fill 
 	%>% filter(Date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]]
@@ -60,8 +63,8 @@ test_data_fill <- (cachedat$test_data_fill
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)
-	params=c(log_E0 = log(20)
-		, log_beta0=-1.5
+	params=c(log_E0 = log(5)
+		, log_beta0=-2
 	  # , nonhosp_mort = 0.1
 	)
 	# , log_nb_disp = c(report=20, death=1,H=1)
@@ -114,6 +117,6 @@ if(save){
 
 ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility
 													, testdat = test_data_fill)
-saveRDS(ont_calib_testify,"cachestuff/ont_calib_testify.rds")
+saveRDS(ont_calib_testify,"code/cachestuff/ont_calib_testify.rds")
 
 }

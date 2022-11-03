@@ -67,9 +67,10 @@ clean_mobility <- (bind_rows(google=clean_google,apple=clean_apple,.id="source")
 									 %>% dplyr::select(date,value)
 									 %>% group_by(date)
 									 %>% summarise_at("value",mean,na.rm=TRUE)
-									 %>% na.omit()
 									 %>% rename(rel_activity = value)
 									 #   %>% mutate_at("rel_activity", ~pmin(., 1))  ## cap at 100% (? should we ?)
+									 %>% mutate(rel_activity = zoo::rollmean(rel_activity,k=7,fill=NA))
+									 %>% na.omit()
 									 %>% ungroup()
 )
 
@@ -110,4 +111,4 @@ ll <- list(calibrate_data_fill = calibrate_data_fill
 	, test_data_fill = test_data_fill
 	, clean_mobility = clean_mobility)
 
-saveRDS(ll,"cachestuff/calibrate_comb_setup.rds")
+saveRDS(ll,"code/cachestuff/calibrate_comb_setup.rds")

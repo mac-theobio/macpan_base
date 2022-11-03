@@ -3,7 +3,6 @@
 - Parameter estimate table: does it make sense and fix the greater than symbol
 - Make better looking plots (the code is in `code/ontario_plots.R`)
 - Need to write a better results section!
-- Look into technical problems with the forecasting machine (forecast window; what is assumed about future testing intensity?)
 - venue: PLoS ONE?
 
 ## everyone

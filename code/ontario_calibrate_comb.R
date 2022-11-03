@@ -10,11 +10,9 @@ if(run){
 ## This is a very slow step because it is downloading large mobility csvs
 # load("calibrate_comb_setup.rda")
 
-stop_date <-  as.Date("2021-05-29")
-stop_date <-  as.Date("2021-06-15")
 stop_date <-  as.Date("2020-08-30")
 
-cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
+cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
 
 
 
@@ -27,7 +25,7 @@ calibrate_data <- (cachedat$calibrate_data_fill
 
 ## loading parameters
 
-params <- fix_pars(read_params("ON.csv")
+params <- fix_pars(read_params("code/ON.csv")
 	, target=c(R0=3, Gbar=6)	
 )
 
@@ -85,5 +83,5 @@ print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("20
 
 if(save){
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
-saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
+saveRDS(ont_calib_comb_reports_mobbreaks,"code/cachestuff/ont_calib_comb_mobbreaks.rds")
 }
