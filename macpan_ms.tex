@@ -564,7 +564,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 
 \subsection{Testify}
 
-The base model is relative simple but does not account for testing practices. Testing strategies are constantly changing over the course of the pandemic due to supply and demand. Figure \ref{fig:Ont_testing} shows the testing intensity (tests \emph{per capita} per day) in Ontario in the calibration time frame.
+The base model is relative simple but does not account for testing practices. Testing strategies are constantly changing over the course of the pandemic due to supply and demand of the labs and mandates for lifting restrictions. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 31st 2020.  
 
 
 \begin{figure}[ht!]
@@ -579,7 +579,7 @@ The base model is relative simple but does not account for testing practices. Te
 \FloatBarrier
 
 Figure \ref{fig:Ont_calibration_testify} shows the calibration account for testing. 
-Compared to the reports fit from the base model, the testify fit is much more noisy which corresponse to the testing intensity. 
+Compared to the reports fit from the base model, the testify fit is much more noisy which corresponse to the noise in observed testing intensity. 
 Unlike, the base model, when we control for testing, it will provide a more realistic estimate of the real effect of changes in transmission.
 \mike{todo: does this make sense? compare mobility parameters?}.
 
@@ -609,36 +609,23 @@ Unlike, the base model, when we control for testing, it will provide a more real
 
 \FloatBarrier
 
-\mike{How is testify being handled in the forecasting window?!?}
-
 \subsection{Limitations}
 
 Our model assumes homogeneous mixing of the population. No
-age-related or spatial contact structure is considered. In addition,
-long-term care facilities (LTCFs), where many elderly people in Canada
+age-related or spatial contact structure is considered. 
+We did not include hospitalization in the calibrations due to capacity issues which became a serious issue with the admissions and occpuancy underreporting the severity of the pandemic.
+In addition, long-term care facilities (LTCFs), where many elderly people in Canada
 have died without going to hospital, have not been modelled
-explicitly.  While we do not anticipate any qualitative differences in
+explicitly.  
+While we do not anticipate any qualitative differences in
 results, explicitly creating compartments and calibrating to data for
 LTCFs would likely allow us to match ICU occupancy and forecast
-pressure on ICUs more accurately.
+pressure on ICUs more accurately but will not resolve the issues on hospital intensity. 
 
 \subsection{Conclusions}
 
-\mike{conclusion needs to change to match the story}
 
-Testing remains an important surveillance strategy for COVID-19.  In
-order to mitigate spread, testing would need to be combined, not only
-with isolation of infected individuals, but with extensive contact
-tracing and quarantine of contacts.  \david{We need to do more to
-  bolster this conclusion, but should be OK for the report.}  More
-widespread and faster diagnostic testing \cite{Will+20,Wyll+20} also
-have the potential to significantly reduce the spread of SARS-CoV-2.
-
-Future work using our model should focus on estimating how much
-testing and tracing is likely to be necessary in order to interrupt
-sufficiently many chains of transmission that health care system
-burdens remain below tolerable levels.
-
+\mike{todo}
 %%\input{nextsteps.tex}
 
 \clearpage
