@@ -514,6 +514,7 @@ index for each day.
 \section{Results}
 
 \mike{Do we want to include some simulation to show the model works and can do the calibration?}
+\mike{figure captions and make better plots}
 
 \subsection{Base model}
 
@@ -564,7 +565,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 
 \subsection{Testify}
 
-The base model is relative simple but does not account for testing practices. Testing strategies are constantly changing over the course of the pandemic due to supply and demand of the labs and mandates for lifting restrictions. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 31st 2020.  
+The base model is relative simple but does not account for testing practices. Testing strategies are constantly changing over the course of the pandemic due to supply and demand of the labs and mandates for lifting restrictions. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
 
 
 \begin{figure}[ht!]
@@ -599,6 +600,8 @@ Unlike, the base model, when we control for testing, it will provide a more real
 \label{fig:Ont_calibration_testify_forecast}
 \end{figure}
 
+\mike{We (I) probably should make another forecast using the testing intensity of the forecast window. Thoughts?}
+
 \begin{table}
 \centering
 \input{"testify_table.tex"}
@@ -612,8 +615,8 @@ Unlike, the base model, when we control for testing, it will provide a more real
 \section{Discussion}
 
 We have fitted two models varying in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario Canada from March 1st to Aug 30th 2020. 
-The simple base model is the typical simplistic type of compartmental epidemic models to model infectious disease epidemics. 
-The testify model is a practical addition to the base model that allows the model to coop with different testing practices and policies changes.
+The simple base model is the typical simplistic type of compartmental epidemic model to infectious disease epidemics. 
+The testify model is a practical addition to the base model that allows the model to cooperate with different testing practices and policy changes.
 
 \subsection{Limitations}
 
@@ -627,37 +630,37 @@ pressure on ICUs more accurately but will not resolve the issues on hospital int
 \subsection{Conclusions}
 
 SARS-CoV-2 continues to be a global burden after 3 years. 
-Here we demonstrated a simple modelling framework that can flexibility fit to epidemic data and easily allow additional complexities to account for features during the epidemic. 
+Here we demonstrated a simple modeling framework that can flexibly fit epidemic data and easily allow additional complexities to account for features during the epidemic. 
 We learned two things about fitting epidemic data. 
-First, it is important to have ways to incorportate time-varying parameterations fitting changes in the observed data or behavioural changes. Time-varying transmission rates played in important role in our calibration. 
-Second, allowing for testing intensity disaggragate the transmission rates through time (i.e. does increase in posivitive cases/confirmation due to increase in transmission or testing capcity). 
-The flexibility of incorportation various time-vary parameterization allows user to make more realistic features and scenario exploration. 
+First, it is important to have ways to incorporate time-varying parameterizations fitting changes in the observed data or behavioural changes. Time-varying transmission rates played an important role in our calibration. 
+Second, allowing for testing intensity to disaggregate the transmission rates through time (i.e. does increase in positive cases/confirmation due to an increase in transmission or testing capacity). 
+The flexibility of incorporating various time-vary parameterizations allows users to make more realistic features and scenario exploration. 
 
 %%\input{nextsteps.tex}
 
 \clearpage
 
-\section{Appendix: Model calibrations for each province}\label{sec:supp}
-
-Our fits are shown in the \hyperlink{current.fits}{following pages},
-with one page per province.  Provinces are ordered by total
-population. The smaller provinces (later pages) have far fewer cases
-so the fits are less reliable.
-
-The data to which we calibrated the model are shown with dots.
-We fitted to hospital occupancy rather than admissions because
-we have admissions data only for Ontario.  The fitted model
-is shown with solid curves in each panel.
-The bottom row shows inferred total disease incidence,
-and
-our mobility index for the province.
-\david{[temporarily deleted because we don't have $\R_t$ in the plots]
-, and our inferred value of \Rt. Note that in our current model \Rt depends
-\emph{only} on the mobility index, the time period (early or late) and
-the direct and indirect effects of susceptible depletion.}
-
-\FloatBarrier
-\clearpage
+% \section{Appendix: Model calibrations for each province}\label{sec:supp}
+% 
+% Our fits are shown in the \hyperlink{current.fits}{following pages},
+% with one page per province.  Provinces are ordered by total
+% population. The smaller provinces (later pages) have far fewer cases
+% so the fits are less reliable.
+% 
+% The data to which we calibrated the model are shown with dots.
+% We fitted to hospital occupancy rather than admissions because
+% we have admissions data only for Ontario.  The fitted model
+% is shown with solid curves in each panel.
+% The bottom row shows inferred total disease incidence,
+% and
+% our mobility index for the province.
+% \david{[temporarily deleted because we don't have $\R_t$ in the plots]
+% , and our inferred value of \Rt. Note that in our current model \Rt depends
+% \emph{only} on the mobility index, the time period (early or late) and
+% the direct and indirect effects of susceptible depletion.}
+% 
+% \FloatBarrier
+% \clearpage
 
 %% LOOP THROUGH PROVINCES TO GET FIGURES:
 %% Note that we could implement a switch for the captions via:
