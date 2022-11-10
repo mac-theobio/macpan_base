@@ -548,7 +548,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_base_forecast.png}
 
-\caption{Ontario Testify}
+\caption{Ontario base forecast}
 \label{fig:Ont_calibration_base_forecast}
 \end{figure}
 
@@ -609,23 +609,30 @@ Unlike, the base model, when we control for testing, it will provide a more real
 
 \FloatBarrier
 
+\section{Discussion}
+
+We have fitted two models varying in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario Canada from March 1st to Aug 30th 2020. 
+The simple base model is the typical simplistic type of compartmental epidemic models to model infectious disease epidemics. 
+The testify model is a practical addition to the base model that allows the model to coop with different testing practices and policies changes.
+
 \subsection{Limitations}
 
-Our model assumes homogeneous mixing of the population. No
-age-related or spatial contact structure is considered. 
-We did not include hospitalization in the calibrations due to capacity issues which became a serious issue with the admissions and occpuancy underreporting the severity of the pandemic.
-In addition, long-term care facilities (LTCFs), where many elderly people in Canada
-have died without going to hospital, have not been modelled
-explicitly.  
-While we do not anticipate any qualitative differences in
-results, explicitly creating compartments and calibrating to data for
-LTCFs would likely allow us to match ICU occupancy and forecast
+Our model assumes homogeneous mixing of the population. 
+No age-related or spatial contact structure is considered. 
+We did not include hospitalization in the calibrations due to reporting from capacity issues which became a serious issue with the admissions and occpuancy underreporting the severity of the pandemic.
+In addition, long-term care facilities (LTCFs), where many elderly people in Canada have died without going to hospital, have not been modelled explicitly.  
+While we do not anticipate any qualitative differences in results, explicitly creating compartments and calibrating to data for LTCFs would likely allow us to match ICU occupancy and forecast
 pressure on ICUs more accurately but will not resolve the issues on hospital intensity. 
 
 \subsection{Conclusions}
 
+SARS-CoV-2 continues to be a global burden after 3 years. 
+Here we demonstrated a simple modelling framework that can flexibility fit to epidemic data and easily allow additional complexities to account for features during the epidemic. 
+We learned two things about fitting epidemic data. 
+First, it is important to have ways to incorportate time-varying parameterations fitting changes in the observed data or behavioural changes. Time-varying transmission rates played in important role in our calibration. 
+Second, allowing for testing intensity disaggragate the transmission rates through time (i.e. does increase in posivitive cases/confirmation due to increase in transmission or testing capcity). 
+The flexibility of incorportation various time-vary parameterization allows user to make more realistic features and scenario exploration. 
 
-\mike{todo}
 %%\input{nextsteps.tex}
 
 \clearpage
