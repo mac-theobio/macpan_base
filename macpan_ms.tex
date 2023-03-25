@@ -15,12 +15,6 @@
 \linenumbers
 \maketitle
 
-\section*{Story:}
-\begin{enumerate}
-\item{Basic macpan}
-\item{time-varying parameters to model the effect of shutdowns and reopening}
-\end{enumerate}
-
 \begin{abstract}
 Compartmental epidemiological models are widely used to understand, manage, and forecast the SARS-CoV-2 (COVID-19) pandemic. 
 We introduce a new compartmental modeling framework that shares many characteristics with existing models, but includes a number of new and noteworthy features.
@@ -130,14 +124,18 @@ This adjustment accounts for the effects of depletion during the course of a tim
 
 While the flow matrix description is convenient for most epidemiological dynamics, there are a few epidemiological processes that are more naturally captured by absolute rather than \emph{per capita} rates, for example (1) when intensities of public health interventions such as numbers of tests or vaccines administered are reported by public health agencies; or (2) in models incorporating births or immigration.
 We have typically handled the former case by taking observed vaccination or testing rates and dividing them by current compartment sizes in order to set the relevant entries in the flow matrix; we have not yet tried to build models including inflows from outside the system (the latter case).
-\mike{Nothing wrong with adding vaccination here, but do we want to stick with it or remove it given we didn't do it for this paper?}
+\mike{Nothing wrong with adding vaccination here, but do we want to stick with it or remove it given we didn't do it for this paper?} \ben{think it's fine}
 
 We typically compute the model dynamics deterministically, as a discrete-time model with a hazard correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
 As well as allowing us to visualize model results more conveniently, condensation also allows us to compare the simulated state vector to available data streams.
 In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution. 
-Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with a mean of 11 days and a coefficient of variation of 0.25 \ben{how did we pick these values? 
+Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with
+moments chosen to match estimates of case-reporting delays
+\ben{how did we pick these values? 
 Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
-\jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>} When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
+\jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>}
+\ben{done, but still not clear that there are a lot of such estimates in the literature \ldots}
+When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
 Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
 
@@ -150,7 +148,7 @@ After receiving negative results (whether true negatives, from individuals in $S
 \cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational epidemiological model.
 Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering) while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment (e.g., from \code{Im}, negative-waiting to \code{R}, negative-waiting).
 
-We define a weight vector $w$ across epidemic compartments that gives weight $w_a$ to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and 1 to symptomatic classes (all others, including \code{R} \jd{??}).
+We define a weight vector $w$ across epidemic compartments that gives weight $w_a$ to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and 1 to symptomatic classes (i.e., all other classes).
 If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$), then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding \emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. 
 However, under some extreme conditions (if testing is so extreme that few untested symptomatic people are left) this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
 \[T_i = \frac{\rho \tau w_i}{\tau W + \rho} .\] (see \cite{Ghar+22} appendix A.5 for more details).
@@ -193,7 +191,7 @@ All of the sub-models for temporal change in the transmission rate can be subsum
 where $\boldsymbol{X}$ is a model matrix that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
 In particular, piecewise breaks correspond to indicator variables for which period an observation falls in; the mobility model corresponds to a column containing the log of relative mobility; and the spline model corresponds to a set of columns containing the basis vectors of a B-spline basis with specified knots.
 
-In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- equivalent to, but simpler to implement than the more general log-linear model.
+In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- a special case of the more general log-linear model. When we fit the model with 
 
 \mike{Add something here about the mobility set up? Different intercepts and slopes + a smoother}
 

@@ -73,7 +73,7 @@ shellpipes.out:
 	Rscript -e 'remotes::install_github("dushoff/shellpipes")'
 
 pkg:
-	remotes::install_github("mac-theobio/McMasterPandemic@v0.0.20.1")
+	Rscript -e 'remotes::install_github("mac-theobio/McMasterPandemic@v0.0.20.1")'
 
 ######################################################################
 

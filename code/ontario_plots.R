@@ -1,6 +1,7 @@
 library(tidyverse); theme_set(theme_bw(base_size = 10))
 library(McMasterPandemic)
 library(shellpipes)
+library(anytime) ## required because cached objects still think we are loading this pkg
 
 ## How do I read in two rds again in shellpipe-verse?
 
@@ -16,7 +17,12 @@ dd <- predict(testify$fit
 			  , ensemble=FALSE
 			  , keep_vars=c("postest")
 )
-
+## debugging:
+## debug(sim_fun)
+## debug(run_sim)
+## Error in `[<-`(`*tmp*`, 1, names(state), value = c(S_u = 14569404.7660548,  : 
+##   subscript out of bounds
+## options(error=recover)
 ddcombo <- (testify$data
 	%>% mutate(var = ifelse(var == "report","postest",var))
 	%>% transmute(date, var,data=value)
