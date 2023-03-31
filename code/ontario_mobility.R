@@ -12,10 +12,13 @@ mob <- (dat$clean_mobility
 print(mob)
 
 gg <- (ggplot(mob,aes(x=date,y=rel_activity))
-	+ geom_line()
+    + geom_line()
+    + labs(x = "Date", y = "Relative activity")
+    + geom_hline(lty = 2, yintercept = 1)
+    + scale_x_date(date_labels = "%b-%Y")
 )
 
 print(gg)
 
 
-ggsave("figure/ontario_mobility.png",width = 10, height = 10)
+ggsave("figure/ontario_mobility.png",width = 8, height = 6)
