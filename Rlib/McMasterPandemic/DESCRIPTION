@@ -1,0 +1,30 @@
+Package: McMasterPandemic
+Title: Pandemic Model
+Description: This is a compartmental model for pandemic modeling/health care utilization.
+Version: 0.0.16
+Authors@R: c(person("Ben","Bolker",email="bolker@mcmaster.ca",role=c("aut","cre")),
+	   	   person("David Earn",role="aut"),
+	   	   person("Morgan Kain",role="aut"),
+		   person("Mike Li",role="aut"),
+		   person("Jonathan Dushoff",role="aut"),
+		   person("Zach Levine", role="ctb"))
+Depends: R (>= 3.5.0)
+Imports: lattice, Matrix, MASS, dplyr, ggplot2, tidyr, plyr, purrr,
+        anytime, pomp, scales, bbmle (>= 1.0.23.5), Hmisc, DEoptim,
+        mvtnorm, bdsmatrix, zoo, deSolve, splines, diagram
+Suggests: knitr, testthat, cowplot, tikzDevice, igraph, memoise,
+        latticeExtra, directlabels, rmarkdown, tidyverse
+RoxygenNote: 7.1.1
+Encoding: UTF-8
+License: GPL
+LazyData: yes
+VignetteBuilder: knitr
+URL: https://github.com/bbolker/McMasterPandemic
+Author: Ben Bolker [aut, cre],
+  David Earn [aut],
+  Morgan Kain [aut],
+  Mike Li [aut],
+  Jonathan Dushoff [aut],
+  Zach Levine [ctb]
+Maintainer: Ben Bolker <bolker@mcmaster.ca>
+Built: R 4.3.0; x86_64-pc-linux-gnu; 2022-10-29 23:45:33 UTC; unix

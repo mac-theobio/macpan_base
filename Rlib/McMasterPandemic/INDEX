@@ -1,0 +1,89 @@
+McMasterPandemic-package
+                        'McMasterPandemic'
+aggregate.pansim        Temporal aggregation of pansim objects
+calc_conv               calculate convolution
+calibrate               Estimate model parameters from data
+calibrate_comb          Combined calibration of model to multiple types
+                        of data
+condense                condense an object
+condense.pansim         Condense columns (infected, ICU, hospitalized)
+                        in a pansim output
+condense_age            collapse age/testing/etc. categories (only;
+                        don't do other condensation)
+describe_params         Describe parameters
+dev_is_tikz             Is 'tikzDevice' currently in use?
+do_step                 Take a single simulation time step
+expand_stateval_age     expand state vector and rate matrix by age
+                        classes
+expand_stateval_testing
+                        expand states and values to include
+fix_pars                adjust pars to match targets
+forecast_ensemble       find confidence envelopes by simulation
+forecast_sim            simulate/forecast a single trajectory
+getData                 extract and return original fitting data
+get_GI_moments          compute moments of generation interval (mean
+                        and CV^2)
+get_Gbar                compute mean generation interval from
+                        parameters
+get_R0                  calculate R0 for a given set of parameters
+get_evec                get dominant eigenvector
+get_kernel_moments      compute R0, r, etc. based on kernel computation
+get_opt_pars            generate reasonable default opt_pars
+get_r                   return growth rate (from Jacobian)
+gradfun                 gradient function for ODE runs
+invlink_trans           apply inverse-link functions to parameter
+                        vector or list based on names
+make_betavec            construct vector of transmission multipliers
+make_delay_kernel       construct a Gamma-distributed delay kernel
+make_jac                construct Jacobian matrix for ICU model (not
+                        quite complete: doesn't include flows to R)
+make_ratemat            Create transition matrix
+make_state              retrieve parameters from a CSV file
+make_test_wtsvec        make weights vector for tests
+mk_agecats              construct age categories
+mle_fun                 negative log-likelihood function
+nlist                   self-naming list (copied from lme4:::namedList)
+non_expanded_states     global variables for testify expansion
+ont_all                 Sample data and fit from Ontario (up to 18
+                        April 2020)
+ont_cal1                Fitted models to Ontario data
+pivot                   pivot an object
+plot.pansim             plot method for simulations
+plot.predict_pansim     plot forecasts from fits
+predict.fit_pansim      make forecasts from sim
+print.params_pansim     print parameters, possibly with detailed
+                        description
+rExp                    run a pure-exponential sim; uses run_sim_range
+                        with a population of 1 (proportions) and a very
+                        small starting value, run for 100 steps (by
+                        default) used to calculate either r
+                        (technically r0) or eigenvector (for
+                        distributing initial exposed across states)
+read_params             read simulation parameters
+restore                 convert a parameter vector back to a structured
+                        list Like 'relist', but adds the capability to
+                        fill in parameters from a "fixed-parameter"
+                        vector
+run_sim                 Run pandemic simulation
+run_sim_break           run simulation with one or more breakpoints
+run_sim_loglin          run with log-linear model applied to beta
+run_sim_mobility        run with transmission propto relative mobility
+run_sim_range           Run simulation across a range of times
+show_ratemat            visualize rate (per-capita flow) matrix
+summary.params_pansim   summary method for 'pansim' parameter objects
+testify                 expand rate matrix for testing status
+texify                  Convert expression string to TeX format
+trans_state_vars        Translate state variables
+unpack                  unpack a list into the current (calling)
+                        environment this is a replacement for 'with()'
+                        (which is hard to debug) and 'attach()' (which
+                        is frowned upon by CRAN/triggers package-check
+                        warnings) (for more traditional Python tuple
+                        unpacking see the 'zeallot' package)
+update.params_pansim    update parameters within a list of parameters
+update_foi              calculate only updated force of infection at
+                        present, this is the only state-dependent _per
+                        capita_ rate maybe more efficient than
+                        modifying & returning the whole matrix
+vis_model               display flow chart on current graphics device
+write_params            write parameters to CSV file

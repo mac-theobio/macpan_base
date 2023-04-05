@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: Pandemic Model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+<h1> Pandemic Model
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;McMasterPandemic&rsquo; version 0.0.16</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="McMasterPandemic-package.html">McMasterPandemic-package</a></td>
+<td>'McMasterPandemic'</td></tr>
+<tr><td style="width: 25%;"><a href="expand_stateval_age.html">ageify</a></td>
+<td>expand state vector and rate matrix by age classes</td></tr>
+<tr><td style="width: 25%;"><a href="aggregate.pansim.html">aggregate.pansim</a></td>
+<td>Temporal aggregation of pansim objects</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">asymp_cat</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="calc_conv.html">calc_conv</a></td>
+<td>calculate convolution</td></tr>
+<tr><td style="width: 25%;"><a href="calibrate.html">calibrate</a></td>
+<td>Estimate model parameters from data</td></tr>
+<tr><td style="width: 25%;"><a href="calibrate_comb.html">calibrate_comb</a></td>
+<td>Combined calibration of model to multiple types of data</td></tr>
+<tr><td style="width: 25%;"><a href="ontario_data.html">comb_sub</a></td>
+<td>Sample data and fit from Ontario (up to 18 April 2020)</td></tr>
+<tr><td style="width: 25%;"><a href="condense.html">condense</a></td>
+<td>condense an object</td></tr>
+<tr><td style="width: 25%;"><a href="condense.pansim.html">condense.pansim</a></td>
+<td>Condense columns (infected, ICU, hospitalized) in a pansim output</td></tr>
+<tr><td style="width: 25%;"><a href="condense_age.html">condense_age</a></td>
+<td>collapse age/testing/etc. categories (only; don't do other condensation)</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">cryptic_cat</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="describe_params.html">describe_params</a></td>
+<td>Describe parameters</td></tr>
+<tr><td style="width: 25%;"><a href="dev_is_tikz.html">dev_is_tikz</a></td>
+<td>Is 'tikzDevice' currently in use?</td></tr>
+<tr><td style="width: 25%;"><a href="do_step.html">do_step</a></td>
+<td>Take a single simulation time step</td></tr>
+<tr><td style="width: 25%;"><a href="expand_stateval_age.html">expand_stateval_age</a></td>
+<td>expand state vector and rate matrix by age classes</td></tr>
+<tr><td style="width: 25%;"><a href="expand_stateval_testing.html">expand_stateval_testing</a></td>
+<td>expand states and values to include</td></tr>
+<tr><td style="width: 25%;"><a href="fix_pars.html">fix_pars</a></td>
+<td>adjust pars to match targets</td></tr>
+<tr><td style="width: 25%;"><a href="forecast_ensemble.html">forecast_ensemble</a></td>
+<td>find confidence envelopes by simulation</td></tr>
+<tr><td style="width: 25%;"><a href="forecast_sim.html">forecast_sim</a></td>
+<td>simulate/forecast a single trajectory</td></tr>
+<tr><td style="width: 25%;"><a href="getData.html">getData</a></td>
+<td>extract and return original fitting data</td></tr>
+<tr><td style="width: 25%;"><a href="get_evec.html">get_evec</a></td>
+<td>get dominant eigenvector</td></tr>
+<tr><td style="width: 25%;"><a href="get_Gbar.html">get_Gbar</a></td>
+<td>compute mean generation interval from parameters</td></tr>
+<tr><td style="width: 25%;"><a href="get_GI_moments.html">get_GI_moments</a></td>
+<td>compute moments of generation interval (mean and CV^2)</td></tr>
+<tr><td style="width: 25%;"><a href="get_kernel_moments.html">get_kernel_moments</a></td>
+<td>compute R0, r, etc. based on kernel computation</td></tr>
+<tr><td style="width: 25%;"><a href="get_opt_pars.html">get_opt_pars</a></td>
+<td>generate reasonable default opt_pars</td></tr>
+<tr><td style="width: 25%;"><a href="get_r.html">get_r</a></td>
+<td>return growth rate (from Jacobian)</td></tr>
+<tr><td style="width: 25%;"><a href="get_R0.html">get_R0</a></td>
+<td>calculate R0 for a given set of parameters</td></tr>
+<tr><td style="width: 25%;"><a href="gradfun.html">gradfun</a></td>
+<td>gradient function for ODE runs</td></tr>
+<tr><td style="width: 25%;"><a href="invlink_trans.html">invlink_trans</a></td>
+<td>apply inverse-link functions to parameter vector or list based on names</td></tr>
+<tr><td style="width: 25%;"><a href="make_betavec.html">make_betavec</a></td>
+<td>construct vector of transmission multipliers</td></tr>
+<tr><td style="width: 25%;"><a href="make_delay_kernel.html">make_delay_kernel</a></td>
+<td>construct a Gamma-distributed delay kernel</td></tr>
+<tr><td style="width: 25%;"><a href="make_jac.html">make_jac</a></td>
+<td>construct Jacobian matrix for ICU model (not quite complete: doesn't include flows to R)</td></tr>
+<tr><td style="width: 25%;"><a href="make_ratemat.html">make_ratemat</a></td>
+<td>Create transition matrix</td></tr>
+<tr><td style="width: 25%;"><a href="make_state.html">make_state</a></td>
+<td>retrieve parameters from a CSV file</td></tr>
+<tr><td style="width: 25%;"><a href="make_test_wtsvec.html">make_test_posvec</a></td>
+<td>make weights vector for tests</td></tr>
+<tr><td style="width: 25%;"><a href="make_test_wtsvec.html">make_test_wtsvec</a></td>
+<td>make weights vector for tests</td></tr>
+<tr><td style="width: 25%;"><a href="McMasterPandemic-package.html">McMasterPandemic</a></td>
+<td>'McMasterPandemic'</td></tr>
+<tr><td style="width: 25%;"><a href="mk_agecats.html">mk_agecats</a></td>
+<td>construct age categories</td></tr>
+<tr><td style="width: 25%;"><a href="mle_fun.html">mle_fun</a></td>
+<td>negative log-likelihood function</td></tr>
+<tr><td style="width: 25%;"><a href="nlist.html">nlist</a></td>
+<td>self-naming list (copied from lme4:::namedList)</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">non_expanded_states</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="ontario_data.html">ont_all</a></td>
+<td>Sample data and fit from Ontario (up to 18 April 2020)</td></tr>
+<tr><td style="width: 25%;"><a href="ontario_fits.html">ont_cal1</a></td>
+<td>Fitted models to Ontario data</td></tr>
+<tr><td style="width: 25%;"><a href="ontario_fits.html">ont_cal_2brks</a></td>
+<td>Fitted models to Ontario data</td></tr>
+<tr><td style="width: 25%;"><a href="ontario_fits.html">ont_cal_mob1</a></td>
+<td>Fitted models to Ontario data</td></tr>
+<tr><td style="width: 25%;"><a href="pivot.html">pivot</a></td>
+<td>pivot an object</td></tr>
+<tr><td style="width: 25%;"><a href="predict.fit_pansim.html">plot.fit_pansim</a></td>
+<td>make forecasts from sim</td></tr>
+<tr><td style="width: 25%;"><a href="plot.pansim.html">plot.pansim</a></td>
+<td>plot method for simulations</td></tr>
+<tr><td style="width: 25%;"><a href="plot.predict_pansim.html">plot.predict_pansim</a></td>
+<td>plot forecasts from fits</td></tr>
+<tr><td style="width: 25%;"><a href="predict.fit_pansim.html">predict.fit_pansim</a></td>
+<td>make forecasts from sim</td></tr>
+<tr><td style="width: 25%;"><a href="print.params_pansim.html">print.params_pansim</a></td>
+<td>print parameters, possibly with detailed description</td></tr>
+<tr><td style="width: 25%;"><a href="read_params.html">read_params</a></td>
+<td>read simulation parameters</td></tr>
+<tr><td style="width: 25%;"><a href="restore.html">restore</a></td>
+<td>convert a parameter vector back to a structured list Like 'relist', but adds the capability to fill in parameters from a "fixed-parameter" vector</td></tr>
+<tr><td style="width: 25%;"><a href="rExp.html">rExp</a></td>
+<td>run a pure-exponential sim; uses run_sim_range with a population of 1 (proportions) and a very small starting value, run for 100 steps (by default) used to calculate either r (technically r0) or eigenvector (for distributing initial exposed across states)</td></tr>
+<tr><td style="width: 25%;"><a href="run_sim.html">run_sim</a></td>
+<td>Run pandemic simulation</td></tr>
+<tr><td style="width: 25%;"><a href="run_sim_break.html">run_sim_break</a></td>
+<td>run simulation with one or more breakpoints</td></tr>
+<tr><td style="width: 25%;"><a href="run_sim_loglin.html">run_sim_loglin</a></td>
+<td>run with log-linear model applied to beta</td></tr>
+<tr><td style="width: 25%;"><a href="run_sim_mobility.html">run_sim_mobility</a></td>
+<td>run with transmission propto relative mobility</td></tr>
+<tr><td style="width: 25%;"><a href="run_sim_range.html">run_sim_range</a></td>
+<td>Run simulation across a range of times</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">severe_cat</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="show_ratemat.html">show_ratemat</a></td>
+<td>visualize rate (per-capita flow) matrix</td></tr>
+<tr><td style="width: 25%;"><a href="summary.params_pansim.html">summary.params_pansim</a></td>
+<td>summary method for 'pansim' parameter objects</td></tr>
+<tr><td style="width: 25%;"><a href="testify.html">testify</a></td>
+<td>expand rate matrix for testing status</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">test_accumulators</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="non_expanded_states.html">test_extensions</a></td>
+<td>global variables for testify expansion</td></tr>
+<tr><td style="width: 25%;"><a href="texify.html">texify</a></td>
+<td>Convert expression string to TeX format</td></tr>
+<tr><td style="width: 25%;"><a href="trans_state_vars.html">trans_state_vars</a></td>
+<td>Translate state variables</td></tr>
+<tr><td style="width: 25%;"><a href="unpack.html">unpack</a></td>
+<td>unpack a list into the current (calling) environment this is a replacement for 'with()' (which is hard to debug) and 'attach()' (which is frowned upon by CRAN/triggers package-check warnings) (for more traditional Python tuple unpacking see the 'zeallot' package)</td></tr>
+<tr><td style="width: 25%;"><a href="update.params_pansim.html">update.params_pansim</a></td>
+<td>update parameters within a list of parameters</td></tr>
+<tr><td style="width: 25%;"><a href="update_foi.html">update_foi</a></td>
+<td>calculate only updated force of infection at present, this is the only state-dependent _per capita_ rate maybe more efficient than modifying &amp; returning the whole matrix</td></tr>
+<tr><td style="width: 25%;"><a href="vis_model.html">vis_model</a></td>
+<td>display flow chart on current graphics device</td></tr>
+<tr><td style="width: 25%;"><a href="write_params.html">write_params</a></td>
+<td>write parameters to CSV file</td></tr>
+</table>
+</div></body></html>
