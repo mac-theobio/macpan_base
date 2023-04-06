@@ -4,6 +4,10 @@
 - Make better looking plots (the code is in `code/ontario_plots.R`)
 - Need to write a better results section!
 - venue: PLoS ONE?
+- pipeline
+    - interim hack with 
+    - locate working commit on MacPan repo
+
 
 ## everyone
 

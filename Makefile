@@ -30,6 +30,9 @@ code/ontario_tables.Rout: code/ontario_tables.R
 code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
 	$(pipeR)
 
+code/ontario_base_forecast_plot.Rout: code/ontario_base_forecast.Rout code/ontario_base_forecast_plot.R
+	$(pipeR)
+
 code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
 	$(pipeR)
 
