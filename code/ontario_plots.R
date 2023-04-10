@@ -9,8 +9,10 @@ library(anytime) ## required because cached objects still think we are loading t
 ## How do I read in two rds again in shellpipe-verse?
 
 base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
-(plot(base$fit,data=filter(base$data,date<=as.Date("2020-08-30")))
-	+ scale_x_date(date_breaks="1 month", date_labels="%b")
+(plot(base$fit, data=filter(base$data, date<=as.Date("2020-08-30")))
+    ## 'dlspace' not working, alas
+    + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
+    + expand_limits(x = as.Date("2020-10-01"))
 )
 ggsave("figure/ontario_base.png",width = 10,height = 6)
 
