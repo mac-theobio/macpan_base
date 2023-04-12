@@ -72,7 +72,7 @@ Finally, the model can be used to
 \subsection*{Compartmental structure}
 
 The epidemiological structure of the model is based on a susceptible-exposed-infectious-removed (SEIR) model with additional compartments reflecting the biology of COVID-19 and the structure of the health-care system. 
-The COVID-19-specific compartmental structure of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical} \ben{find some refs/examples} in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. 
+The COVID-19-specific compartmental structure of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical, kainChopping2021}. in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. 
 All symptomatic individuals are presumed to have undergone a period of pre-symptomatic infectiousness (\code{p}). 
 Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
 Some fraction of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
@@ -81,11 +81,10 @@ The model includes additional compartments which facilitate book-keeping: cumula
 
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
 We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
-A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that as the most susceptible individuals are infected, they lower the average level of susceptibility in the remaining population. While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense; check Dwyer?}
+A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that as the most susceptible individuals are infected, they lower the average level of susceptibility in the remaining population. While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense/expand where necessary; check Dwyer? Williams et al 2006: ``To allow for heterogeneity in sexual behaviour and to fit the observed asymptotic prevalence of infection, the transmission parameter takes the value $\lambda_0$ at the start of the epidemic and declines exponentially at rate $\alpha$ times the prevalence of infection.'' Granich et al. say ``To allow for heterogeneity in sexual behaviour and for the observed steady state prevalence of HIV, we let the transmission decrease with the prevalence, P. If n=1, the decrease is exponential; if $n=\infty$, the decrease is a step function. Both have been used in previous models (5, 29).'' Granich et al. also cite \cite{williamsHIV2006} (their ref. 29), but I don't see a transmission model in there anywhere ...}
 
 %\begin{figure}[ht!]
 \begin{figure}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/flow.chart.crop.pdf}
 \caption{Flow chart for basic compartmental mechanistic transmission model. 
 Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs} (ICU with prognosis of survival), \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care after ICU stay). 
@@ -122,7 +121,6 @@ This adjustment accounts for the effects of depletion during the course of a tim
 
 While the flow matrix description is convenient for most epidemiological dynamics, there are a few epidemiological processes that are more naturally captured by absolute rather than \emph{per capita} rates, for example (1) when intensities of public health interventions such as numbers of tests or vaccines administered are reported by public health agencies; or (2) in models incorporating births or immigration.
 We have typically handled the former case by taking observed vaccination or testing rates and dividing them by current compartment sizes in order to set the relevant entries in the flow matrix; we have not yet tried to build models including inflows from outside the system (the latter case).
-\mike{Nothing wrong with adding vaccination here, but do we want to stick with it or remove it given we didn't do it for this paper?} \ben{think it's fine}
 
 We typically compute the model dynamics deterministically, as a discrete-time model with a hazard correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
 As well as allowing us to visualize model results more conveniently, condensation also allows us to compare the simulated state vector to available data streams.
@@ -175,24 +173,25 @@ The time-varying (relative) transmission $\beta_1$ can incorporate a variety of 
 \item abrupt (piecewise) changes on specified dates when control measures are known to have been implemented;
 \item proportional to a power of observed mobility or some other exogenous proxy for contact behaviour
 \[
-  \beta_1(t) \propto (\textrm{relative mobility})^{\pmob}
-\]
-for some power $\pmob>0$;
+  \beta_1(t) \propto \log(M(t))^{\pmob}, 
+  \]
+where $M(t)$ is the relative mobility index at time $t$, for some power $\pmob>0$;
 \item according to an arbitrary spline curve, i.e. a linear combination of components of a B-spline basis.
 \end{itemize}
 
 All of the sub-models for temporal change in the transmission rate can be subsumed under a single log-linear model:
 \begin{equation}\label{eq:betamodel}
-\log \beta(t) = \log \beta_0 + \boldsymbol{X}\boldsymbol{c}
+\log \beta(t) = \log \beta_0 + \XX\boldsymbol{c}
 \,,
 \end{equation}
-where $\boldsymbol{X}$ is a model matrix that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
+where $\XX$ is a model matrix that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
 In particular, piecewise breaks correspond to indicator variables for which period an observation falls in; the mobility model corresponds to a column containing the log of relative mobility; and the spline model corresponds to a set of columns containing the basis vectors of a B-spline basis with specified knots.
 
-In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- a special case of the more general log-linear model. When we fit the model with 
-
-\mike{Add something here about the mobility set up? Different intercepts and slopes + a smoother}
-
+In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- a special case of the more general log-linear model. In the models illustrated below, we pick breakpoints to denote several time periods $\{P_1, P_2, \ldots\}$ and construct $\XX$ to allow the effects of mobility, and the baseline contact rate, to change at breakpoints.
+Specifically, for each breakpoint we define a logistic transition curve $S(j) = (1+\exp((t-t_\textrm{brk}(j))/s))^{-1}$, where $s$ (set to 3 days) defines the speed of transition. Because the baseline transmission rate is included in the model (as parameter \code{beta0}), we do not need to include an intercept in $\XX$; the first column is $\log(M(t))$. Subsequent columns $2j$ and $2j+1$ are defined as 
+For the first period, Thus, columns $2j-1$ and $2j$ of $\XX$ are defined as $S(j)$ and $S(j) \log M(t)$, respectively. The parameters associated with these columns denote the change in baseline contact rate and the change in the effect of mobility between periods $j$ and $j+1$.
+\ben{WZMLi: does this match what you think we did/your description below?}
+  
 \subsection*{Derived parameters and parameter setting}
 
 It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. 
@@ -217,12 +216,8 @@ The growth rate $r$ can be computed by numerically solving the Euler-Lotka equat
 for $r$.
 
 \jd{Suggest dropping the detailed equations for Gbar and CV, but instead adding $g(t)$ and saying that we also calculate its mean and CV.}
-
 \jd{Suggested easy ref is ChamDush15: http://dx.doi.org/10.1098/rspb.2015.2026 (instead of current Cham18)}
-
-\ben{check: what do we do about phenom het/$\zeta$ in these procedures, esp about incorporating it in any computation of \Rt?}
-
-\jd{$\zeta$ should not pose any special problems here; when $S\approx N$ its effect is negligible. At other times (if any), it should be handled correctly by setting $S$ and $N$ correctly and suppressing outflow from $S$ as described.}
+\ben{JD: please go ahead and implement this change}
 
 In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. 
 Estimates of these summary statistics are more broadly available \cite{park2020reconciling}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
@@ -248,73 +243,21 @@ In the expanded model, we can include time series of both positive and negative 
 Reported new confirmations are the most reliable and voluminous source of epidemic information.
 Unfortunately, they are also subject to many inherent biases, including substantial variation over time in \term{testing intensity} (\ie tests \emph{per capita} per day).
 
-We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}] \mike{two mobility intercept and three slopes}, and several basic model parameters (\cref{estparmtab}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
+We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}] (two mobility intercept and three slopes), and several basic model parameters (\cref{estparmtab}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
 \mike{how does cref work?}
+\ben{DJDE/JD/WZMLi: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab) working and properly cross-referenced, then we don't need the information in Mike's comments above}
 Other model parameters are taken from the literature (\cref{litparmtab}).
-\ben{need more details: which parameters are estimated? what are the
-  rules about breakpoints? Are we using mobility, phenom het, etc., or not?}
-\mike{everything else from ON.csv, the main ones are hospital parameters given we are not calibrating to them, and the time spent in each box.}
 
-We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas many severe cases actually occur entirely in Long Term Care Facilities (LTCFs) and capacities limitations. 
-\ben{not sure what this means; is this really the reason that we exclude ICU, or do we exclude it because the data are wonky? Before we added the non-hospital mortality flow, this would have been a reason not to calibrate to \emph{deaths}, but otherwise I don't understand this \ldots}
-\mike{this is weird now. If we don't calibrate to hospitalization at all, calibrating to death will not make sense. Drop it and calibrate to reports only?}
-
-\ben{commented out section on estimation of $R_t$, covered above --- and
-  analytic expressions are less general than the kernel machinery}
-%% \hypertarget{Rt}{}
-%% \subsubsection*{Estimation of effective reproduction number $\R_t$}
-
-%% The basic reproduction number for the basic model is (\emph{cf.}\/
-%% \cref{litparmtab,estparmtab}) \david{I took this from the vignette,
-%%   where I wrote it months ago.  Are we just setting
-%%   $\texttt{iso}_{\rm m,s}=0$?} \ben{(1) Yes; we could include the isolation
-%%   parameters if we wanted, but we have yet to set them to anything
-%%   other than zero. (2) Why are the subscripts for infection
-%%   category (a,m,p) Roman rather than math italic?}
-%% %%
-%% %% \begin{equation}\label{eq:R0}
-%% %% \R_0 = \beta_0 \left\{
-%% %% \alpha \frac{C_{\rm a}}{\gamma_{\rm a}}
-%% %% +
-%% %%  (1-\alpha)\left[ \frac{C_{\rm p}}{\gamma_{\rm p}}
-%% %%   + \mu(1-\texttt{iso}_{\rm m})\frac{C_{\rm m}}{\gamma_{\rm m}}
-%% %%   + (1-\mu)(1-\texttt{iso}_{\rm s})\frac{C_{\rm s}}{\gamma_{\rm s}} \right]
-%% %%   \right\} \,.
-%% %% \end{equation}
-%% \begin{equation}\label{eq:R0}
-%% \R_0 = \beta_0 \left\{
-%% \alpha \frac{C_{\rm a}}{\gamma_{\rm a}}
-%% +
-%% (1-\alpha)\left[ \frac{C_{\rm p}}{\gamma_{\rm p}}
-%%   + \mu\frac{C_{\rm m}}{\gamma_{\rm m}}
-%%   + (1-\mu)\frac{C_{\rm s}}{\gamma_{\rm s}} \right]
-%%   \right\} \,.
-%% \end{equation}
-%% For the full model (including testing flows), we compute $\R_0$
-%% numerically via \cite{WallLips07}
-%% \begin{equation}
-%% \frac{1}{\R_0} = \int_0^\infty e^{rt} g(t)\,{\rm d}t \,,
-%% \end{equation}
-%% where the exponential growth rate is obtained by solving the model
-%% linearized about the disease-free equilibrium \cite{Ma+14}, and the
-%% generation interval distribution is obtained by solving the cohort
-%% equations associated with the model (\emph{cf.}\/
-%% \cite{Cham+18}).\david{Did I correctly describe what we are actually
-%%   doing?}\david{We should state the numerical value of $\R_0$, with
-%%   and without testing flows.  Or are we adjusting it with
-%%   \code{\detokenize{fix_pars}} anyway?  If the latter, we need to
-%%   explain that.}
-%% %%
-%% The effective reproduction number at time $t$ is
-%% \begin{equation}\label{eq:Rt}
-%% \R_t = \R_0\, \beta_1(t) \Big(\frac{S(t)}{N}\Big)^{1+\zeta}\,.
-%% \end{equation}
+We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas many severe cases actually occur entirely in Long Term Care Facilities (LTCFs); thus,
+our model would not properly match the observed time series of hospitalization and ICU occupancy, or at least would fail to account for
+severe cases outside of hospitals. Furthermore, capacity limitations in the health care system lead to ceilings on hospitalization that are
+not properly represented in our model.
+\ben{I think I got this statement right but am not sure: WZMLi/JD/DJDE, please check for correctness/clarity.}
 
 \subsubsection*{Forecasting}
 
 Our calibrations yield values for the parameters of our deterministic model. 
-Using the calibrated parameters, we generate 1000 multivariate normal sets of parameters and feed it into the deterministic model to generate an ensemble of forecast. We extend the end date of the calibration window (i.e. the last observed data point for calibration) to create a forecast window. Inside the forecast window, the user either input non-calibrated data (i.e. mobility, testing and etc) or assumed the last set of inputs and calibrated parameters be constant throughout the forecasting window. 
-\mike{Please check guts and see if it is doing this.}
+Using the calibrated parameters and the estimated covariance matrix of the sampling distribution of the parameters, we draw 1000 sets of parameters from a multivariate normal distribution \cite{Bolk08,krinskyThree1991a} and feed them into the deterministic model to generate an ensemble of forecasts. We extend the end date of the calibration window (i.e. the last observed data point for calibration) to create a forecast window. In the forecast window, the user can either input covariates (i.e. relative mobility and/or testing rates, depending on the model) or assume that the last set of inputs remain constant through the forecasting window. 
 
 \subsection{Data sources}
 
@@ -403,8 +346,8 @@ Data are frequently downloaded from a variety of sources and cleaned.  See
 We use mobility data from
 Apple\footnote{\url{https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/applemobilitytrends.csv}}
 and
-Google\footnote{\url{https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv}}
-for each province as a whole. From these data we derive a
+Google\footnote{\url{https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv}}.
+From these data we derive a
 \term{relative mobility index} using the ``driving'' index from Apple
 and the ``retail and recreation'' and ``workplaces'' indices from
 Google; we compute a 7-day moving average of these indices, rescale
@@ -523,49 +466,47 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
 
-\caption{Ontario mobility \ben{Mike L.: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}}
+\caption{Ontario mobility \ben{WZMLi: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}}
 \label{fig:Ont_mobility}
 \end{figure}
+
+
 
 \mike{keep only forecast plot?}
 
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_base.png}
 
-\caption{Ontario calibration}
+\caption{Ontario calibration \ben{Take out incidence, cumRep? Mention that death and hospitalization rates declined (why?) and that we are only calibrating to reports/not allowing time-variation in hosp and mortality rates?}}
 \label{fig:Ont_calibration}
 \end{figure}
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_base_forecast.png}
 
-\caption{Ontario base forecast}
+\caption{Ontario base forecast. \ben{need to explain what's going on here; at the very least the caption should say (even if it's kind of obvious) that gray points represent calibration points, red are forecast points.  Why is the death forecast so far off?  Should we just leave it out (probably)? (WZMLi ...)}}
 \label{fig:Ont_calibration_base_forecast}
 \end{figure}
 
 \begin{table}
 \centering
 \input{"base_table.tex"}
-\caption{Parameter estimates for base model calibration}
+\caption{Parameter estimates for base model calibration. \ben{Need to figure out how this is generated/adjust names to be sensible/augment caption. Where are the (\textbackslash gg)s coming from? WZMLi?}}
 \label{table:base}
 \end{table}
 
 
 \FloatBarrier
 
-\subsection{Testify}
+\subsection{Incorporating testing flows}
 
-The base model is relative simple but does not account for testing practices. Testing strategies are constantly changing over the course of the pandemic due to supply and demand of the labs and mandates for lifting restrictions. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
+The base model is relative simple but does not account for testing practices. Testing strategies changed continuously over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
 
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_testing.png}
 
 
@@ -575,21 +516,17 @@ The base model is relative simple but does not account for testing practices. Te
 
 \FloatBarrier
 
-Figure \ref{fig:Ont_calibration_testify} shows the calibration account for testing. 
-Compared to the reports fit from the base model, the testify fit is much more noisy which corresponse to the noise in observed testing intensity. 
-Unlike, the base model, when we control for testing, it will provide a more realistic estimate of the real effect of changes in transmission.
-\mike{todo: does this make sense? compare mobility parameters?}.
+Figure \ref{fig:Ont_calibration_testify} shows the results from calibrating the model to positive tests, with the testing flow incorporated and with observed testing rates fed into the model as a known series.
+The variation in the predicted line is driven by high-frequency changes in testing rate, including day-of-week effects.
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_testify.png}
 
-\caption{Ontario Testify}
+\caption{Calibration of positive tests }
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
 \begin{figure}[ht!]
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ontario_testify_forecast.png}
 
 \caption{Ontario Testify}
@@ -601,7 +538,7 @@ Unlike, the base model, when we control for testing, it will provide a more real
 \begin{table}
 \centering
 \input{"testify_table.tex"}
-\caption{Parameter estimates for testify model calibration}
+\caption{Parameter estimates for testify model calibration. \ben{Contrast with non-testify results.  Maybe instead of this table we can include a figure that shows the two values along with confidence intervals? (Have to be a little careful about the scaling - i.e., which parameters it makes sense to show on a common scale ...)}}
 \label{table:testify}
 
 \end{table}

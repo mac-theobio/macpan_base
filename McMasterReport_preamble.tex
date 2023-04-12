@@ -11,6 +11,8 @@
 \usepackage{enumerate} % fancier enumeration (e.g., a,b,c, ...)
 \usepackage{ragged2e} % \RaggedRight
 \usepackage{grffile} % \RaggedRight
+\usepackage[sort&compress]{natbib}
+\setcitestyle{numbers}
 
 %% cleveref package for convenient hyperrefercing/citing:
 \usepackage[nameinlink,capitalize]{cleveref}
@@ -36,6 +38,7 @@
 %% code
 \newcommand{\code}[1]{{\tt #1}}
 
+\newcommand{\XX}{\ensuremath\boldsymbol{X}\xspace}
 %% misc macros
 \newcommand{\etal}{\textit{et al}.\xspace}
 %% for referencing TeX macros:
