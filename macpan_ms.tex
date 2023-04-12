@@ -221,7 +221,7 @@ for $r$.
 
 In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. 
 Estimates of these summary statistics are more broadly available \cite{park2020reconciling}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
-We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{gamma}{a}) by a single factor until the target values are achieved.
+We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{\gamma}{a}) by a single factor until the target values are achieved.
 
 \subsubsection*{Calibration}
 
@@ -245,7 +245,7 @@ Unfortunately, they are also subject to many inherent biases, including substant
 
 We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}] (two mobility intercept and three slopes), and several basic model parameters (\cref{estparmtab}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
 \mike{how does cref work?}
-\ben{DJDE/JD/WZMLi: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab) working and properly cross-referenced, then we don't need the information in Mike's comments above}
+\ben{DJDE/JD/WZMLi: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab) working and properly cross-referenced, then we don't need the information in Mike's comments above. We may need to do some archaeology: were these in the original report to PHAC?}
 Other model parameters are taken from the literature (\cref{litparmtab}).
 
 We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas many severe cases actually occur entirely in Long Term Care Facilities (LTCFs); thus,
@@ -494,7 +494,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \begin{table}
 \centering
 \input{"base_table.tex"}
-\caption{Parameter estimates for base model calibration. \ben{Need to figure out how this is generated/adjust names to be sensible/augment caption. Where are the (\textbackslash gg)s coming from? WZMLi?}}
+\caption{Parameter estimates for base model calibration. \ben{Need to figure out how this is generated/adjust names to be sensible/augment caption. Parameter names should be left-justified, estimates decimal-point-justified. Where are the (\textbackslash gg)s coming from? WZMLi?}}
 \label{table:base}
 \end{table}
 
@@ -522,14 +522,14 @@ The variation in the predicted line is driven by high-frequency changes in testi
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testify.png}
 
-\caption{Calibration of positive tests }
+\caption{Calibration of positive tests  \ben{is there a nice way to combine Figures 6 and 7? Maybe a two-y-axis plot?}}
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testify_forecast.png}
 
-\caption{Ontario Testify}
+\caption{Ontario calibration with testing flows}
 \label{fig:Ont_calibration_testify_forecast}
 \end{figure}
 
@@ -572,6 +572,17 @@ The flexibility of incorporating various time-vary parameterizations allows user
 %%\input{nextsteps.tex}
 
 \clearpage
+
+\section{To do}
+
+\begin{itemize}
+\item find and clean up \code{estparmtab}/\code{litparmtab} (DJDE, WZMLi?)
+\item clean up Tables 1 and 2 (WZMLi?)
+\item should we include fits to simulations or not?
+\item Clean up figures, improve captions  
+\item Discussion and conclusions
+\item output/include figs as PDF rather than PNG (JD, WZMLi?)
+\end{itemize}
 
 % \section{Appendix: Model calibrations for each province}\label{sec:supp}
 % 
