@@ -18,33 +18,35 @@ Ignore +=	base_table.tex testify_table.tex
 
 ######################################################################
 
+autowrapR = defined
+
 ## MS
 
 ## dependencies
 
 code/ontario_plots.Rout: code/ontario_plots.R 
-	$(pipeR)
+	$(wrapR)
 
 code/ontario_tables.Rout: code/ontario_tables.R
-	$(pipeR)
+	$(wrapR)
 
 code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
-	$(pipeR)
+	$(wrapR)
 
-code/ontario_base_forecast_plot.Rout: code/ontario_base_forecast.Rout code/ontario_base_forecast_plot.R
-	$(pipeR)
+code/ontario_base_forecast_plot.Rout: code/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
+	$(wrapR)
 
 code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
-	$(pipeR)
+	$(wrapR)
 
-code/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast.Rout code/ontario_testify_forecast_plot.R
-	$(pipeR)
+code/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
+	$(wrapR)
 
 
 code/ontario_mobility.Rout: code/ontario_mobility.R
-	$(pipeR)
+	$(wrapR)
 
-ontario_deps: code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_base_forecast.Rout code/ontario_testify_forecast.Rout code/ontario_mobility.Rout
+ontario_deps: code/ontario_plots.rda code/ontario_tables.rda code/ontario_base_forecast.rda code/ontario_testify_forecast.rda code/ontario_mobility.rda
 
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug
@@ -56,16 +58,16 @@ macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps figure/flo
 ######################################################################
 
 ## repiped figures
-pipeRdesc += figure/flow
+wrapRdesc += figure/flow
 figure/flow.Rout: figure/flow.R
-	$(pipeR)
+	$(wrapR)
 
 ## figure/flow.chart.crop.pdf:
 
-pipeRdesc += figure/testFlow
+wrapRdesc += figure/testFlow
 ## figure/testFlow.1.Rout: figure/testFlow.R
 figure/testFlow.%.Rout: figure/testFlow.R
-	$(pipeR)
+	$(wrapR)
 
 ## %.crop.pdf: %.pdf
 figure/flow.chart.crop.pdf: figure/flow.chart.pdf
