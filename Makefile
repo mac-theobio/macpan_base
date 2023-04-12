@@ -42,11 +42,15 @@ code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
 code/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
 	$(wrapR)
 
-
 code/ontario_mobility.Rout: code/ontario_mobility.R
 	$(wrapR)
 
-ontario_deps: code/ontario_plots.rda code/ontario_tables.rda code/ontario_base_forecast.rda code/ontario_testify_forecast.rda code/ontario_mobility.rda
+## JD: Not unravelling this now, but this stuff should be coded here
+## figure/%.png: code/%.Rout ;
+
+######################################################################
+
+ontario_deps: code/ontario_plots.rda code/ontario_tables.rda code/ontario_base_forecast_plot.rda code/ontario_testify_forecast_plot.rda code/ontario_mobility.rda
 
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug
