@@ -83,6 +83,6 @@ cat(kable(testify_table_rename,format="latex",align = "c")
 )
 
 
-
+saveVars(testify_table_rename)
 
 

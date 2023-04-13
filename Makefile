@@ -25,25 +25,25 @@ autowrapR = defined
 ## dependencies
 
 code/ontario_plots.Rout: code/ontario_plots.R 
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_tables.Rout: code/ontario_tables.R
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_base_forecast_plot.Rout: code/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
-	$(wrapR)
+	$(pipeR)
 
 code/ontario_mobility.Rout: code/ontario_mobility.R
-	$(wrapR)
+	$(pipeR)
 
 ## JD: Not unravelling this now, but this stuff should be coded here
 ## figure/%.png: code/%.Rout ;
