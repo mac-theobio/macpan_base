@@ -22,3 +22,5 @@ print(gg)
 
 
 ggsave("figure/ontario_mobility.png",width = 8, height = 6)
+
+saveEnvironment()

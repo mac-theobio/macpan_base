@@ -30,3 +30,4 @@ postest <- ensemble %>% filter(var %in% c("postest"))
 # postest <- ensemble %>% filter(var %in% c("report"))
 plot(postest)
 
+saveEnvironment()

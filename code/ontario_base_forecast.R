@@ -18,3 +18,6 @@ fit$forecast_args$end_date <- fit$forecast_args$end_date + extend_days
 ensemble <- forecast_ensemble(fit, nsim=1000, scale_Sigma = 1000)
 
 forecast <- ensemble %>% filter(var %in% c("report","death"))
+
+saveVars(forecast, mod)
+

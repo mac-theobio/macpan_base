@@ -9,6 +9,8 @@ library(zoo)
 library(gtable)
 library(shellpipes)
 
+loadEnvironments()
+
 gg <- (ggplot(postest,aes(x=date,y=value))
 	+ geom_point(data=mod$data %>% filter(var%in%c("report"),date < as.Date("2020-09-30")),color="red",size=0.95)
 	+ geom_point(data=mod$data %>% filter(var%in%c("report"),date < as.Date("2020-08-30")),color="grey")
@@ -24,3 +26,5 @@ gg <- gg + coord_cartesian(ylim = c(0,1500))
 
 gg
 ggsave("figure/ontario_testify_forecast.png",width = 10, height = 10)
+
+saveEnvironment()

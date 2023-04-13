@@ -5,6 +5,7 @@ library(cowplot)
 library(zoo)
 library(gtable)
 
+loadEnvironments()
 
 gg_report <- (ggplot(filter(forecast,var=="report"),aes(x=date,y=value))
 	## Overlaying the data
@@ -36,3 +37,5 @@ ggcombo <- plot_grid(gg_report,gg_death,nrow=2)
 ggcombo
 
 ggsave("figure/ontario_base_forecast.png",width = 10, height = 10)
+
+saveEnvironment()
