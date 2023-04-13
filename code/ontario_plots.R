@@ -69,3 +69,4 @@ testing <- (ggplot(testdat,aes(x=Date,y=intensity))
 print(testing)
 ggsave("figure/ontario_testing.png",width = 10,height = 6)
 
+saveEnvironment()
