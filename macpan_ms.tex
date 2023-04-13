@@ -6,9 +6,9 @@
 
 \title{A compartmental model for epidemic parameter estimation and forecasting, with applications to SARS-CoV-2}
 
-\author{Michael Li \and Jonathan Dushoff \and David J.\,.D.\ Earn \and Irena Papst \and Benjamin M. Bolker \\
-  McMaster University\\
-}
+\author{Michael Li, Jonathan Dushoff, David J.\,D.\ Earn,\\
+  Irena Papst, Benjamin M.\ Bolker\\
+  McMaster University}
 
 \begin{document}
 
@@ -20,8 +20,10 @@ Compartmental epidemiological models are widely used to understand, manage, and 
 We introduce a new compartmental modeling framework that shares many characteristics with existing models, but includes a number of new and noteworthy features.
 In particular, it includes a flexible structure based on the \emph{flow matrix} (the \emph{per capita} rates of transitions between compartments) that allows it to be used interchangeably for discrete or continuous time and for deterministic or discrete-state stochastic models; the capacity to set starting conditions based on the expected distribution of states during an exponential phase of the epidemic; automatic computation of $\R_0$ and the mean and dispersion of the generation interval for specified parameters; explicit structures incorporating the intensity of testing and delays between test administration and reporting; time-varying parameters based on breakpoints, spline bases, or external covariates such as cellphone-based mobility indices; and the ability to calibrate model parameters to multiple data streams such as case reports, hospitalization and ICU admission rates.
 We demonstrate the model by calibrating it to multiple COVID-19 time series (positive tests, negative tests, hospitalizations, and deaths) for each of the Canadian provinces from 2020-02-27 to 2020-08-30.
-We estimate epidemiological parameters, including the effective reproduction number $\R_t$ over the course of the epidemic.
+We estimate epidemiological parameters, including the effective reproduction number $\R_t$ over the course of these early six months of the pandemic.
 \end{abstract}
+
+\david{Target journal?  Ideas: PLoS Comp Biol}
 
 %%\vfill
 %%\subsubsection*{Our group's COVID-19 research}
@@ -72,16 +74,19 @@ Finally, the model can be used to
 \subsection*{Compartmental structure}
 
 The epidemiological structure of the model is based on a susceptible-exposed-infectious-removed (SEIR) model with additional compartments reflecting the biology of COVID-19 and the structure of the health-care system. 
-The COVID-19-specific compartmental structure of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical, kainChopping2021}. in splitting infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. 
+The COVID-19-specific compartmental structure of the model resembles many other COVID-19 models \cite{childs2021impact, tuite2020mathematical, kainChopping2021} in separating infectious individuals into sub-compartments reflective of the epidemiology of COVID-19; it additionally adds compartments for hospitalized individuals in acute care or intensive care. 
 All symptomatic individuals are presumed to have undergone a period of pre-symptomatic infectiousness (\code{p}). 
 Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
-Some fraction of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
+Some fraction \david{add parameter symbol in brackets} of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
 The model includes additional compartments which facilitate book-keeping: cumulative hospital admissions (\code{X}), individuals in acute care after discharge from ICU (\code{H2}), and cumulative deaths (\code{D}) (\cref{fig:flowchart}).
 (The version of the model discussed here was developed and used before vaccines were available; we have since expanded the model to include relevant compartments.)
 
+\david{It is weird that we do not have a table listing all the parameters of the model.
+I guess that's why the symbol for the proportion in ICU who die was not given above.}
+
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
-We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g. front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
-A \emph{phenomenological heterogeneity} factor $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that as the most susceptible individuals are infected, they lower the average level of susceptibility in the remaining population. While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense/expand where necessary; check Dwyer? Williams et al 2006: ``To allow for heterogeneity in sexual behaviour and to fit the observed asymptotic prevalence of infection, the transmission parameter takes the value $\lambda_0$ at the start of the epidemic and declines exponentially at rate $\alpha$ times the prevalence of infection.'' Granich et al. say ``To allow for heterogeneity in sexual behaviour and for the observed steady state prevalence of HIV, we let the transmission decrease with the prevalence, P. If n=1, the decrease is exponential; if $n=\infty$, the decrease is a step function. Both have been used in previous models (5, 29).'' Granich et al. also cite \cite{williamsHIV2006} (their ref. 29), but I don't see a transmission model in there anywhere ...}
+We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g., front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
+A \emph{phenomenological heterogeneity} parameter \david{not ``factor''} $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that as the most susceptible individuals are infected, they lower the average level of susceptibility in the remaining population. While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense/expand where necessary; check Dwyer? Williams et al 2006: ``To allow for heterogeneity in sexual behaviour and to fit the observed asymptotic prevalence of infection, the transmission parameter takes the value $\lambda_0$ at the start of the epidemic and declines exponentially at rate $\alpha$ times the prevalence of infection.'' Granich et al. say ``To allow for heterogeneity in sexual behaviour and for the observed steady state prevalence of HIV, we let the transmission decrease with the prevalence, P. If n=1, the decrease is exponential; if $n=\infty$, the decrease is a step function. Both have been used in previous models (5, 29).'' Granich et al. also cite \cite{williamsHIV2006} (their ref. 29), but I don't see a transmission model in there anywhere ...}
 
 %\begin{figure}[ht!]
 \begin{figure}
@@ -106,34 +111,47 @@ Compartments denoted by rectangles are accumulators, primarily used in the conde
 %% \label{fig:flowmatrix}
 %% \end{figure}
 
-Internally, the model is defined by a \emph{flow matrix} $\mathbf{M}$, whose elements specify the \emph{per capita} rates at which individuals move from one compartment to another.
-For the basic model, the only element of the flow matrix that needs to be recomputed at each time step is the incidence (flow from $S$ to $E$); all other rates are constant except when the model specifies a piecewise change.
-
-This set-up allows for considerable flexibility.
+Internally, the model is defined by a \emph{flow matrix} $\mathbf{M}$, the elements of which specify the \emph{per capita} rates at which individuals move from one compartment to another.
+For the basic model, the only element of the flow matrix that needs to be recomputed at each time step is the incidence (flow from $S$ to $E$); all other rates are piecewise constant (they are adjusted instantaneously when policies change, for example).
+%%
+This set-up allows for considerable flexibility:
 \begin{itemize}
 \item For a numerical differential equation solver, we need the time derivatives of each compartment. The absolute rates are computed by columnwise multiplication by the state vector $\mathbf s$ (${\mathbf F}_{ij} = \mathbf{M}_{ij} \mathbf{s}_j$).
 The gradient is the difference between the total flows into (column sums of $\mathbf F$) and out of (row sums of $\mathbf F$) each compartment.
 \item For a discrete-time model, we compute the vectors of outflows and inflows as above, but simply compute the new states as (original state + (inflow - outflow)$\Delta t$).
-\item We can also use a discrete-time model with a \emph{hazard correction} to the flows to address the possibility that a state will go negative due to an overly large outflow. Instead of the total \emph{per capita} outflow of a compartment being equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$), we let the total outflow be $\textsub{f'}{tot} = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f'}{tot}/\textsub{f}{tot}$.
+\item We can also use a discrete-time model with a \emph{hazard correction} 
+  \david{Is there a published paper that uses this terminology?  or at least a paper
+    we can cite that uses the idea?  I believe that using this to make a discrete-time
+    model is discussed by Hoppensteadt in an old book that I could find.}
+  to the flows to address the possibility that a state will go negative due to an overly large outflow. Instead of the total \emph{per capita} outflow of a compartment being equal to the sum of \emph{per capita} flow to each other compartment ($\textsub{f}{tot} = \sum_i {\mathbf M}_{ij}$), we let the total outflow be $\textsub{f'}{tot} = 1-\exp(-\textsub{f}{tot} \Delta t)$; the individual flows are then adjusted by a factor of $\textsub{f'}{tot}/\textsub{f}{tot}$.  \david{Notation is not ideal here.  $\textsub{f}{tot}$ depends on $j$; perhaps $f_j$ would be better?  Why $f$?  Maybe
+  $M_j$?}
 This adjustment accounts for the effects of depletion during the course of a time step.
 \item Finally, if we choose to run a fully stochastic simulation, the flow matrix $\mathbf M$ is what we need to sample the flows between compartments as Euler-multinomial deviates \cite{breto+09}, which take the hazard correction described above and use it to compute probabilities for draws from binomial or multinomial random deviates.
 \end{itemize}
 
 While the flow matrix description is convenient for most epidemiological dynamics, there are a few epidemiological processes that are more naturally captured by absolute rather than \emph{per capita} rates, for example (1) when intensities of public health interventions such as numbers of tests or vaccines administered are reported by public health agencies; or (2) in models incorporating births or immigration.
-We have typically handled the former case by taking observed vaccination or testing rates and dividing them by current compartment sizes in order to set the relevant entries in the flow matrix; we have not yet tried to build models including inflows from outside the system (the latter case).
+We have typically handled the former case by taking observed vaccination or testing rates and dividing them by current compartment sizes in order to set the relevant entries in the flow matrix; we have not yet tried to build models including inflows from outside the system (the latter case).\david{The phrasing ``not yet tried'' feels odd in a paper.  Not sure how to express this.}
 
-We typically compute the model dynamics deterministically, as a discrete-time model with a hazard correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_s$, $\textrm{ICU}_d$) compartments.
+We typically compute the model dynamics deterministically, as a discrete-time model with a hazard correction (the third option above).  Once the trajectories are computed, we reduce the full state vector to a more convenient, collapsed state vector in a step we call \emph{condensation}, for example by summing all of the infectious compartments to a single $I$ state vector, or collapsing the different acute-care ($H$, $H2$) or ICU ($\textrm{ICU}_\textrm{s}$, $\textrm{ICU}_\textrm{d}$) compartments.
 As well as allowing us to visualize model results more conveniently, condensation also allows us to compare the simulated state vector to available data streams.
-In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution. 
-Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection by the number of susceptibles, to a case-reporting time series: $\textrm{CR}(t) = \sum \phi(i) (\textrm{FOI}(t-i) S(t-i))$, where we typically set $\phi(i)$ to be a Gamma distribution with
-moments chosen to match estimates of case-reporting delays
+In addition to summing compartments, we can also compute incidences as time-lagged differences of accumulator compartments (for example, differencing accumulated deaths $D$ to derive a mortality rate) or perform more complicated operations such as convolution\david{maybe cite Goldstein et al 2009, PNAS}. 
+Our main use of convolution is to convert incidence, which we compute by multiplying the force of infection (FOI) by the number of susceptibles, to a case-reporting (CR) time series: 
+\begin{linenomath*}
+\begin{equation}\label{eq:CR}
+\textrm{CR}(t) = \sum_i \phi(i) (\textrm{FOI}(t-i) S(t-i))\,,
+\end{equation}
+\end{linenomath*}
+where we typically set $\phi(i)$ to be a Gamma distribution with
+moments chosen to match empirical estimates of case-reporting delays
 \ben{how did we pick these values? 
 Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
 \jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>}
-\ben{done, but still not clear that there are a lot of such estimates in the literature \ldots}
-When computing case reports from incidence we also include a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
+\ben{done, but still not clear that there are a lot of such estimates in the literature \ldots}\david{I added ``empirical'', which can cover unpublished estimates.}
+When computing case reports from incidence we also assume a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
-Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter.
+Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter \cite{linden2011using}.\david{added that ref}
+
+\thickredline
 
 \subsection*{Expansion to accomodate testing}
 
