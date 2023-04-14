@@ -151,22 +151,33 @@ When computing case reports from incidence we also assume a case-report proporti
 
 Once condensation is done, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter \cite{linden2011using}.\david{added that ref}
 
-\thickredline
-
 \subsection*{Expansion to accomodate testing}
 
-At the cost of additional complexity, we can add explicit testing compartments to the model.
-In the simpler version of the model, we assume that a specified fraction of infections are reported as cases (or calibrating this value from joint data on cases and hospitalizations), and imposing a distributed delay between infection and reporting (i.e. via convolution).
-Here we instead expand the susceptible and all infected compartments factorially to include the possibilities that individuals in those epidemiological classes are untested; tested and awaiting negative results; tested and awaiting positive results; or tested positive.
-After receiving negative results (whether true negatives, from individuals in $S$, or false negatives, from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment; depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}); we assume here that people waiting for test results do not isolate.
-\cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that uses a simple SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundational epidemiological model.
-Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering) while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment (e.g., from \code{Im}, negative-waiting to \code{R}, negative-waiting).
+At the cost of additional complexity, we can add explicit testing compartments to the model.  In the simpler version of the model, we assume that a specified fraction of infections are reported as cases (or we calibrate this fraction from joint data on cases and hospitalizations), and impose a distributed delay between infection and reporting (i.e., via convolution).
+Here we instead expand the susceptible and all infected compartments factorially to include the possibilities that individuals in those epidemiological classes have one of four testing statuses:
+\begin{itemize}
+\item untested;
+\item tested and awaiting negative results;
+\item tested and awaiting positive results; or 
+\item tested positive.
+\end{itemize}
+After receiving negative results (whether true negatives, from individuals in $S$, or false negatives, from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment; depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}).  We assume here that people waiting for test results do not isolate.
+Gharouni \emph{et al.}\/ \cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that expands a basic SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundation.
+Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering) while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment, e.g., from \code{Im}-negative-waiting to \code{R}-negative-waiting.
 
-We define a weight vector $w$ across epidemic compartments that gives weight $w_a$ to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and 1 to symptomatic classes (i.e., all other classes).
-If $W$ is the weighted sum of compartment occupancies $X_i$ (i.e., $\sum_i w_i X_i/N$), then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding \emph{per capita} testing rate in compartment $i$ would be $T_i = \rho w_i/W$. 
+We define a weight vector $w$ across epidemic compartments that gives weight $w_\textrm{a}$ to asymptomatic classes (\code{S}, \code{E}, \code{Ia}, \code{Ip}, \code{R}) and 1 to symptomatic classes (i.e., all other classes).
+If $W$ is the weighted sum of compartment occupancies $X_i$, i.e., 
+\begin{equation}
+W = \sum_i w_i X_i/N \,,
+\end{equation}
+then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding \emph{per capita} testing rate in compartment $i$ would be ${\mathcal T}_i = \rho w_i/W$. 
+\david{We should try to keep notation consistent with \cite{Ghar+22}.  I changed
+$T_i$ to ${\mathcal T}_i$.  Not sure that's sufficient.}
 However, under some extreme conditions (if testing is so extreme that few untested symptomatic people are left) this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
-\[T_i = \frac{\rho \tau w_i}{\tau W + \rho} .\] (see \cite{Ghar+22} appendix A.5 for more details).
-The testing flows out of each untested subcompartment are divided into flows to ``positive waiting'' and ``negative waiting'' compartments according to the infection status of the relevant compartment and specificity/sensitivity parameters. If tests are assumed to be perfectly specific and sensitive, then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the ``negative waiting'' and those from infectious compartments enter the ``positive waiting'' compartment.
+\begin{equation}
+{\mathcal T}_i = \frac{\rho \tau w_i}{\tau W + \rho} \,;
+\end{equation}
+see Appendix A.5 of \cite{Ghar+22} for details.  The testing flows out of each untested subcompartment are divided into flows to ``positive waiting'' and ``negative waiting'' compartments according to the infection status of the relevant compartment and specificity/sensitivity parameters (specificity/sensitivity refers to the probability that a truely negative/positive individual tests negative/positive).  \david{phrasing could probably be improved, but I felt we should define specificity and sensitivity} If tests are assumed to be perfectly specific and sensitive, then all individuals from non-infectious compartments (\code{S}, \code{E}, \code{R}) enter the ``negative waiting'' compartment and those from infectious compartments enter the ``positive waiting'' compartment.
 
 We assume that all individuals admitted to the hospital for COVID-19 are immediately tested. (These tests are not included in the accounting of test distribution above, but in the COVID setting they represent a small fraction of the overall number of tests administered.)
 
@@ -179,6 +190,8 @@ We assume that all individuals admitted to the hospital for COVID-19 are immedia
 	 \mike{Irena}
   \label{fig:testing_flow}
 \end{figure}
+
+\thickredline
 
 \subsection*{Model parameterization}
 
