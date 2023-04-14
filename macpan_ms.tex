@@ -191,41 +191,56 @@ We assume that all individuals admitted to the hospital for COVID-19 are immedia
   \label{fig:testing_flow}
 \end{figure}
 
-\thickredline
-
 \subsection*{Model parameterization}
 
 The model allows for time-varying, piecewise-constant changes in any parameter. 
 Our early analyses focused on changes in time-varying effective reproductive number (\Rt) due to behaviour change and non-pharmaceutical interventions, which we model by changing the transmission rate.
 The transmission rate $\beta(t)$ is taken to be a time-varying function of the form $\beta_0 \beta_1(t)$ where $\beta_0$ is the baseline value for transmission from symptomatic individuals.
 Individuals in different symptomatic classes (presymptomatic, asymptomatic, mild, severe) may have their transmission modified by a specified multiplier (given as model parameters); we assume that hospital transmission is negligible.
+\david{Can we find a reference to support most transmission occuring in the community / outside hospitals?}
 The time-varying (relative) transmission $\beta_1$ can incorporate a variety of different effects, one at a time or in combination:
 \begin{itemize}
 \item abrupt (piecewise) changes on specified dates when control measures are known to have been implemented;
-\item proportional to a power of observed mobility or some other exogenous proxy for contact behaviour
-\[
-  \beta_1(t) \propto \log(M(t))^{\pmob}, 
-  \]
+\item proportional to a power of observed mobility or some other exogenous proxy for contact behaviour:
+\begin{equation}
+  \beta_1(t) \propto \log(M(t))^{\pmob} \,, 
+\end{equation}
 where $M(t)$ is the relative mobility index at time $t$, for some power $\pmob>0$;
-\item according to an arbitrary spline curve, i.e. a linear combination of components of a B-spline basis.
+\item according to an arbitrary spline curve, i.e., a linear combination of components of a B-spline basis.
 \end{itemize}
-
-All of the sub-models for temporal change in the transmission rate can be subsumed under a single log-linear model:
+All of these sub-models for temporal change in the transmission rate can be subsumed under a single log-linear model:
 \begin{equation}\label{eq:betamodel}
 \log \beta(t) = \log \beta_0 + \XX\boldsymbol{c}
 \,,
 \end{equation}
-where $\XX$ is a model matrix that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
+where $\XX$ is a model matrix 
+\david{not ideal that we have $X_i$ meaning something else entirely above}
+that can contain any combination of covariates and $\boldsymbol{c}$ is a vector of covariates determining differences in the log of the relative transmission rate.
+\david{Only $\boldsymbol{c}$ can vary in time, right?  We should therefore
+write $\boldsymbol{c}(t)$ in \cref{eq:betamodel}.}
 In particular, piecewise breaks correspond to indicator variables for which period an observation falls in; the mobility model corresponds to a column containing the log of relative mobility; and the spline model corresponds to a set of columns containing the basis vectors of a B-spline basis with specified knots.
 
 In practice, when we use the model without incorporating covariates we adopt a simpler strategy of providing a list of the breakpoints and the parameters that change at those breakpoints --- a special case of the more general log-linear model. In the models illustrated below, we pick breakpoints to denote several time periods $\{P_1, P_2, \ldots\}$ and construct $\XX$ to allow the effects of mobility, and the baseline contact rate, to change at breakpoints.
-Specifically, for each breakpoint we define a logistic transition curve $S(j) = (1+\exp((t-t_\textrm{brk}(j))/s))^{-1}$, where $s$ (set to 3 days) defines the speed of transition. Because the baseline transmission rate is included in the model (as parameter \code{beta0}), we do not need to include an intercept in $\XX$; the first column is $\log(M(t))$. Subsequent columns $2j$ and $2j+1$ are defined as 
-For the first period, Thus, columns $2j-1$ and $2j$ of $\XX$ are defined as $S(j)$ and $S(j) \log M(t)$, respectively. The parameters associated with these columns denote the change in baseline contact rate and the change in the effect of mobility between periods $j$ and $j+1$.
+Specifically, for each breakpoint we define a logistic transition curve 
+\begin{equation}
+S(j) = (1+\exp((t-t_\textrm{brk}(j))/s))^{-1} \,,
+\end{equation}
+where $s$ (set to 3 days) defines the speed of transition. Because the baseline transmission rate is included in the model (as parameter \code{beta0}), we do not need to include an intercept in $\XX$; the first column is $\log(M(t))$. Subsequent columns $2j$ and $2j+1$ are defined as
+\david{ummm, that sentence isn't finished}
+For the first period, 
+\david{again, the sentence didn't get finished}
+Thus, columns $2j-1$ and $2j$ of $\XX$ are defined as $S(j)$ and $S(j) \log M(t)$, respectively. The parameters associated with these columns denote the change in baseline contact rate and the change in the effect of mobility between periods $j$ and $j+1$.
 \ben{WZMLi: does this match what you think we did/your description below?}
   
 \subsection*{Derived parameters and parameter setting}
 
-It is useful to be able to compute several quantities derived from the parameters of a model, in particular (1) the dominant eigenvector of the system in the exponential growth phase; (2) the value of \Rzero and the intrinsic growth rate $r$; (3) the mean and coefficient of variation of the generation interval. 
+It is useful to be able to compute several quantities derived from the parameters of a model, in particular:
+\begin{enumerate}
+\item the dominant eigenvector of the system in the exponential growth phase
+  (as described below, we use this eigenvector to set sensible initial conditions for all state variables, including those that cannot be observed);
+\item the basic reproduction number \Rzero and the intrinsic growth rate $r$;
+\item the mean and coefficient of variation of the generation interval. 
+\end{enumerate}
 In principle we could compute these values directly from the flow matrix, by constructing the Jacobian matrix and the next-generation matrix and performing the appropriate eigenvector/eigenvalue calculations (as discussed by \cite{VandWatm02} for differential equations and \cite{Casw00} for discrete-time systems). However, we found it simpler to derive these values by simulation.
 
 To compute the eigenvector, we run a simulation where we set the outflow from the susceptible compartment to zero (while maintaining the \emph{inflow} from $S$ to $E$), which mimics the dynamics near the disease-free equilibrium where susceptible depletion is negligible. After running the simulation for a long time (100 steps by default), the state vector is close to the eigenvector.  
@@ -233,18 +248,17 @@ We use this value to set starting conditions when starting near the beginning of
 It is easy to specify a scalar value (say, 1\% of the population) to indicate the initial size of the epidemic; by distributing these individuals according to the calculated eigenvector, we reduce numerical instability at the beginning of our simulations. 
 
 To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. 
-We simulate the progression of a \emph{single} individual through the infection process, i.e. setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. 
-Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age of infetion, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. 
+We simulate the progression of a \emph{single} individual through the infection process, i.e., setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. 
+Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age of infection, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. 
 This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. 
-We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient
+We can easily compute $\Rzero = \sum_t K$, mean generation interval  $\bar G = \sum_t K(t)/\Rzero \cdot t$, and generation interval coefficient of variation,
 \[
-\textrm{CV}(G) = \frac{\sqrt{\sum_t K(t)/\Rzero (t- \bar G)^2}}{\bar G} .
+\textrm{CV}(G) = \frac{\sqrt{\sum_t K(t)/\Rzero (t- \bar G)^2}}{\bar G} \,.
 \]
-The growth rate $r$ can be computed by numerically solving the Euler-Lotka equation
+The growth rate can be computed by numerically solving for $r$ in the Euler-Lotka equation,
 \[
-\sum_t  K(t) e^{-r t} = 1
+\sum_t  K(t) e^{-r t} = 1 \,.
 \]
-for $r$.
 
 \jd{Suggest dropping the detailed equations for Gbar and CV, but instead adding $g(t)$ and saying that we also calculate its mean and CV.}
 \jd{Suggested easy ref is ChamDush15: http://dx.doi.org/10.1098/rspb.2015.2026 (instead of current Cham18)}
@@ -252,43 +266,57 @@ for $r$.
 
 In addition to its use in summarizing a given set of parameters, the computation of $\Rzero$, $r$, and the generation interval is useful as an initial step in calibrating the model. 
 Estimates of these summary statistics are more broadly available \cite{park2020reconciling}, and more epidemiologically relevant, than the more specific mechanistic parameters describing the relative infectiousness and duration of each of the different infectious compartments (although this detailed information is still important for determining the effectiveness of interventions like contact tracing). 
-We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{\gamma}{a}) by a single factor until the target values are achieved.
+We typically start with mechanistic parameters gathered from the literature and pre-calibrate them to specified target values of $r$ (which is easy to estimate from the observed initial growth rate of the epidemic in a region) and the mean generation interval by adjusting $\beta_0$ (baseline transmission) and simultaneously scaling the values of all of the epidemiological transition rates ($\sigma$, \textsub{\gamma}{s}, \textsub{\gamma}{m}, \textsub{\gamma}{a})
+\david{where is the parameter table?...}
+by a single factor until the target values are achieved.
 
 \subsubsection*{Calibration}
 
-Once we have run a deterministic model simulation for a particular set of parameters (including a starting number infected, distributed across non-susceptible classes according to the exponential-phase eigenvector computed as described above) and we have some set of time series data to calibrate against (for example, case reports and hospital admissions), we can calculate a log-likelihood. 
-We assume that every observation is independently negative binomially distributed, with a series-specific estimated dispersion parameter (i.e. the variability in cases, hospital admissions, etc. will differ). 
+Once we have run a deterministic model simulation for a particular set of parameters (including a starting number infected, distributed across non-susceptible classes according to the exponential-phase eigenvector computed as described above) and we have some set of time series data to calibrate against (for example, case reports and hospital admissions), we can calculate a log-likelihood (e.g., \cite{Bolk08}). 
+We assume that every observation is independently negative binomially distributed, with a series-specific estimated dispersion parameter (i.e., the variability in cases, hospital admissions, etc., will differ). 
 We use standard nonlinear optimization algorithms built into R, such as Nelder-Mead, to find the maximum likelihood estimates; when we have had difficulty with numerical instability, we have performed an initial fit with differential evolution \cite{Mull+11} followed by a final fit with Nelder-Mead.
 
 A link function can be added for any parameter in the model to constrain it to a sensible domain; the user specifies this by adding an appropriate prefix to the name of the parameter in the list of starting values for parameters to be calibrated. 
-For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive, and using a starting value of -1 on the log scale (i.e. initial $\beta_0 = \exp(-1)$). 
-Specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the fraction of non hospitalized mortality) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1, and using a starting value of $\beta_0 = \textrm{logit}^{-1}(-0.2) = 0.45$.
+For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive, and using a starting value of -1 on the log scale (i.e., initial $\beta_0 = \exp(-1)$). 
+Specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the fraction of non-hospitalized mortality\david{is that the case fatality proportion outside hospital, or the proportion of deaths that occur outside hospital? I presume the former but it sounds like the latter}) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1, and using a starting value of $\beta_0 = \textrm{logit}^{-1}(-0.2) = 0.45$.
 
 The model includes a general framework for adding a prior probability distribution for any parameter, using any distribution available in R. 
 For example, \code{dbeta(nonhosp\_mort, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{nonhosp\_mort}.
 We do not need to adopt a fully Bayesian framework to make use of priors; instead, we can think of them as convenient regularizing factors to keep the model-fitting process numerically stable. If we do want to be Bayesian, then the fitting procedure described above will return maximum \emph{a posteriori} (MAP) parameter values, not a sample from the full posterior distribution as is standard with frameworks that use Markov chain Monte Carlo.
+\david{A standard ref is needed for MCMC.  \cite{Bolk08} or something else?}
 
-
-In Ontario, we calibrate to deaths, and new confirmations, all of which are available publicly. 
+For the province of Ontario, Canada,
+we calibrate to deaths, and new confirmations, all of which are available publicly. 
 In the expanded model, we can include time series of both positive and negative tests in our calibration. 
 Reported new confirmations are the most reliable and voluminous source of epidemic information.
 Unfortunately, they are also subject to many inherent biases, including substantial variation over time in \term{testing intensity} (\ie tests \emph{per capita} per day).
 
-We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}] (two mobility intercept and three slopes), and several basic model parameters (\cref{estparmtab}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
-\mike{how does cref work?}
+We simultaneously estimate the temporal pattern of the transmission rate [Equation~\eqref{eq:betamodel}] (two mobility intercepts and three slopes), and several basic model parameters (\cref{estparmtab}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
+\mike{how does cref work?}\david{like \macro{ref} except that it figures out what
+  you're referring to and behaves appropriately.  So when \texttt{estparmtab} exists,
+  \macro{cref}\texttt{\{estparmtab\}} will yield ``Table 3'' or whatever.}
 \ben{DJDE/JD/WZMLi: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab) working and properly cross-referenced, then we don't need the information in Mike's comments above. We may need to do some archaeology: were these in the original report to PHAC?}
 Other model parameters are taken from the literature (\cref{litparmtab}).
 
-We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas many severe cases actually occur entirely in Long Term Care Facilities (LTCFs); thus,
+We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas during the early pandemic period
+that we focus on here, many severe cases actually occur entirely in Long Term Care Facilities (LTCFs); thus,
 our model would not properly match the observed time series of hospitalization and ICU occupancy, or at least would fail to account for
 severe cases outside of hospitals. Furthermore, capacity limitations in the health care system lead to ceilings on hospitalization that are
-not properly represented in our model.
+not represented in our model.
 \ben{I think I got this statement right but am not sure: WZMLi/JD/DJDE, please check for correctness/clarity.}
+\david{I removed ``properly'' since we make no attempt to represent capacity limits
+  to my knowledge. What you describe accurately reflects our rationale in 2020, but we are currently happy to calibrate to hosp and ICU. Can we rephrase in a way
+  that is consistent with us later deciding that fitting to hosp and ICU is OK?
+  Is my additional phrase ``during the early pandemic period
+that we focus on here'' a solution?}
 
 \subsubsection*{Forecasting}
 
 Our calibrations yield values for the parameters of our deterministic model. 
-Using the calibrated parameters and the estimated covariance matrix of the sampling distribution of the parameters, we draw 1000 sets of parameters from a multivariate normal distribution \cite{Bolk08,krinskyThree1991a} and feed them into the deterministic model to generate an ensemble of forecasts. We extend the end date of the calibration window (i.e. the last observed data point for calibration) to create a forecast window. In the forecast window, the user can either input covariates (i.e. relative mobility and/or testing rates, depending on the model) or assume that the last set of inputs remain constant through the forecasting window. 
+Using the calibrated parameters and the estimated covariance matrix of the sampling distribution of the parameters, we draw many (typically 1000) sets of parameters from a multivariate normal distribution \cite{Bolk08,krinskyThree1991a} and feed them into the deterministic model to generate an ensemble of forecasts. We extend the end date of the calibration window (i.e., the last observed data point for calibration) to create a forecast window. In the forecast window, the user can either investigate scenarios by inputting covariates (i.e., relative mobility and/or testing rates, depending on the model) or assume that the last set of inputs remain constant through the forecasting window to obtain a
+\emph{status quo} forecast.
+
+\thickredline
 
 \subsection{Data sources}
 
@@ -492,7 +520,7 @@ Figure \ref{fig:Ont_calibration} shows the fit to data of a basic model that cal
 \mike{do we need a justification of the end date?}
 The basic model was chosen to be the base model because reported cases and death time series are most commonly applicable to public data for many juristrictions.
 This time frame captures the first wave of the COVID outbreak in Ontario. 
-We did not explicitly include break dates (i.e. time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.
+We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.
 Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
 
 
