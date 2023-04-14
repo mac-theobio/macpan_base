@@ -62,16 +62,17 @@ macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps figure/flo
 ######################################################################
 
 ## repiped figures
-wrapRdesc += figure/flow
+pipeRdesc += figure/flow
 figure/flow.Rout: figure/flow.R
-	$(wrapR)
+	$(pipeR)
 
 ## figure/flow.chart.crop.pdf:
+## figure/flow.chart.pdf: figure/flow.R
 
-wrapRdesc += figure/testFlow
+pipeRdesc += figure/testFlow
 ## figure/testFlow.1.Rout: figure/testFlow.R
 figure/testFlow.%.Rout: figure/testFlow.R
-	$(wrapR)
+	$(pipeR)
 
 ## %.crop.pdf: %.pdf
 figure/flow.chart.crop.pdf: figure/flow.chart.pdf
