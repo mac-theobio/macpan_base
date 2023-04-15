@@ -30,16 +30,16 @@ code/ontario_plots.Rout: code/ontario_plots.R
 code/ontario_tables.Rout: code/ontario_tables.R
 	$(pipeR)
 
-code/ontario_base_forecast.Rout: code/ontario_base_forecast.R
+slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R
 	$(pipeR)
 
-code/ontario_base_forecast_plot.Rout: code/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
+code/ontario_base_forecast_plot.Rout: slow/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
 	$(pipeR)
 
-code/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
+slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
 	$(pipeR)
 
-code/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
+code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
 	$(pipeR)
 
 code/ontario_mobility.Rout: code/ontario_mobility.R
@@ -50,6 +50,7 @@ code/ontario_mobility.Rout: code/ontario_mobility.R
 
 ######################################################################
 
+## Deprecated by slowtarget
 testsetup:
 	- cp ../code/*_forecast.rda code/
 	- cp ../code/*_forecast.Rout code/
@@ -112,14 +113,15 @@ Sources += Makefile
 Ignore += makestuff
 msrepo = https://github.com/dushoff
 
-Makefile: makestuff/Makefile
-makestuff/Makefile:
+Makefile: makestuff/macpan_base_00.stamp
+makestuff/Makefile: 
 	git clone $(msrepo)/makestuff
 	ls makestuff/Makefile
 
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/slowtarget.mk
 -include makestuff/texi.mk
 
 -include makestuff/git.mk
