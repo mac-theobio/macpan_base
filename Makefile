@@ -52,6 +52,7 @@ code/ontario_mobility.Rout: code/ontario_mobility.R
 
 testsetup:
 	- cp ../code/*_forecast.rda code/
+	- cp ../code/*_forecast.Rout code/
 
 ######################################################################
 
