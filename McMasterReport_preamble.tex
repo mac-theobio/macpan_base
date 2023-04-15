@@ -14,6 +14,10 @@
 \usepackage[sort&compress]{natbib}
 \setcitestyle{numbers}
 
+%% https://tex.stackexchange.com/questions/2746/aligning-numbers-by-decimal-points-in-table-columns
+\usepackage{dcolumn}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
 %% cleveref package for convenient hyperrefercing/citing:
 \usepackage[nameinlink,capitalize]{cleveref}
 \crefname{equation}{Equation}{Equations}

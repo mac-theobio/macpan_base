@@ -69,15 +69,18 @@ testify_table_rename <- (left_join(testify_table,testify_pardf)
 	%>% transmute(NULL
 		, Parameter = names
 		, Estimate = as.character(format(round(value,3)),nsmall=3)
-		, Estimate = ifelse(as.numeric(Estimate) > 1e3, "\\gg 1000",Estimate)
+		, Estimate = ifelse(as.numeric(Estimate) > 1e3, "$\\gg 1000$",Estimate)
 	)
 )
 
 testify_table_rename
 
-cat(kable(base_table_rename,format="latex",align = "c")
-		, file = "base_table.tex"		
+cat(kable(base_table_rename,format="latex",align = c("l","r"))
+          ## could use decimal alignment but have other stuff to sort out ...
+          ## "d{3.1}"))
+  , file = "base_table.tex"		
 )
+    
 cat(kable(testify_table_rename,format="latex",align = "c")
 	, file = "testify_table.tex"		
 )
