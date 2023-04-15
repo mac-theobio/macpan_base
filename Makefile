@@ -57,15 +57,14 @@ testsetup:
 
 ######################################################################
 
-.PHONY: ontario_deps
 ontario_deps: code/ontario_plots.rda code/ontario_tables.rda code/ontario_base_forecast_plot.rda code/ontario_testify_forecast_plot.rda code/ontario_mobility.rda
 
 ## JD: This seems to chain without being uncommented; 
 ## let me know if you have a reproducible bug
 macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps figure/flow.chart.crop.pdf figure/testFlow.1.Rout.pdf
+	pdflatex macpan_ms.tex
 ## these seem useful, but break when included
 ## code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_testify_forecast_plot.Rout 
-	pdflatex macpan_ms.tex
 
 ######################################################################
 
