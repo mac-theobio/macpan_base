@@ -114,9 +114,10 @@ Ignore += makestuff
 msrepo = https://github.com/dushoff
 
 Makefile: makestuff/macpan_base_00.stamp
-makestuff/Makefile: 
-	git clone $(msrepo)/makestuff
-	ls makestuff/Makefile
+makestuff/*.stamp: 
+	- $(RM) makestuff/*.stamp
+	(cd makestuff && $(MAKE) pull) || git clone $(msrepo)/makestuff
+	touch $@
 
 -include makestuff/os.mk
 
