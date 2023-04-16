@@ -13,7 +13,8 @@ vim_session:
 
 ######################################################################
 
-## Sources += $(wildcard *.tex figure/*.R)
+Sources += $(*/*.R)
+Sources += macpan_ms.tex McMasterReport_preamble.tex
 Ignore +=	base_table.tex testify_table.tex
 
 ######################################################################
