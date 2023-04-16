@@ -6,12 +6,7 @@ rpcall("figure/testFlow.1.Rout figure/testFlow.R")
 startGraphics(width = 6, height = 6)
 
 ## MLi: this is the problem, pipeStar is getting the error
-## version <- pipeStar()
-
-## MLi: hacks
-
-version <- 1
-
+version <- pipeStar()
 if (version=="") stop('You need to specify a version for this script by adding "1" or "2" to the file name')
 
 ## version 1 (basic)

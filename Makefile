@@ -13,7 +13,7 @@ vim_session:
 
 ######################################################################
 
-Sources += $(*/*.R)
+Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex
 Ignore +=	base_table.tex testify_table.tex
 
@@ -80,9 +80,11 @@ figure/flow.Rout: figure/flow.R
 pipeRdesc += figure/testFlow
 ## pipeRimplicit += figure/testFlow
 ## figure/testFlow.1.Rout: figure/testFlow.R
-figure/testFlow.1.Rout: figure/testFlow.R
+figure/testFlow.%.Rout: figure/testFlow.R
 	$(pipeR)
 ## MLi do we ever use v2? 
+
+
 
 
 
