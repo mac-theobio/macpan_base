@@ -79,8 +79,6 @@ figure/flow.Rout: figure/flow.R
 ## figure/flow.chart.crop.pdf:
 ## figure/flow.chart.pdf: figure/flow.R
 
-pipeRdesc += figure/testFlow
-## pipeRimplicit += figure/testFlow
 ## figure/testFlow.1.Rout: figure/testFlow.R
 figure/testFlow.%.Rout: figure/testFlow.R
 	$(pipeR)
