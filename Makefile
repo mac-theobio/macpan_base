@@ -64,6 +64,7 @@ code/ontario_mobility.Rout: code/ontario_mobility.R
 ## Explicit pointers for old pathways
 
 figure/%.png: code/%.Rout ;
+figure/ontario_base.png: code/ontario_plots.Rout ;
 
 ######################################################################
 
