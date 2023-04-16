@@ -49,16 +49,6 @@ code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/
 code/ontario_mobility.Rout: code/ontario_mobility.R
 	$(pipeR)
 
-## JD: Not unravelling this now, but this stuff should be coded here
-## figure/%.png: code/%.Rout ;
-
-######################################################################
-
-## Deprecated by slowtarget
-testsetup:
-	- cp ../code/*_forecast.rda code/
-	- cp ../code/*_forecast.Rout code/
-
 ######################################################################
 
 # ontario_deps: code/ontario_plots.rda code/ontario_tables.rda code/ontario_base_forecast_plot.rda code/ontario_testify_forecast_plot.rda code/ontario_mobility.rda
@@ -68,6 +58,12 @@ testsetup:
 # macpan_ms.pdf: macpan_ms.tex McMasterReport_preamble.tex ontario_deps figure/flow.chart.crop.pdf figure/testFlow.1.Rout.pdf; pdflatex macpan_ms.tex
 ## these seem useful, but break when included
 ## code/ontario_plots.Rout code/ontario_tables.Rout code/ontario_testify_forecast_plot.Rout 
+
+######################################################################
+
+## Explicit pointers for old pathways
+
+figure/%.png: code/%.Rout ;
 
 ######################################################################
 
@@ -86,20 +82,10 @@ figure/testFlow.%.Rout: figure/testFlow.R
 	$(pipeR)
 ## MLi do we ever use v2? 
 
-
-
-
-
-
 ## %.crop.pdf: %.pdf
 figure/flow.chart.crop.pdf: figure/flow.chart.pdf
 	Rscript -e 'knitr::plot_crop("$<")'
 	$(copy)
-
-## pre-piping versions
-## git rm figure/testing_flow_graph.R figure/flowmatrix.R 2022 Aug 09 (Tue)
-## figure/testing_flow_graph.R.c66c057d.oldfile:
-## figure/flowmatrix.R.c66c057d.oldfile:
 
 ######################################################################
 
