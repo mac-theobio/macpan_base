@@ -28,3 +28,6 @@ macpan_base.Rproj
 *.rtmp
 *.args
 *.png
+*.tex.deps
+*.mk
+*.subdeps

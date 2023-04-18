@@ -298,6 +298,12 @@ We simultaneously estimate the temporal pattern of the transmission rate [Equati
 \ben{DJDE/JD/WZMLi: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab) working and properly cross-referenced, then we don't need the information in Mike's comments above. We may need to do some archaeology: were these in the original report to PHAC?}
 Other model parameters are taken from the literature (\cref{litparmtab}).
 
+\begin{table}
+  \centering
+  \input{litparmtab.tex}
+  \caption{\label{litparmtab} Literature parameters}
+\end{table}
+
 We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas during the early pandemic period
 that we focus on here, many severe cases actually occur entirely in Long Term Care Facilities (LTCFs); thus,
 our model would not properly match the observed time series of hospitalization and ICU occupancy, or at least would fail to account for
@@ -553,7 +559,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \begin{table}
 \centering
 \input{base_table.tex}
-\caption{Parameter estimates for base model calibration. \ben{Need to figure out how this is generated/adjust names to be sensible/augment caption. Parameter names should be left-justified, estimates decimal-point-justified. Where are the (\textbackslash gg)s coming from? WZMLi?}}
+\caption{Parameter estimates for base model calibration. \ben{JD/DJDE: should some parameters (change in transmission etc.) be back-transformed? Are parameter names comprehensible?  Should we add confidence intervals/std errs? We should explain that dispersion model is converging to Poisson; do we need to justify/explain the very high value of $\zeta$ (phenom het)?}}
 \label{table:base}
 \end{table}
 
@@ -562,7 +568,7 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 
 \subsection{Incorporating testing flows}
 
-The base model is relative simple but does not account for testing practices. Testing strategies changed continuously over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The verticle line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
+The base model is relative simple but does not account for testing practices. Testing strategies changed continuously over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
 
 
 \begin{figure}[ht!]
