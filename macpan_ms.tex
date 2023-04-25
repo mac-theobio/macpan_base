@@ -342,195 +342,31 @@ Our calibrations yield values for the parameters of our deterministic model (\cr
 Using the calibrated parameters and the estimated covariance matrix of the sampling distribution of the parameters, we draw many (typically 1000) sets of parameters from a multivariate normal distribution \cite{Bolk08,krinskyThree1991a} and feed them into the deterministic model to generate an ensemble of forecasts. We extend the end date of the calibration window (i.e., the last observed data point for calibration) to create a forecast window. In the forecast window, the user can either investigate scenarios by inputting covariates (i.e., relative mobility and/or testing rates, depending on the model) or assume that the last set of inputs remains constant through the forecasting window to obtain a
 \emph{status quo} forecast.
 
-\thickredline
-
 \subsection{Data sources}
 
-\david{This section describes all the data available to us, whether we
-  use it or not.  This is harmless for the PHAC report, but we'll need
-  to describe only data we when we submit for publication.}
-\mike{I am commenting out all the parts we are not using}
-% 
-% One of us (ML) maintains a public web site containing Canadian
-% COVID-19 data at the provincial level.  Data are frequently downloaded
-% from a variety of sources and cleaned.  See
-% \url{https://wzmli.github.io/COVID19-Canada/}.
-% 
-% While the public data do include line lists of records for individual
-% patients, there are several important limitations:
-% \begin{itemize}
-% \item A single \term{episode date} is given, with no indication of
-%   whether this refers to the date of onset of symptoms, date of
-%   testing, date of report, \emph{etc.}
-% \item Only a broad age class is given (\eg 50--59), rather than the
-%   exact age of each patient.
-% \end{itemize}
+\david{I've moved comments about commenting out text and the commented out text to \texttt{cuts.tex}, because I have bad experience with having commented-out text in a file that suddenly appears in the galley proofs because a copy-editor thinks it wasn't meant to be commented out.}
 
-\mike{let's stick with public Ontario for now?}
 \subsubsection*{Public COVID-19 data for Ontario, Canada}
 
-
-Daily reported data on COVID-19 testing and outcomes (confirmed cases, death, hospital and ICU occupancy) in Ontario are publicly available from the official provincal website. See
+Daily reported data on COVID-19 testing and outcomes (confirmed cases, deaths, hospital and ICU occupancies) are publicly available for Ontario on the official provincal website:
 \url{https://data.ontario.ca/dataset/f4f86e54-872d-43f8-8a86-3892fd3cb5e6/resource/ed270bb8-340b-41f9-a7c6-e8ef587e6d11/download/covidtesting.csv}.
-
-However, this dataset does not have testing counts before April 15th. 
-One of us (ML) maintains a public web site containing Canadian COVID-19 data at the provincial level since the beginning of the COVID-19 pandemic.   
-Data are frequently downloaded from a variety of sources and cleaned.  See
-\url{https://wzmli.github.io/COVID19-Canada/}.
-
-% \subsubsection*{Detailed COVID-19 data for Ontario}
-
-% Through Public Health Ontario
-% (\href{https://www.publichealthontario.ca/}{PHO}), we have obtained access to
-% data from a number of health databases.
-% \begin{description}
-% \item[iPHIS]A line list extracted from the integrated Public Health
-%   Information System
-%   (\href{https://www.publichealthontario.ca/en/diseases-and-conditions/infectious-diseases/ccm/iphis}{iPHIS})
-%   includes, for most patients:
-%   \begin{itemize}
-%   \item dates of symptom onset, specimen collection, case report, ER
-%     visit, hospital admission and discharge, ICU admission and
-%     discharge, death;
-%   \item gender;
-%   \item either age (in two-year age groups) OR location (FSA: first
-%     three characters of postal code).
-% 
-%   \end{itemize}
-% \item[OLIS]A line list extracted from the Ontario Laboratories
-%   Information System
-%   (\href{https://www.ehealthontario.on.ca/en/for-healthcare-professionals/ontario-laboratories-information-system-olis}{OLIS})
-%   provides information on every COVID-19 test performed in Ontario.
-%   (The records are unfortunately not linked to the iPHIS database.)
-%   Age is given only in 10-year age classes.
-% \item[ICES]Through a secure data portal at
-%   \href{https://www.ices.on.ca/}{ICES}, we can access more complete
-%   data from
-%   \href{https://www.ehealthontario.on.ca/en/for-healthcare-professionals/ontario-laboratories-information-system-olis}{OLIS}
-%   (including age rather than age group of each tested individual), the
-%   Discharge Abstract Database
-%   (\href{https://www.cihi.ca/en/discharge-abstract-database-metadata}{DAD}),
-%   the National Ambulatory Care Reporting System
-%   (\href{https://www.cihi.ca/en/national-ambulatory-care-reporting-system-metadata}{NACRS})
-%   and claims made to the Ontario Health Insurance Plan
-%   (\href{https://www.ontario.ca/page/what-ohip-covers}{OHIP}).  These
-%   databases are linkable through encrypted individual identifiers.
-%   \david{Is iPHIS definitely not available within ICES?}
-% 
-%   Using the ICES secure data portal is awkward and time-consuming;
-%   other than conducting some exploratory analysis, we have so far used
-%   it only to obtain the detailed age structure of the OLIS testing
-%   data (which is not available to us via iPHIS).
-% \end{description}
-
-
+However, this dataset does not include testing counts before 15 April 2020.  Since the beginning of the COVID-19 pandemic (and until the present at the time of writing), one of us (ML) has maintained a public web site containing Canadian COVID-19 data at the provincial level.  Data are frequently downloaded from a variety of sources and cleaned.  See \url{https://wzmli.github.io/COVID19-Canada/}.
 
 \hypertarget{Mobility data}{}
 \subsubsection*{Mobility data}
 
-We use mobility data from
-Apple\footnote{\url{https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/applemobilitytrends.csv}}
-and
-Google\footnote{\url{https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv}}.
-From these data we derive a
-\term{relative mobility index} using the ``driving'' index from Apple
-and the ``retail and recreation'' and ``workplaces'' indices from
-Google; we compute a 7-day moving average of these indices, rescale
-all of them to have a baseline (pre-pandemic) value of 1.0, and
-average the three indices (equally weighted), to obtain an overall
-index for each day.
+We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/applemobilitytrends.csv}} and Google\footnote{\url{https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv}}.  From these data we derive a \term{relative mobility index} using the ``driving'' index from Apple and the ``retail and recreation'' and ``workplaces'' indices from Google; we compute a 7-day moving average of these indices, rescale all of them to have a baseline (pre-pandemic) value of 1.0, and average the three indices (equally weighted), to obtain an overall index for each day.
 
-% \subsubsection*{Important dates}
-% 
-% Our code allows us to model abrupt effects on the effective
-% reproduction number ($\R_t$) on a given set of dates, and to find the
-% relative transmission changes that best fit the data.
-% 
-% Key dates in Ontario are listed in \cref{tab:dates}.  We ignore the
-% initial declaration of emergency on 17 March 2020 because this
-% occurred during the March Break for schools and therefore had a small
-% effect until 23 March when schools would have re-opened and workplaces
-% were ordered to close.  Many other measures, announcements and
-% developments are listed (for each province and territory) in the
-% document \texttt{Timeline of FPT PH Measures on COVID-19
-%   2020-05-04.docx} provided by the Chief Science Advisor on 8 May
-% 2020. \david{That statement is fine for the report, but not for a
-%   publication.} However, for Ontario, there are no other obvious dates
-% that seem to be likely to be associated with a major change in social
-% distancing.
-% 
-% \david{Ontario covid timeline from Wikipedia: \url{https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Ontario}.}
-% 
-% We have chosen not to fit abrupt changes in $\R_t$ because we have
-% found that \hypertarget{Mobility data}{relative mobility indices}
-% yield more plausible fits.  Mobility indices seem to better reflect
-% (1) gradual uptake/compliance with discrete changes in government
-% policies, and (2) behavioural changes that are not directly related to
-% official policies.
-% 
-% \begin{table}[ht]
-% \begin{center}
-%   \RaggedRight
-%   \renewcommand{\arraystretch}{1.5}
-%   \small
-% \begin{tabular}{ c | p{7cm} | p{6cm} }
-% {\bfseries Date} & {\bfseries Event} & {\bfseries Comment} \\ \hline
-% 
-% 11 March 2020 &
-%                 \href{https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020}{W.H.O.~declares COVID-19 pandemic} \\
-% 17 March 2020 &
-%                 \href{https://news.ontario.ca/opo/en/2020/03/ontario-enacts-declaration-of-emergency-to-protect-the-public.html}{Ontario
-%                 declares emergency} & Schools ordered to stay
-%                                             closed after March Break. \\
-% 23 March 2020 & Ontario orders workplaces to close & Initially
-%                                                     \href{https://news.ontario.ca/opo/en/2020/03/ontario-closing-at-risk-workplaces-to-protect-health-and-safety.html}{At-Risk
-%                                                     Workplaces} and
-%                                                     then
-% \href{https://news.ontario.ca/opo/en/2020/03/ontario-orders-the-mandatory-closure-of-all-non-essential-workplaces-to-fight-spread-of-covid-19.html}{All
-%                                                     Non-Essential
-%                                                     Workplaces}. \\
-% 
-% 28 March 2020 &
-%                 \href{https://news.ontario.ca/opo/en/2020/03/ontario-prohibits-gatherings-of-five-people-or-more-with-strict-exceptions.html}{Ontario
-%                 restricts gatherings} & Gatherings of more than five
-%                                         people prohibited, with strict exceptions.\\
-% 19 May 2020 &
-%               \href{https://www.ontario.ca/page/reopening-ontario-whats-each-stage#section-1}{Ontario
-%               entered Stage 1 of reopening} & \\
-% 12 June 2020 &
-%                \href{https://www.ontario.ca/page/reopening-ontario-whats-each-stage#section-2}{Most
-%                public health unit regions allowed to move into Stage
-%                2 (not Peel and Toronto)} & Restaurants and bars can open for dining in outdoor areas only.\\
-% 24 June 2020 &  Peel and Toronto entered Stage 2& \\
-% 17 July 2020 &  Some regions entered Stage 3& \\
-% 31 July 2020 &  Peel and Toronto entered Stage 3& \\
-% 12 August 2020 & Windsor-Essex entered Stage 3& \\
-% \end{tabular}
-% \end{center}
-% \caption{Key dates in Ontario.}
-% \label{tab:dates}
-% \end{table}
-% 
-% \bigbreak \bigbreak \bigbreak
-% % The data we use to calibrate our dynamical models are shown in \cref{fig:data}.
-% % \begin{figure}
-% 
-% %% \caption{The daily Ontario COVID-19 data that we use to calibrate our
-% %%   models: number of COVID-19 deaths (death), number of COVID-19
-% %%   patients currently in acute care in hospital (H), number of COVID-19
-% %%   cases reported (report).  Reporting began on date_range[1].
-% %%   The most recent counts are for date_range[2].  The bottom
-% %%   panel shows an index of mobility derived from cell phone data
-% %%   collected by Google and Apple.  The thick grey line shows the date
-% %%   the COVID-19 data begin, the red solid line shows the date that the
-% %%   WHO declared a COVID-19 pandemic (11 March 2020), the red dotted
-% %%   line shows the date of the Declaration of Emergency in Ontario (17
-% %%   March 2020), and the grey dotted line shows the date on which
-% %%   workplaces were ordered closed in Ontario (23 March 2020).}
-% %%   \label{fig:data}
-% %% \end{figure}
-% \david{Caption to old figure is commented out.  Possibly useful at some
-% point.}
+\david{The ``important dates'' section is in \texttt{cuts.tex}.  Do we really not use those dates at all?}
+
+\begin{figure}[ht!]
+\includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
+
+\caption{Ontario mobility \ben{WZMLi: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}}
+\label{fig:Ont_mobility}
+\end{figure}
+
+\thickredline
 
 \FloatBarrier
 
@@ -549,13 +385,6 @@ This time frame captures the first wave of the COVID outbreak in Ontario.
 We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.
 Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
 
-
-\begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
-
-\caption{Ontario mobility \ben{WZMLi: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}}
-\label{fig:Ont_mobility}
-\end{figure}
 
 
 
