@@ -424,17 +424,13 @@ that gives the symbol for the parameter.}
 
 \FloatBarrier
 
-\thickredline
-
 \subsection{Incorporating testing flows}
 
-The base model is relatively simple but does not account for testing practices. Testing strategies changed frequently over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days ahead for the forecast window. The testing intensity over the forecast window is assumed to be constant as the last observed testing intensity on August 30th 2020.  
-
+The base model is relatively simple but does not account for testing practices. Testing strategies changed frequently over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast).
+\david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testing.png}
-
-
 \caption{Ontario Testing Intensity}
 \label{fig:Ont_testing}
 \end{figure}
@@ -447,7 +443,7 @@ The variation in the predicted line is driven by high-frequency changes in testi
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testify.png}
 
-\caption{Calibration of positive tests  \ben{is there a nice way to combine Figures 6 and 7? Maybe a two-y-axis plot?}}
+\caption{Calibration of positive tests  \ben{is there a nice way to combine Figures 6 and 7? Maybe a two-y-axis plot?}\david{two $y$ axes seems worth trying}}
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
@@ -459,11 +455,13 @@ The variation in the predicted line is driven by high-frequency changes in testi
 \end{figure}
 
 \mike{We (I) probably should make another forecast using the testing intensity of the forecast window. Thoughts?}
+\david{Yes it would be good to see how using the correct testing intensity affects the forecast.  This needs to be expressed carefully to avoid confusion.  We need to get across that this emphasizes how much better the forecast would be with advance knowledge of how testing intensity would change over the forecast period.}
 
 \begin{table}
 \centering
 \input{testify_table.tex}
-\caption{Parameter estimates for testify model calibration. \ben{Contrast with non-testify results.  Maybe instead of this table we can include a figure that shows the two values along with confidence intervals? (Have to be a little careful about the scaling - i.e., which parameters it makes sense to show on a common scale ...)}}
+\caption{Parameter estimates for testify model calibration. \ben{Contrast with non-testify results.  Maybe instead of this table we can include a figure that shows the two values along with confidence intervals? (Have to be a little careful about the scaling - i.e., which parameters it makes sense to show on a common scale ...)}
+\david{Can we explain the factor of 10 difference in $\zeta$?}}
 \label{table:testify}
 
 \end{table}
@@ -472,20 +470,22 @@ The variation in the predicted line is driven by high-frequency changes in testi
 
 \section{Discussion}
 
-We have fitted two models varying in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario Canada from March 1st to Aug 30th 2020. 
-The simple base model is the typical simplistic type of compartmental epidemic model to infectious disease epidemics. 
-The testify model is a practical addition to the base model that allows the model to cooperate with different testing practices and policy changes.
+We have fitted two models that vary in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario, Canada, from 1 March to 30 August 2020.  Our simple base model is typicalof compartmental epidemic models used to study infectious disease epidemics.  The testify model \david{The ``testify'' terminology has not been defined.  Do we want to define it and use it because we like the term? or should we just refer to the ``model with testing flows'' or something like that so referees don't think we're goofy?}  is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
 
 \subsection{Limitations}
 
 Our model assumes homogeneous mixing of the population. 
 No age-related or spatial contact structure is considered. 
+\david{The following sentence needs to be rewritten.  I don't understand what was intended to be expressed.}
 We did not include hospitalization in the calibrations due to reporting from capacity issues which became a serious issue with the admissions and occpuancy underreporting the severity of the pandemic.
 In addition, long-term care facilities (LTCFs), where many elderly people in Canada have died without going to hospital, have not been modelled explicitly.  
 While we do not anticipate any qualitative differences in results, explicitly creating compartments and calibrating to data for LTCFs would likely allow us to match ICU occupancy and forecast
-pressure on ICUs more accurately but will not resolve the issues on hospital intensity. 
+pressure on ICUs more accurately but will not resolve the issues on hospital intensity.
+\david{the last phrase needs to be rephrased.   What is ``hospital intensity''?}
 
 \subsection{Conclusions}
+
+\david{This conclusion paragraph leaves a lot to be desired.  I think we should discuss what we think the key take-home messages should be, and then write a new conclusion paragraph.  We should also state that we have continue to develop the software during the pandemic, and will describe further innovations in subsequent papers.}
 
 SARS-CoV-2 continues to be a global burden after 3 years. 
 Here we demonstrated a simple modeling framework that can flexibly fit epidemic data and easily allow additional complexities to account for features during the epidemic. 
@@ -494,7 +494,9 @@ First, it is important to have ways to incorporate time-varying parameterization
 Second, allowing for testing intensity to disaggregate the transmission rates through time (i.e. does increase in positive cases/confirmation due to an increase in transmission or testing capacity). 
 The flexibility of incorporating various time-vary parameterizations allows users to make more realistic features and scenario exploration. 
 
-%%\input{nextsteps.tex}
+\david{\macro{input\{nextsteps.tex\}} has been commented out.  There may be useful comments in there that would help with Discussion/Conclusions.}
+
+\thickredline
 
 \clearpage
 
@@ -507,33 +509,9 @@ The flexibility of incorporating various time-vary parameterizations allows user
 \item Clean up figures, improve captions  
 \item Discussion and conclusions
 \item output/include figs as PDF rather than PNG (JD, WZMLi?)
+\item \david{In the original PHAC report, we showed fits to all
+    the large provinces.  I'm OK with discussing Ontario only, but just checking that change was intentional.  I've move the commented-out appendix to \texttt{cuts.tex}.}
 \end{itemize}
-
-% \section{Appendix: Model calibrations for each province}\label{sec:supp}
-% 
-% Our fits are shown in the \hyperlink{current.fits}{following pages},
-% with one page per province.  Provinces are ordered by total
-% population. The smaller provinces (later pages) have far fewer cases
-% so the fits are less reliable.
-% 
-% The data to which we calibrated the model are shown with dots.
-% We fitted to hospital occupancy rather than admissions because
-% we have admissions data only for Ontario.  The fitted model
-% is shown with solid curves in each panel.
-% The bottom row shows inferred total disease incidence,
-% and
-% our mobility index for the province.
-% \david{[temporarily deleted because we don't have $\R_t$ in the plots]
-% , and our inferred value of \Rt. Note that in our current model \Rt depends
-% \emph{only} on the mobility index, the time period (early or late) and
-% the direct and indirect effects of susceptible depletion.}
-% 
-% \FloatBarrier
-% \clearpage
-
-%% LOOP THROUGH PROVINCES TO GET FIGURES:
-%% Note that we could implement a switch for the captions via:
-%%   https://tex.stackexchange.com/questions/64131/implementing-switch-cases
 
 \clearpage
 
