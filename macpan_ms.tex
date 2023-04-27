@@ -376,22 +376,25 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 
 \mike{figure captions and make better plots}
 
-\thickredline
-
 \subsection{Base model}
 
-Figure \ref{fig:Ont_calibration} shows the fit to data of a basic model that calibrates to COVID new cases and death for Ontario from February 24, 2020 (the first covid case reported in Ontario) to August 30, 2020. 
-\mike{do we need a justification of the end date?}
-The basic model was chosen to be the base model because reported cases and death time series are most commonly applicable to public data for many juristrictions.
+Figure \ref{fig:Ont_calibration} shows the fit to data of a basic model\david{what is ``a basic model''?} that calibrates to COVID new cases and deaths for Ontario from 24 February 2020 (the first covid case reported in Ontario) to 30 August 2020.
 This time frame captures the first wave of the COVID outbreak in Ontario. 
-We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.
+\mike{do we need a justification of the end date?}
+\david{I moved the sentence about this being the first wave, but was
+there really only one wave by end of of Aug 2020?}
+The basic model was chosen to be the base model
+\david{Huh?  Now we're assuming the reader understands the meaning
+of ``basic model'' and ``base model'', neither of which have been defined.  I don't get this.}
+because reported cases and death time series are most commonly applicable to public data \david{applicable to public data???  Is this supposed to mean that cases and deaths are what we can typically obtain publicly?}
+for many juristrictions.
+We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.\david{That was true in 2020 but is no longer true.
+  We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.}
 Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
 
-
-
+\david{The above paragraph is awful.  It needs to be completely rewritten.  I'm not sure what was intended to be conveyed with it.}
 
 \mike{keep only forecast plot?}
-
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_base.png}
@@ -410,12 +413,18 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \begin{table}
 \centering
 \input{base_table.tex}
-\caption{Parameter estimates for base model calibration. \ben{JD/DJDE: should some parameters (change in transmission etc.) be back-transformed? Are parameter names comprehensible?  Should we add confidence intervals/std errs? We should explain that dispersion model is converging to Poisson; do we need to justify/explain the very high value of $\zeta$ (phenom het)?}}
+\caption{Parameter estimates for base model calibration. \ben{JD/DJDE: should some parameters (change in transmission etc.) be back-transformed? Are parameter names comprehensible?  Should we add confidence intervals/std errs? We should explain that dispersion model is converging to Poisson; do we need to justify/explain the very high value of $\zeta$ (phenom het)?}\david{We definitely need to comment on
+    the value of $\zeta$; it seems absurdly high.}
+  \david{CIs would be nice.}
+\david{Can we use the \macro{\detokenize{describe_params}} function that I wrote early on?  In any case, it would be helpful to have a first column
+that gives the symbol for the parameter.}
+}
 \label{table:base}
 \end{table}
 
-
 \FloatBarrier
+
+\thickredline
 
 \subsection{Incorporating testing flows}
 
