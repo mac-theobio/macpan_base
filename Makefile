@@ -22,7 +22,6 @@ vim_session:
 
 Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex
-Ignore +=	base_table.tex testify_table.tex
 
 Ignore +=	base_table.tex testify_table.tex
 base_table.tex testify_table.tex: code/ontario_tables.Rout ;
