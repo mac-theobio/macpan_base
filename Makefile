@@ -13,7 +13,7 @@ vim_session:
 
 ######################################################################
 
-## macpan_ms.pdf: macpan_ms.tex
+## macpan_ms.tex.pdf: macpan_ms.tex
 
 Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex
@@ -21,6 +21,15 @@ Ignore +=	base_table.tex testify_table.tex
 
 Ignore +=	base_table.tex testify_table.tex
 base_table.tex testify_table.tex: code/ontario_tables.Rout ;
+
+######################################################################
+
+Sources += README.md TODO.md
+
+## OK to use .TEX for non-source .tex files? Or too disruptive for Mac-sters?
+
+## Make a rule to explane where we get this.
+Ignore += litparmtab.tex
 
 ######################################################################
 
