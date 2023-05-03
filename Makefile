@@ -1,7 +1,12 @@
 ## This is macpan_base 
 ## A public repo to write our main macpan report paper
 
+## See makestuff/slowtarget.md for workflow control and assuring you are up to date
 all: macpan_ms.pdf
+## macpan_ms.pdf.final:
+## slowsync:
+
+######################################################################
 
 current: target
 -include target.mk
