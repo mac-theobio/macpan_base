@@ -18,7 +18,7 @@ vim_session:
 
 ######################################################################
 
-## macpan_ms.tex.pdf: macpan_ms.tex
+## macpan_ms.pdf: macpan_ms.tex
 
 Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex
