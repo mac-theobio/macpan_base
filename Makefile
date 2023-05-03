@@ -82,7 +82,7 @@ figure/ontario_testify_forecast.png: code/ontario_testify_forecast_plot.Rout ;
 ######################################################################
 
 ## repiped figures
-pipeRdesc += figure/flow
+figure/flow.chart.pdf: figure/flow.Rout ;
 figure/flow.Rout: figure/flow.R
 	$(pipeR)
 
