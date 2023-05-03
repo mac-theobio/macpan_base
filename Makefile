@@ -28,7 +28,8 @@ Sources += README.md TODO.md
 
 ## OK to use .TEX for non-source .tex files? Or too disruptive for Mac-sters?
 
-## Make a rule to explane where we get this.
+## Make a rule to explain where we get this.
+## This seems to break the pipeline now, and there seem to be other pipeline problems as well.
 Ignore += litparmtab.tex
 
 ######################################################################
