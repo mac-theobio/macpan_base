@@ -18,55 +18,62 @@ ggsave("figure/ontario_base.png",width = 10,height = 6)
 
 
 testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
-dd <- predict(testify$fit
+dd <- suppressWarnings(predict(testify$fit
 			  , ensemble=FALSE
-			  , keep_vars=c("postest")
+			  , keep_vars=c("postest"))
 )
-## debugging:
-## debug(sim_fun)
-## debug(run_sim)
-## Error in `[<-`(`*tmp*`, 1, names(state), value = c(S_u = 14569404.7660548,  : 
-##   subscript out of bounds
-## options(error=recover)
+
 ddcombo <- (testify$data
 	%>% mutate(var = ifelse(var == "report","postest",var))
 	%>% transmute(date, var,data=value)
 	
 	# %>% gather(key = "var", value="data",-date)
-	%>% left_join(dd,.)
+    %>% left_join(dd,., by = c("date", "var"))
+    %>% select(date, var, value, data)
 )
-
-gg <- (ggplot(ddcombo, aes(x=date, color=var))
-	   + geom_line(aes(y=value))
-	   + geom_point(aes(y=data),alpha=0.3)
-	   + scale_y_log10(limits=c(1,NA))
-	   + theme_bw()
-	+ scale_x_date(date_breaks="1 month", date_labels="%b")
-)
-
-print(gg)
-ggsave("figure/ontario_testify.png",width = 10,height = 6)
 
 dat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
 
 start_date <- as.Date("2020-03-01")
 end_date <- as.Date("2020-10-01")
 
+## https://r-graph-gallery.com/line-chart-dual-Y-axis-ggplot2.html
+iscale <- 100 ## approx testing intensity/positive test ratio
+
 testdat <- (dat$test_data_fill
-	%>% filter(between(Date,start_date,end_date))
+    %>% filter(between(Date,start_date,end_date))
+    %>% rename(date = "Date", data = "intensity")
+    %>% mutate(var = "intensity", data = data/iscale)
 )
 
+ddcombo2 <- bind_rows(ddcombo, testdat)
 
-testing <- (ggplot(testdat,aes(x=Date,y=intensity))
-	+ geom_point()
-	+ ylab("Daily Testing")
-	+ scale_x_date(date_breaks="1 month", date_labels="%b"
-#		, limits=c(start_date,end_date))
-	)
-	+ geom_vline(aes(xintercept=as.Date("2020-09-01")))
+gg <- (ggplot(ddcombo2, aes(x=date))
+    + geom_line(data = ddcombo, aes(y=value), colour = "black")
+    + geom_point(aes(y=data, colour  = var), alpha=0.3)
+    + theme_bw()
+    + scale_colour_manual(values = c("red", "black"))
+    + scale_shape_manual(values = 1:2)
+    + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
+    + scale_y_continuous(name = "positive tests",
+                         sec.axis = sec_axis(~.*iscale, name = "testing intensity"))
+    + geom_vline(aes(xintercept=as.Date("2020-09-01")), lty = 2)
+    ## can't combine log/lin scale, so use linear for both
 )
+print(gg)
 
-print(testing)
-ggsave("figure/ontario_testing.png",width = 10,height = 6)
+ggsave("figure/ontario_testify.png",width = 10,height = 6)
+
+## testing <- (ggplot(testdat,aes(x=Date,y=intensity))
+## 	+ geom_point()
+## 	+ ylab("Daily Testing")
+## 	+ scale_x_date(date_breaks="1 month", date_labels="%b"
+## #		, limits=c(start_date,end_date))
+## 	)
+## 	+ geom_vline(aes(xintercept=as.Date("2020-09-01")))
+## )
+
+## print(testing)
+## ggsave("figure/ontario_testing.png",width = 10,height = 6)
 
 saveEnvironment()
