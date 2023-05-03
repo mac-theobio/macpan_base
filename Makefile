@@ -31,11 +31,14 @@ base_table.tex testify_table.tex: code/ontario_tables.Rout ;
 
 Sources += README.md TODO.md
 
+######################################################################
+
 ## OK to use .TEX for non-source .tex files? Or too disruptive for Mac-sters?
 
-## Make a rule to explain where we get this.
 ## This seems to break the pipeline now, and there seem to be other pipeline problems as well.
+
 Ignore += litparmtab.tex
+litparmtab.tex: code/ontario_tables.Rout ;
 
 ######################################################################
 
