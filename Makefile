@@ -32,14 +32,6 @@ Sources += README.md TODO.md
 
 ######################################################################
 
-## OK to use .TEX for non-source .tex files? Or too disruptive for Mac-sters?
-
-## This seems to break the pipeline now, and there seem to be other pipeline problems as well.
-
-litparm_table.tex: code/ontario_tables.Rout ;
-
-######################################################################
-
 autowrapR = defined
 
 ## MS
