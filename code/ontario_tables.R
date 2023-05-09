@@ -6,56 +6,71 @@ library(shellpipes)
 base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
 
-beautify <- function(x) {
-    x[,"symbol"] <- texify(as.character(x[,"symbol"]), force=TRUE)
+cap_first <- function(x) gsub("^(.)", "\\U\\1", x, perl = TRUE)
+
+## Existing param descriptions and symbols
+base_param_vals <- (describe_params(coef(base$fit))
+    |> mutate(across(meaning, cap_first))
+    |> select(symbol, meaning)
+)
+
+## add descriptions for params not covered in original model
+breakpoints <- c("Apr 01", "Apr 07")
+rep_type <- c("report", "death", "postest")
+new_par_tab <- tibble(
+    orig_symbol = c(rep_type   ## these how the nb disp params show up
+                  , paste0("mob_logist", 1:2)
+                  , paste0("log(rel_activity):mob_logist", 0:2)
+                    ),
+    symbol = c(sprintf("\\theta_\\textrm{%s}", rep_type)
+               ## ugh, texify is badly hard-coded
+                 , sprintf("beta_{%d}", 1:2)
+                 , sprintf("beta_{\\textrm{mob},%d}", 0:2)
+                   ),
+    meaning = c(
+        sprintf("Negative binomial dispersion parameter (%s)",
+                c("case reports", "deaths", "positive tests"))
+      , sprintf("Relative change in transmission after %s", breakpoints)
+      , "Mobility power"
+      , sprintf("Change in mobility power after %s", breakpoints)
+    )
+)
+
+beautify <- function(x, sname = "symbol") {
+    x[[sname]] <- texify(as.character(x[[sname]]), force=TRUE)
     return(x)
 }
 
-get_params_table <- function(x){
-    coef_table <- data.frame()
-    cc <- coef(x,"fitted")
-    for(i in names(cc)){
-        tempdat <- data.frame(type = i
-                            , pars = names(cc[[i]])
-                            , value = cc[[i]]
-                              )
-        coef_table <- bind_rows(tempdat,coef_table)
-        rownames(coef_table) <- NULL
-    }
-    return(coef_table)
+
+get_params_table <- function(x) {
+    res <- (coef(x, "fitted")
+        |> purrr::map_dfr(~tibble(pars = names(.), value = .),
+                             .id = "type")
+        |> left_join(base_param_vals,  by = c("pars" = "symbol"))
+    )
+    newpars <- is.na(res$meaning)
+    newinds <- na.omit(match(res$pars[newpars], new_par_tab$orig_symbol))
+    res$pars[newpars] <- new_par_tab$symbol[newinds]
+    res$meaning[newpars] <- new_par_tab$meaning[newinds]
+    select(res, -type)
 }
-
-breakpoints <- c("Apr 01", "Apr 07")
-par_names <- c(
-    sprintf("Relative change in transmission after %s", breakpoints)
-  , "Mobility power"
-  , sprintf("Change in mobility power after %s", breakpoints)
-  , sprintf("Negative binomial dispersion parameter (%s)",
-            c("case reports", "deaths"))
-  , "Initial number exposed"
-  , "Transmission rate"
-  , "Non-hospitalized mortality probability"
-  , "Exponent of phenomenological response  to susceptible depletion"
-)
-
-testify_table <- get_params_table(testify$fit)
 
 mk_table <- function(fit, par_names) {
     (fit
-    |> get_params_table()
-    |> transmute(names = par_names, value)
-    |> mutate(across(value, ~pmin(., 1000))) ## truncate NB dispersions - don't mess up formatting for everyone else
-    |> mutate(fval = format(round(value, 3)))
-    |> mutate(across(fval, ~ ifelse(value == 1000, "$\\gg 1000$", .)))
-    |> select(-value)
-    |> setNames(c("Parameter", "Estimate"))
+        |> get_params_table()
+        |> beautify(sname = "pars")
+        |> mutate(across(pars, ~ gsub("nonhosp_mort", "\\eta", .)))     ## no beautiful symbol defined, make one up
+        |> mutate(across(value, ~pmin(., 1000))) ## truncate NB dispersions - don't mess up formatting for everyone else
+        |> mutate(fval = format(round(value, 3)))
+        |> mutate(across(fval, ~ ifelse(value == 1000, "$\\gg 1000$", .)))
+        |> transmute(Parameter = pars, Estimate = fval, Meaning = meaning) 
     )
 }
 
 write_table <- function(table, fn) {
     invisible(Hmisc::latex(table
-                         , col.just = c("l", "r")
-                         , collabel.just=c("l","r")
+                         , col.just = c("c", "r", "l")
+                         , collabel.just=c("c", "r", "l")
                          , rowname = NULL
                          , file = fn
                          , table.env = FALSE
@@ -66,8 +81,8 @@ base_pardf <- mk_table(base$fit, par_names)
 write_table(base_pardf, "base_table.tex")
 
 testify_pardf <- mk_table(testify$fit,
-                          grep("(death|mortality)", par_names, invert = TRUE, value = TRUE))
-
+                          grep("(death|mortality)",
+                               par_names, invert = TRUE, value = TRUE))
 
 write_table(testify_pardf, "testify_table.tex")
 
@@ -77,11 +92,13 @@ descr <- suppressWarnings(describe_params(pp))
 
 lit_param_table <- (
     descr
-    |> dplyr::filter(!(symbol %in% c("beta0","N","E0","Multiple","mu","iso_m","iso_s")))
-    |> dplyr::select(meaning, value)
-    |> setNames(c("Parameter", "Value"))
+    |> dplyr::filter(!(symbol %in% c("beta0","N","E0","Multiple","mu","iso_m","iso_s", "zeta")))
+    |> mutate(across(meaning, ~ gsub("([LN][A-Z]+)", "\\L\\1", ., perl = TRUE)))  ## hack to lowercase LATENT and NOT in param desc
+    |> mutate(across(meaning, cap_first))
+    |> beautify()
+    |> transmute(Parameter = symbol, Value = value, Meaning = meaning)
 )
 
-write_table(lit_param_table, "litparmtab.tex")
+write_table(lit_param_table, "litparm_table.tex")
 
 

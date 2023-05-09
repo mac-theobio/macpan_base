@@ -24,6 +24,9 @@ We estimate epidemiological parameters, including the effective reproduction num
 \end{abstract}
 
 \david{Target journal?  Ideas: PLoS Comp Biol}
+\ben{PLoS Comp Biol seems to be shooting very high for this.
+  I'd be fine with PeerJ/PLoS ONE, but would be willing to try harder,
+  e.g. some low-tier-but-not-terrible epi or modeling venue}
 
 %%\vfill
 %%\subsubsection*{Our group's COVID-19 research}
@@ -48,13 +51,13 @@ We estimate epidemiological parameters, including the effective reproduction num
 
 \subsection*{JD: 2023 May 03 (Wed)}
 
-Next step is to decide what results to use and how to frame them. I feel that \fref{Ont_calibration_base_forecast} and \fref{Ont_calibration_testify_forecast} are the beginning of a framework that could drive things forward: we tried this and got that. Here are the limitations or concerns – repeat. The big question in my mind is what's a good number/choice of things to show. How far forward in time or complexity are we willing to go?
+Next step is to decide what results to use and how to frame them. I feel that \fref{Ont_calibration_base_forecast} and \fref{Ont_calibration_testify_forecast} are the beginning of a framework that could drive things forward: we tried this and got that. Here are the limitations or concerns – repeat. The big question in my mind is what's a good number/choice of things to show. How far forward in time or complexity are we willing to go? \ben{For my part, not much! I really want to get this out as the \textbf{minimal} adequate product.}
 
-Reading now, I feel like the Results could be edited to make the supporting cast (most of the other figures) feel more like supporting cast. For example, I like the idea of combining \fref{Ont_testing} and \fref{Ont_calibration_testify} (although it seems like we could do that just with panels?).
+Reading now, I feel like the Results could be edited to make the supporting cast (most of the other figures) feel more like supporting cast. For example, I like the idea of combining \fref{Ont_testing} and \fref{Ont_calibration_testify} (although it seems like we could do that just with panels?). \ben{combination is done.}
 
-If we edit the Results the way I want, I think they will feel thin, so that brings me back to the question: what can we add?
+If we edit the Results the way I want, I think they will feel thin, so that brings me back to the question: what can we add? \ben{My personal feeling is that we should let them be thin.  The forecasting is no longer interesting (I think); what may be worth highlighting are the novel modeling aspects (there are a few).}
 
-For even broader framing: here's the stuff we did during the pandemic, some of the problems we encountered, and some of the things we learned. We are describing these lessons because they may be helpful to people in future new outbreaks. We should also find a way to talk about how the development of macpan laid the groundwork for the development of macpan2, and to mention that it is here and we will be writing papers about it.
+For even broader framing: here's the stuff we did during the pandemic, some of the problems we encountered, and some of the things we learned. We are describing these lessons because they may be helpful to people in future new outbreaks. We should also find a way to talk about how the development of macpan laid the groundwork for the development of macpan2, and to mention that it is here and we will be writing papers about it. \ben{OK, but not more than a few sentences.}
 
 \section{Introduction}
 
@@ -77,9 +80,10 @@ It incorporates the standard epidemiological compartments required to model COVI
 mortality. 
 Case reporting can be modeled either as a time-delayed convolution of incidence or by enabling a factorial expansion of the model that accounts for the testing status of individuals \cite{Fris+20}. 
 The model also allows for time-dependent variation in any rate parameter --- particularly the transmission rate --- and allows this variation to be indexed by external covariates such as cellphone-based mobility metrics, or to follow smooth (spline) curves over time. 
-The same model structure can be run as an ordinary differential equation, a discrete-time-step deterministic model, or a discrete-time-step stochastic model with dynamical noise.
+The same model structure can be run as an ordinary differential equation, a discrete-time deterministic model, or a discrete-time stochastic model with dynamical noise.
 \david{Do we mean ``dynamical noise'' or ``demographic noise'' or ``observation noise'', ... ??  The term ``dynamical noise'' may seem generic, but it seems to have a specific meaning.}
 \jd{I'm curious about this. I like the idea of using “dynamical noise” to mean what I used to call “process error” (broader than “demographic noise”), because process error seems like such a bad name for it.}
+\ben{why do we even need ``dynamical noise'' here? How about just ``discrete-time stochastic model''? (``dynamical noise'' was added by JD in \href{https://github.com/mac-theobio/macpan_base/commit/f613549f1b93275da537825a60551a14f32f0536}{this commit})}
 Finally, the model can be used to
 (1) simulate specific scenarios for planning purposes;
 (2) calibrate parameters to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
@@ -325,17 +329,12 @@ In the expanded model, we can include time series of both positive and negative 
 Reported new confirmations are the most reliable and voluminous source of epidemic information.
 Unfortunately, they are also subject to many inherent biases, including substantial variation over time in \term{testing intensity} (\ie tests \emph{per capita} per day).
 
-We simultaneously estimate the temporal pattern of the transmission rate [\cref{eq:betamodel}] (two mobility intercepts and three slopes), and several basic model parameters (\cref{estparmtab}\david{\texttt{estparmtab}}) \mike{E0(initial number of exposed), beta0, nonhosp\_mort, zeta(pheomhet), dispersion parameters (report and death)}.
-\mike{how does cref work?}\david{like \macro{ref} except that it figures out what
-  you're referring to and behaves appropriately.  So when \texttt{estparmtab} exists,
-  \macro{cref}\texttt{\{estparmtab\}} will yield ``Table 3'' or whatever.}
-\ben{DE/JD/WZ: if we can get estimated-parameter table (estparmtab) and literature parameter table (litparmtab; \cref{tab:litparm}) working and properly cross-referenced, then we don't need the information in Mike's comments above. We may need to do some archaeology: were these in the original report to PHAC?}
+We simultaneously estimate the temporal pattern of the transmission rate [\cref{eq:betamodel}] (two mobility intercepts and three slopes), and several basic model parameters (\cref{tab:estparm}).
 Other model parameters are taken from the literature (\cref{tab:litparm}).
 
 \begin{table}
   \centering
-  \input{litparmtab.tex}
-  \caption{Literature parameters\david{We need an additional (first) column with the symbol for each parameter.}}
+  \input{litparm_table.tex}
   \label{tab:litparm}
 \end{table}
 
@@ -353,13 +352,11 @@ that we focus on here'' a solution?}
 
 \subsubsection*{Forecasting}
 
-Our calibrations yield values for the parameters of our deterministic model (\cref{tab:estparm}\david{\texttt{estparmtab}}). 
+Our calibrations yield values for the parameters of our deterministic model (\cref{tab:estparm}).
 Using the calibrated parameters and the estimated covariance matrix of the sampling distribution of the parameters, we draw many (typically 1000) sets of parameters from a multivariate normal distribution \cite{Bolk08,krinskyThree1991a} and feed them into the deterministic model to generate an ensemble of forecasts. We extend the end date of the calibration window (i.e., the last observed data point for calibration) to create a forecast window. In the forecast window, the user can either investigate scenarios by inputting covariates (i.e., relative mobility and/or testing rates, depending on the model) or assume that the last set of inputs remains constant through the forecasting window to obtain a
 \emph{status quo} forecast.
 
 \subsection{Data sources}
-
-\david{I've moved comments about commenting out text and the commented out text to \texttt{cuts.tex}, because I have bad experience with having commented-out text in a file that suddenly appears in the galley proofs because a copy-editor thinks it wasn't meant to be commented out.}
 
 \subsubsection*{Public COVID-19 data for Ontario, Canada}
 
@@ -429,37 +426,29 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 \begin{table}
 \centering
 \input{base_table.tex}
-\caption{Parameter estimates for base model calibration. \ben{JD/DE: should some parameters (change in transmission etc.) be back-transformed? Are parameter names comprehensible?  Should we add confidence intervals/std errs? We should explain that dispersion model is converging to Poisson; do we need to justify/explain the very high value of $\zeta$ (phenom het)?}\david{We definitely need to comment on
+\caption{
+  \label{tab:estparm}
+  Parameter estimates for base model calibration. \ben{JD/DE: should some parameters (change in transmission etc.) be back-transformed? Are parameter names comprehensible?  Should we add confidence intervals/std errs? We should explain that dispersion model is converging to Poisson; do we need to justify/explain the very high value of $\zeta$ (phenom het)?}\david{We definitely need to comment on
     the value of $\zeta$; it seems absurdly high.}
   \david{CIs would be nice.}
-\david{Can we use the \macro{\detokenize{describe_params}} function that I wrote early on?  In any case, it would be helpful to have a first column
-that gives the symbol for the parameter.}
 }
-\label{table:base}
 \end{table}
 
 \FloatBarrier
 
 \subsection{Incorporating testing flows}
 
-The base model is relatively simple but does not account for testing practices. Testing strategies changed frequently over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing. Figure \ref{fig:Ont_testing} shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast).
-\david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
-
-\begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_testing.png}
-\caption{Ontario Testing Intensity}
-\label{fig:Ont_testing}
-\end{figure}
-
-\FloatBarrier
+The base model is relatively simple but does not account for testing practices. Testing strategies changed frequently over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing.
 
 Figure \ref{fig:Ont_calibration_testify} shows the results from calibrating the model to positive tests, with the testing flow incorporated and with observed testing rates fed into the model as a known series.
 The variation in the predicted line is driven by high-frequency changes in testing rate, including day-of-week effects.
+It also shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast).
+\david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testify.png}
 
-\caption{Calibration of positive tests  \ben{is there a nice way to combine Figures 6 and 7? Maybe a two-y-axis plot?}\david{two $y$ axes seems worth trying}}
+\caption{Calibration of positive tests and testing intensity}
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
@@ -519,7 +508,7 @@ The flexibility of incorporating various time-vary parameterizations allows user
 \section{To do}
 
 \begin{itemize}
-\item find and clean up \code{estparmtab}/\code{litparmtab} (DE, WZ?)
+\item find and clean up \code{estparmtab}/\code{litparmtab} (done)
 \item clean up Tables 1 and 2 (WZ?)
 \item should we include fits to simulations or not?
 \item Clean up figures, improve captions  

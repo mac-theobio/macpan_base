@@ -31,3 +31,4 @@ macpan_base.Rproj
 *.tex.deps
 *.mk
 *.subdeps
+*_table.tex

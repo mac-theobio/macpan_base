@@ -23,9 +23,8 @@ vim_session:
 Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex
 
-Ignore +=	base_table.tex testify_table.tex
-base_table.tex testify_table.tex: code/ontario_tables.Rout
-	$(lstouch)
+Ignore +=	base_table.tex testify_table.tex litparm_table.tex
+litparm_table.tex base_table.tex testify_table.tex: code/ontario_tables.Rout ;
 
 ######################################################################
 
@@ -37,8 +36,7 @@ Sources += README.md TODO.md
 
 ## This seems to break the pipeline now, and there seem to be other pipeline problems as well.
 
-Ignore += litparmtab.tex
-litparmtab.tex: code/ontario_tables.Rout ;
+litparm_table.tex: code/ontario_tables.Rout ;
 
 ######################################################################
 
@@ -78,7 +76,6 @@ figure/ontario_base.png: code/ontario_plots.Rout ;
 figure/ontario_base_forecast.png: code/ontario_base_forecast_plot.Rout ;
 figure/ontario_testing.png figure/ontario_testify.png: code/ontario_plots.Rout ;
 figure/ontario_testify_forecast.png: code/ontario_testify_forecast_plot.Rout ;
-
 ######################################################################
 
 ## repiped figures
