@@ -53,7 +53,7 @@ We estimate epidemiological parameters, including the effective reproduction num
 
 Next step is to decide what results to use and how to frame them. I feel that \fref{Ont_calibration_base_forecast} and \fref{Ont_calibration_testify_forecast} are the beginning of a framework that could drive things forward: we tried this and got that. Here are the limitations or concerns – repeat. The big question in my mind is what's a good number/choice of things to show. How far forward in time or complexity are we willing to go? \ben{For my part, not much! I really want to get this out as the \textbf{minimal} adequate product.}
 
-Reading now, I feel like the Results could be edited to make the supporting cast (most of the other figures) feel more like supporting cast. For example, I like the idea of combining \fref{Ont_testing} and \fref{Ont_calibration_testify} (although it seems like we could do that just with panels?). \ben{combination is done.}
+Reading now, I feel like the Results could be edited to make the supporting cast (most of the other figures) feel more like supporting cast. 
 
 If we edit the Results the way I want, I think they will feel thin, so that brings me back to the question: what can we add? \ben{My personal feeling is that we should let them be thin.  The forecasting is no longer interesting (I think); what may be worth highlighting are the novel modeling aspects (there are a few).}
 
@@ -80,10 +80,7 @@ It incorporates the standard epidemiological compartments required to model COVI
 mortality. 
 Case reporting can be modeled either as a time-delayed convolution of incidence or by enabling a factorial expansion of the model that accounts for the testing status of individuals \cite{Fris+20}. 
 The model also allows for time-dependent variation in any rate parameter --- particularly the transmission rate --- and allows this variation to be indexed by external covariates such as cellphone-based mobility metrics, or to follow smooth (spline) curves over time. 
-The same model structure can be run as an ordinary differential equation, a discrete-time deterministic model, or a discrete-time stochastic model with dynamical noise.
-\david{Do we mean ``dynamical noise'' or ``demographic noise'' or ``observation noise'', ... ??  The term ``dynamical noise'' may seem generic, but it seems to have a specific meaning.}
-\jd{I'm curious about this. I like the idea of using “dynamical noise” to mean what I used to call “process error” (broader than “demographic noise”), because process error seems like such a bad name for it.}
-\ben{why do we even need ``dynamical noise'' here? How about just ``discrete-time stochastic model''? (``dynamical noise'' was added by JD in \href{https://github.com/mac-theobio/macpan_base/commit/f613549f1b93275da537825a60551a14f32f0536}{this commit})}
+The same model structure can be run as an ordinary differential equation, a discrete-time deterministic model, or a discrete-time stochastic model.
 Finally, the model can be used to
 (1) simulate specific scenarios for planning purposes;
 (2) calibrate parameters to match multiple input time series such as hospital admissions or occupancy, cases, or deaths; or
