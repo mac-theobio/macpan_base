@@ -255,11 +255,7 @@ Specifically, for each breakpoint we define a logistic transition curve
 \begin{equation}
 S(j) = \frac{1}{1+e^{[t-t_\textrm{brk}(j)]/s}} \,,
 \end{equation}
-where $s$ (set to 3 days) defines the speed of transition. Because the baseline transmission rate is included in the model (as parameter \code{beta0}), we do not need to include an intercept in $\XX$; the first column is $\log(M(t))$. Subsequent columns $2j$ and $2j+1$ are defined as
-\david{ummm, that sentence isn't finished}
-For the first period, 
-\david{again, the sentence didn't get finished}
-Thus, columns $2j-1$ and $2j$ of $\XX$ are defined as $S(j)$ and $S(j) \log M(t)$, respectively. The parameters associated with these columns denote the change in baseline contact rate and the change in the effect of mobility between periods $j$ and $j+1$.
+where $s$ (set to 3 days) defines the speed of transition. Because the baseline transmission rate is included in the model (as parameter \code{beta0}), we do not need to include an intercept in $\XX$; the first column is $\log(M(t))$, the dependence of (log) transmission rate on (log) mobility during the first period. For $j \ge 1$, subsequent columns $2j$ and $2j+1$ of $\XX$ are defined as $S(j)$ and $S(j) \log M(t)$, respectively. The parameters associated with these columns denote the change in baseline contact rate and the change in the effect of mobility between periods $j$ and $j+1$.
 \ben{WZ: does this match what you think we did/your description below?}
   
 \subsection*{Derived parameters and parameter setting}
