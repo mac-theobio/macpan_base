@@ -96,12 +96,13 @@ All symptomatic individuals are presumed to have undergone a period of pre-sympt
 Infections can be asymptomatic (\code{a}), mildly or moderately symptomatic (\code{m}) or severely symptomatic (\code{s}); all individuals with severe symptoms go to the hospital (acute care or ICU), or die before reaching hospital (e.g., in long-term care facilities).
 Some fraction \david{add parameter symbol in brackets} of individuals who go to the ICU die. Recovered individuals (\code{R}) are assumed to be immune.  
 The model includes additional compartments that facilitate book-keeping: cumulative hospital admissions (\code{X}), individuals in acute care after discharge from ICU (\code{H2}), and cumulative deaths (\code{D}) (\cref{fig:flowchart}).
-(The version of the model discussed here was developed and used before vaccines were available; we have since expanded the model to include other relevant compartments.)
+(The version of the model discussed here was developed and used before vaccines were available and introduction of variants of concern and reinfections, we have since expanded the model to include other relevant compartments.)
 
 \david{It is weird that we do not have a table listing all the parameters of the model.
 I guess that's why the symbol for the proportion in ICU who die was not given above.}
 
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
+We assumed hospitalized individuals do not contribute to the force of infection. \mike{re-write this point nicely? it is a strong assumption.}  
 We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g., front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
 A \emph{phenomenological heterogeneity} parameter \david{not ``factor''} $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that the most susceptible individuals tend to be infected first, after which
 the average level of susceptibility in the remaining population decreases.\david{revised that last sentence, which I kept misreading} While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense/expand where necessary; check Dwyer? Williams et al 2006: ``To allow for heterogeneity in sexual behaviour and to fit the observed asymptotic prevalence of infection, the transmission parameter takes the value $\lambda_0$ at the start of the epidemic and declines exponentially at rate $\alpha$ times the prevalence of infection.'' Granich et al. say ``To allow for heterogeneity in sexual behaviour and for the observed steady state prevalence of HIV, we let the transmission decrease with the prevalence, P. If n=1, the decrease is exponential; if $n=\infty$, the decrease is a step function. Both have been used in previous models (5, 29).'' Granich et al. also cite \cite{williamsHIV2006} (their ref. 29), but I don't see a transmission model in there anywhere ...}
@@ -113,6 +114,7 @@ the average level of susceptibility in the remaining population decreases.\david
 Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs} (ICU with prognosis of survival), \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care after ICU stay). 
 Compartments denoted by rectangles are accumulators, primarily used in the condensation step to compute incidences: \code{R} (recovered), \code{D} (dead), \code{X} (accumulator for cumulative hospital admissions).
 \ben{prettify this further, \textbf{or} steal something better from Irena?}}
+\mike{steal from Darren's product paper, it is in it}
 \label{fig:flowchart}
 \end{figure}
 
@@ -169,7 +171,8 @@ Our main use of convolution is to convert incidence---the force of infection (FO
 \end{equation}
 \end{linenomath*}
 where we typically set $\phi(i)$ to be a Gamma distribution with
-moments chosen to match empirical estimates of case-reporting delays
+moments chosen to match empirical estimates of case-reporting delays.
+\mike{Do we have/need a formula for FOI?}
 \ben{how did we pick these values? 
 Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
 \jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>}
@@ -214,7 +217,7 @@ We assume that all individuals admitted to the hospital for COVID-19 are immedia
     Black arrows represent flows between subcompartments due to testing processes (test administration, reporting of tests); blue arrows represent progression between epidemiological compartments.
     Dashed arrows represent the accumulation of negative and positive test reports, which can be compared against data.
     \ben{is there a better version of this somewhere?}}
-	 \mike{Irena}
+    \mike{what is the problem with the current figure?}
   \label{fig:testing_flow}
 \end{figure}
 
