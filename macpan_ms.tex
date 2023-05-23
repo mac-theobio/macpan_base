@@ -174,10 +174,6 @@ Our main use of convolution is to convert incidence---the force of infection (FO
 where we typically set $\phi(i)$ to be a Gamma distribution with
 moments chosen to match empirical estimates of case-reporting delays.
 \mike{Do we have/need a formula for FOI?}
-\ben{how did we pick these values? 
-Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
-\jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>}
-\ben{done, but still not clear that there are a lot of such estimates in the literature \ldots}\david{I added ``empirical'', which can cover unpublished estimates.}
 When computing case reports from incidence we also assume a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
 After condensation, the model also allows us to add observation error, which we typically simulate from a negative binomial distribution with a variable-specific dispersion parameter \cite{linden2011using}.
@@ -309,8 +305,9 @@ We assume that every observation is independently negative binomially distribute
 We use standard nonlinear optimization algorithms built into R, such as Nelder-Mead, to find the maximum likelihood estimates; when we have had difficulty with numerical instability, we have performed an initial fit with differential evolution \cite{Mull+11} followed by a final fit with Nelder-Mead.
 
 A link function can be added for any parameter in the model to constrain it to a sensible domain; the user specifies this by adding an appropriate prefix to the name of the parameter in the list of starting values for parameters to be calibrated. 
-For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive, and using a starting value of -1 on the log scale (i.e., initial $\beta_0 = \exp(-1)$). 
-Specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the fraction of non-hospitalized mortality\david{is that the case fatality proportion outside hospital, or the proportion of deaths that occur outside hospital? I presume the former but it sounds like the latter} \mike{It is flowing from Is to D. So it is the latter.}) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1, and using a starting value of $\beta_0 = \textrm{logit}^{-1}(-0.2) = 0.45$.
+For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale (ensuring that the value of $\beta_0$ is always positive) using a starting value of -1 on the log scale (i.e., initial $\beta_0 = \exp(-1)$). 
+Similarly, specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the proportion of people leaving the severely infected compartment who die at that moment) is fitted on a logit (log-odds) scale (ensuring that it is bounded between 0 and 1), using a starting value of $\beta_0 = \textrm{logit}^{-1}(-0.2) = 0.45$.
+\jd{Maybe make this number a bit smaller?}
 
 The model includes a general framework for adding a prior probability distribution for any parameter, using any distribution available in R. 
 For example, \code{dbeta(nonhosp\_mort, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{nonhosp\_mort}.
