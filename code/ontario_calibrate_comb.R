@@ -2,9 +2,10 @@ library(McMasterPandemic)
 library(tidyverse)
 library(shellpipes)
 
+loadEnvironments()
+
 run <- TRUE
 save <- FALSE
-cache <- FALSE
 
 if(run){
 
@@ -15,7 +16,7 @@ if(run){
 stop_date <-  as.Date("2020-08-30")
 
 cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
-if(!cache){
+if(!oldcache){
 	cachedat <- rdsRead()
 }
 

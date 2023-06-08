@@ -69,13 +69,21 @@ code/ontario_mobility.Rout: code/ontario_mobility.R
 code/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
 	$(pipeR)
 
-code/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds
+code/%.Rout: %.R
 	$(pipeR)
 
-code/ontario_base_forecast.Rout: code/ontario_base_forecast.R code/ontario_calibrate_comb.rds
+## code/fresh_ontario_calibrate_comb.Rout:code/ontario_calibrate_comb.R
+code/%_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds code/%.rda
 	$(pipeR)
 
-code/ontario_base_forecast_plot_raw.Rout: code/ontario_base_forecast_plot.R code/ontario_base_forecast.rda
+
+## code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R
+code/%_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds code/%.rda %.rda 
+	$(pipeR)
+
+
+## code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R
+code/%_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/%_ontario_base_forecast.rda
 	$(pipeR)
 
 ######################################################################

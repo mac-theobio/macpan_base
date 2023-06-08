@@ -5,11 +5,11 @@ packageVersion("McMasterPandemic")
 library(tidyverse)
 library(shellpipes)
 
-cache <- FALSE
+loadEnvironments()
 
 mod <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 
-if(!cache){
+if(!oldcache){
 	mod <- rdsRead()
 }
 
