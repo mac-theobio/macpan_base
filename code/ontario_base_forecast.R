@@ -5,7 +5,14 @@ packageVersion("McMasterPandemic")
 library(tidyverse)
 library(shellpipes)
 
+cache <- FALSE
+
 mod <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
+
+if(!cache){
+	mod <- rdsRead()
+}
+
 
 fit <- mod$fit
 

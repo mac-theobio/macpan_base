@@ -44,6 +44,9 @@ code/ontario_plots.Rout: code/ontario_plots.R
 code/ontario_tables.Rout: code/ontario_tables.R
 	$(pipeR)
 
+slowtarget/ontario_base_calibration.Rout: code/
+	$(pipeR)
+
 slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R
 	$(pipeR)
 
@@ -57,6 +60,22 @@ code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/
 	$(pipeR)
 
 code/ontario_mobility.Rout: code/ontario_mobility.R
+	$(pipeR)
+
+## recreating the full pipeline
+
+
+### setting up pieces for calibration
+code/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
+	$(pipeR)
+
+code/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds
+	$(pipeR)
+
+code/ontario_base_forecast.Rout: code/ontario_base_forecast.R code/ontario_calibrate_comb.rds
+	$(pipeR)
+
+code/ontario_base_forecast_plot_raw.Rout: code/ontario_base_forecast_plot.R code/ontario_base_forecast.rda
 	$(pipeR)
 
 ######################################################################

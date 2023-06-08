@@ -1,8 +1,10 @@
 library(McMasterPandemic)
 library(tidyverse)
+library(shellpipes)
 
-run <- FALSE
+run <- TRUE
 save <- FALSE
+cache <- FALSE
 
 if(run){
 
@@ -13,7 +15,9 @@ if(run){
 stop_date <-  as.Date("2020-08-30")
 
 cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
-
+if(!cache){
+	cachedat <- rdsRead()
+}
 
 
 calibrate_data <- (cachedat$calibrate_data_fill
@@ -81,7 +85,9 @@ print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("20
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 }
 
-if(save){
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
+if(save){
 saveRDS(ont_calib_comb_reports_mobbreaks,"code/cachestuff/ont_calib_comb_mobbreaks.rds")
 }
+
+rdsSave(ont_calib_comb_reports_mobbreaks)
