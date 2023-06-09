@@ -13,7 +13,6 @@ if(!oldcache){
 	mod <- rdsRead()
 }
 
-
 fit <- mod$fit
 
 ## Hack end date

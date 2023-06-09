@@ -62,8 +62,9 @@ code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/
 code/ontario_mobility.Rout: code/ontario_mobility.R
 	$(pipeR)
 
-## recreating the full pipeline
+######################################################################
 
+## recreating pipeline 2023 Jun
 
 ### setting up pieces for calibration
 code/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
@@ -76,11 +77,13 @@ code/%.Rout: %.R
 code/%_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds code/%.rda
 	$(pipeR)
 
-
 ## code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R
-code/%_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds code/%.rda %.rda 
+code/%_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds code/%.rda
 	$(pipeR)
 
+ontario_base_forecast.cacheVersion.Rout: code/ontario_base_forecast.R something_else
+
+ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds
 
 ## code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R
 code/%_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/%_ontario_base_forecast.rda
