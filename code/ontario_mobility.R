@@ -1,7 +1,7 @@
 library(tidyverse);theme_set(theme_bw())
 library(shellpipes)
 
-dat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
+dat <- rdsRead()
 
 end_date <- as.Date("2020-10-01")
 

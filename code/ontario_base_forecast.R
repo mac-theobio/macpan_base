@@ -7,11 +7,8 @@ library(shellpipes)
 
 loadEnvironments()
 
-mod <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 
-if(!oldcache){
-	mod <- rdsRead()
-}
+mod <- rdsRead()
 
 fit <- mod$fit
 

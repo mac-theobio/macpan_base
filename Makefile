@@ -44,22 +44,19 @@ code/ontario_plots.Rout: code/ontario_plots.R
 code/ontario_tables.Rout: code/ontario_tables.R
 	$(pipeR)
 
-slowtarget/ontario_base_calibration.Rout: code/
-	$(pipeR)
-
-slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R
+slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R code/cachestuff/ont_calib_comb_mobbreaks.rds
 	$(pipeR)
 
 code/ontario_base_forecast_plot.Rout: slow/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
 	$(pipeR)
 
-slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R
+slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R code/cachestuff/ont_calib_testify.rds
 	$(pipeR)
 
 code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
 	$(pipeR)
 
-code/ontario_mobility.Rout: code/ontario_mobility.R
+code/ontario_mobility.Rout: code/ontario_mobility.R code/cachestuff/calibrate_comb_setup.rds
 	$(pipeR)
 
 ######################################################################
@@ -70,23 +67,16 @@ code/ontario_mobility.Rout: code/ontario_mobility.R
 code/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
 	$(pipeR)
 
-code/%.Rout: %.R
+code/fresh_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds
 	$(pipeR)
 
-## code/fresh_ontario_calibrate_comb.Rout:code/ontario_calibrate_comb.R
-code/%_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds code/%.rda
+code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_ontario_calibrate_comb.rds 
 	$(pipeR)
 
-## code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R
-code/%_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds code/%.rda
+fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_ontario_calibrate_comb.rds
 	$(pipeR)
 
-ontario_base_forecast.cacheVersion.Rout: code/ontario_base_forecast.R something_else
-
-ontario_base_forecast.Rout: code/ontario_base_forecast.R code/%_ontario_calibrate_comb.rds
-
-## code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R
-code/%_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/%_ontario_base_forecast.rda
+code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/fresh_ontario_base_forecast.rda
 	$(pipeR)
 
 ######################################################################

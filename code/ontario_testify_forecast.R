@@ -5,7 +5,7 @@ library(tidyverse)
 library(parallel)
 library(shellpipes)
 
-mod <- readRDS("code/cachestuff/ont_calib_testify.rds")
+mod <- rdsRead()
 
 fit <- mod$fit
 

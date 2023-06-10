@@ -15,10 +15,7 @@ if(run){
 
 stop_date <-  as.Date("2020-08-30")
 
-cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
-if(!oldcache){
-	cachedat <- rdsRead()
-}
+cachedat <- rdsRead()
 
 
 calibrate_data <- (cachedat$calibrate_data_fill

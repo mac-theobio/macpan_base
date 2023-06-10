@@ -7,7 +7,6 @@ library(zoo)
 library(gtable)
 library(shellpipes)
 
-rpcall("code/ontario_testify_forecast_plot.Rout slow/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R")
 loadEnvironments()
 
 gg <- (ggplot(postest,aes(x=date,y=value))
