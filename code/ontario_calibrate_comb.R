@@ -61,7 +61,7 @@ current <- do.call(calibrate_comb
 		, mob_data = cachedat$clean_mobility
 		, opt_pars = opt_pars
 		, use_DEoptim = FALSE
-		, DE_cores = 1
+		, DE_cores = 3
 		, use_phenomhet = TRUE
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
