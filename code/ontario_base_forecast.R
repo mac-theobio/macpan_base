@@ -1,6 +1,7 @@
 ## point to OLD/stored MacPan
 #.libPaths(c("Rlib", .libPaths()))
 library(McMasterPandemic)
+library(anytime)
 #packageVersion("McMasterPandemic")
 library(tidyverse)
 library(shellpipes)

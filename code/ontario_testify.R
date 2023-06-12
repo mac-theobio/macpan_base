@@ -1,19 +1,20 @@
 library(McMasterPandemic)
 library(tidyverse)
+library(shellpipes)
 
 # source("calibrate_comb_setup.R")
 ## This is a very slow step because it is downloading large mobility csvs
 # load("calibrate_comb_setup.rda")
 
-run <- FALSE
+run <- TRUE
 save <- FALSE
 
 
 if(run){
 stop_date <-  as.Date("2020-08-30")
 
-cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
-
+# cachedat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
+cachedat <- rdsRead()
 
 
 calibrate_data <- (cachedat$calibrate_data_fill
@@ -44,7 +45,7 @@ params[["testing_tau"]] <- 1
 params[["c_prop"]] <- 1
 
 
-params[["testing_intensity"]] <- 2e-5
+params[["testing_intensity"]] <- 2e-6
 
 test_data_fill <- (cachedat$test_data_fill 
 	%>% filter(Date >= cachedat$test_data_fill$Date[which(cachedat$test_data_fill$intensity>0)[1]]
@@ -55,7 +56,7 @@ test_data_fill <- (cachedat$test_data_fill
 	%>% mutate(NULL
 			, intensity = intensity/params[["N"]]
 			# , Date = Date + 4
-			# , intensity = zoo::rollmean(intensity,k=7,fill=NA)
+			, intensity = intensity + 1e-8
 	)
 	%>% filter(!is.na(intensity))
 )
@@ -113,10 +114,12 @@ print(plot(current, data=cachedat$calibrate_data_fill)
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 }
 
-if(save){
 
 ont_calib_testify <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility
 													, testdat = test_data_fill)
+if(save){
 saveRDS(ont_calib_testify,"code/cachestuff/ont_calib_testify.rds")
 
 }
+
+rdsSave(ont_calib_testify)

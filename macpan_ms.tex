@@ -366,12 +366,14 @@ However, this dataset does not include testing counts before 15 April 2020.  Sin
 We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/applemobilitytrends.csv}} and Google\footnote{\url{https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv}}.  From these data we derive a \term{relative mobility index} using the ``driving'' index from Apple and the ``retail and recreation'' and ``workplaces'' indices from Google; we compute a 7-day moving average of these indices, rescale all of them to have a baseline (pre-pandemic) value of 1.0, and average the three indices (equally weighted), to obtain an overall index for each day.
 
 \david{The ``important dates'' section is in \texttt{cuts.tex}.  Do we really not use those dates at all?}
+\mike{We didn't use it because mobility is handling most of the changes in transmission.}
+\mike{We replaced it with the important dates when we gave up on mobility later on. I do prefer mobility for this paper for a more generalized approach to incorprating different exogenous data (I guess same arugement applies to important dates as well).}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
 
 \caption{Ontario mobility \ben{WZ: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}
-\mike{I will double check, it looks smooth because of the 7 day MA.}
+\mike{Need to add the mobility breakdates in the diagram; the model uses a different slope and intercept at different breakdates.}
 }
 \label{fig:Ont_mobility}
 \end{figure}
@@ -381,38 +383,26 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \hypertarget{sec:Results}{}
 \section{Results}
 
+We used the Ontario data and fitted it to two different models to demonstrate the capability of this modeling framework. The first model is our simplest model, following the schematic illustrated in Figure \ref{fig:flowchart}. This model calibrates to new confirmation and death time series and includes mobility with two additional breaks and phenomenological heterogeneity. We will refer to this as the ``base model''.
+The second model extends the base model by incorporating the testing structure illustrated in Figure \ref{fig:testing_flow}. We will refer to the second model as the ``testify model''. 
+Both models were used to forecast 30 days ahead. 
+We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.\david{That was true in 2020 but is no longer true.
+  We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.} \mike{This is incorrect, we did use it in mobility, but we have to double check if it is used to match policy change vs goodness of fit?!? for the mobility pattern.}
+
+
 \mike{Do we want to include some simulation to show the model works and can do the calibration?}
 \david{I think that would strengthen the paper, if people have the strength for it.  While I'm always pushing for testing against simulations, I am most concerned about getting this paper finished and submitted soon.  If a fit to a simulation can be achieved quickly, then great.}
+\mike{Pretty drainned, happy to delete this suggestion unless the results are ``really'' thin}
 
-\mike{figure captions and make better plots}
 
 \subsection{Base model}
 
-Figure \ref{fig:Ont_calibration} shows the fit to data of a basic model includes mobility with two additional breaks and phenomenological heterogeneity and calibrates to COVID new cases and deaths for Ontario from 24 February 2020 (the first covid case reported in Ontario) to 30 August 2020. \david{what is ``a basic model''?} \mike{adding more details in text.}
-This time frame captures the first wave of the COVID outbreak in Ontario. 
-\mike{do we need a justification of the end date?}
-\david{I moved the sentence about this being the first wave, but was
-there really only one wave by end of of Aug 2020?}
-\jd{Yes. First wave wasn't until winter 2020. The second wave was a relaxation wave of some kind.}
-The basic model was chosen to be the base model
-\david{Huh?  Now we're assuming the reader understands the meaning
-of ``basic model'' and ``base model'', neither of which have been defined.  I don't get this.}
-because reported cases and death time series are most commonly applicable to public data \david{applicable to public data???  Is this supposed to mean that cases and deaths are what we can typically obtain publicly?} \mike{Yes.}
-for many juristrictions.
-We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, the transmission rate is a function of time-varying intercepts and slopes on mobility index which is a sensible proxy for changes in behaviour responding to public health restrictions.\david{That was true in 2020 but is no longer true.
-  We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.} \mike{This is incorrect, we did use it in mobility, but we have to double check if it is used to match policy change vs goodness of fit?!? for the mobility pattern.}
-Hospital occupancy and death on the other hand does not fit to the data well after the initial wave. This suggest the proportion hospitalized and death are lower and should be time varying as well. 
+Figure \ref{fig:Ont_calibration_base_forecast} shows the fit to new confirmations and death time series from Febrary 24 2020 to August 30 2020. This time frame captures the first wave of the COVID outbreak and the beginning of the second wave in Ontario. The model capture to fit the new confirmations data well within the fitting window but not for the death time series. The model has adaqualt flexibility to capture the effective transmission parameter with mobility data and changes in mobility effects for each mobility break \mike{need to reword}, and mortality parameters were assumed to be constant at the optimized level resulting in a overestimation of deaths. 
 
-\david{The above paragraph is not clearly written.  It needs to be rewritten.  I'm not sure what was intended to be conveyed with various statements that I find unclear, so I'm just leaving this for now.}
+The 30 day forecast is expected to increase; when over-laying actual observed time series for that time-frame, the observed time series are lower than predicted but within 95\% prediction interval for the new confirmations and missed all the death observations. 
 
-\mike{keep only forecast plot?}
+\mike{add a comment mobility is freezed?}
 
-\begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_base.png}
-
-\caption{Ontario calibration \ben{Take out incidence, cumRep? Mention that death and hospitalization rates declined (why?) and that we are only calibrating to reports/not allowing time-variation in hosp and mortality rates?}}
-\label{fig:Ont_calibration}
-\end{figure}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_base_forecast.png}
@@ -435,13 +425,14 @@ Hospital occupancy and death on the other hand does not fit to the data well aft
 
 \FloatBarrier
 
-\subsection{Incorporating testing flows}
+\subsection{Testify model}
 
 The base model is relatively simple but does not account for testing practices. Testing strategies changed frequently over the course of the pandemic due to availability of testing facilities and shifting regulations on eligibility for testing.
 
 Figure \ref{fig:Ont_calibration_testify} shows the results from calibrating the model to positive tests, with the testing flow incorporated and with observed testing rates fed into the model as a known series.
 The variation in the predicted line is driven by high-frequency changes in testing rate, including day-of-week effects.
-It also shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast).
+It also shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast). The forecast under predicts the number of new positive cases in the forecast time-frame. The actual testing intensitive did increase during the forecast period. 
+
 \david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
 
 \begin{figure}[ht!]
@@ -476,6 +467,8 @@ It also shows the daily testing in Ontario in the calibration time frame. The ve
 
 We have fitted two models that vary in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario, Canada, from 1 March to 30 August 2020.  Our simple base model is typicalof compartmental epidemic models used to study infectious disease epidemics.  The testify model \david{The ``testify'' terminology has not been defined.  Do we want to define it and use it because we like the term? or should we just refer to the ``model with testing flows'' or something like that so referees don't think we're goofy?}  is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
 
+\mike{Talk about the assumptions of the forecast period for each model. Freezing vs extending/predicting mobility and testing intensity.}
+
 \subsection{Limitations}
 
 Our model assumes homogeneous mixing of the population. 
@@ -486,6 +479,7 @@ In addition, long-term care facilities (LTCFs), where many elderly people in Can
 While we do not anticipate any qualitative differences in results, explicitly creating compartments and calibrating to data for LTCFs would likely allow us to match ICU occupancy and forecast
 pressure on ICUs more accurately but will not resolve the issues on hospital intensity.
 \david{the last phrase needs to be rephrased.   What is ``hospital intensity''?}
+\mike{How busy the hospitals get. I.e. addmission only shows how many the hosp admit but not how many people how actually showed up that needs treatment.}
 
 \subsection{Conclusions}
 
@@ -507,12 +501,16 @@ The flexibility of incorporating various time-vary parameterizations allows user
 \section{To do}
 
 \begin{itemize}
+\item base model is calibrating to new cases and death
+\item testify is calibrating to positive test only
+\item consistency of model (death forecast looks bad because the mort parameters are not time-varying), we can drop death and only calibrate to cases and this is now compariable with testify.
+\item Bt and Rt plot? Even if they are a bit redundant, they are a bit different imo. If we include it, we need to make the plot and need a paragraph in the results. 
 \item find and clean up \code{estparmtab}/\code{litparmtab} (done)
-\item clean up Tables 1 and 2 (WZ?)
-\item should we include fits to simulations or not?
+\item clean up Tables 1 and 2 (WZ? WZ: Combine it into a single table)
+\item should we include fits to simulations or not? (Now sure what this means)
 \item Clean up figures, improve captions  
 \item Discussion and conclusions
-\item output/include figs as PDF rather than PNG (JD, WZ?)
+\item output/include figs as PDF rather than PNG (JD/WZ?) \mike{output ok, brute force the actual non-output graphics from PNG to PDF?}
 \item \david{In the original PHAC report, we showed fits to all
     the large provinces.  I'm OK with discussing Ontario only, but just checking that change was intentional.  I've move the commented-out appendix to \texttt{cuts.tex}.}
 \end{itemize}

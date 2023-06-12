@@ -76,6 +76,16 @@ code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_o
 code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/fresh_ontario_base_forecast.rda
 	$(pipeR)
 
+code/fresh_ontario_testify.Rout: code/ontario_testify.R code/calibrate_comb_setup.rds
+	$(pipeR)
+
+code/fresh_ontario_testify_forecast.Rout: code/ontario_testify_forecast.R code/fresh_ontario_testify.rds
+	$(pipeR)
+
+code/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R code/fresh_ontario_testify_forecast.rda
+	$(pipeR)
+
+
 ######################################################################
 
 ## Explicit pointers for old pathways
