@@ -15,12 +15,24 @@ fit <- mod$fit
 ## Hack end date
 extend_days <- 30
 
+nsims <- 1000
+
 fit$forecast_args$end_date <- fit$forecast_args$end_date + extend_days 
-## MLi: need to increase scale_Sigma to get something sensible
+## Need to freeze mobility?
+# 
+# fit$forecast_args$time_args$X_date <- c(fit$forecast_args$time_args$X_date
+# 	, fit$forecast_args$time_args$X_date[length(fit$forecast_args$time_args$X_date)] + 1:30
+# )
+# 
+# freeze_mob <- fit$forecast_args$time_args$X[rep(nrow(fit$forecast_args$time_args$X),30),]
+# 
+# fit$forecast_args$time_args$X <- rbind(fit$forecast_args$time_args$X
+# 	, fit$forecast_args$time_args$X[rep(nrow(fit$forecast_args$time_args$X),30),]
+# )
 
-print(plot(fit))
+print(plot(fit,data=mod$data) + xlim(c(as.Date("2020-04-01"),as.Date("2020-09-30"))))
 
-ensemble <- forecast_ensemble(fit, nsim=1000, scale_Sigma = 1000)
+ensemble <- forecast_ensemble(fit, nsim=nsims, scale_Sigma = 10)
 
 forecast <- ensemble %>% filter(var %in% c("report","death"))
 

@@ -73,9 +73,6 @@ code/fresh_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calib
 code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_ontario_calibrate_comb.rds 
 	$(pipeR)
 
-fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_ontario_calibrate_comb.rds
-	$(pipeR)
-
 code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/fresh_ontario_base_forecast.rda
 	$(pipeR)
 
