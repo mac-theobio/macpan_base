@@ -15,7 +15,7 @@ base_param_vals <- (describe_params(coef(base$fit))
 )
 
 ## add descriptions for params not covered in original model
-breakpoints <- c("Apr 01", "Apr 07")
+breakpoints <- c("Apr 01", "Aug 07")
 rep_type <- c("report", "death", "postest")
 new_par_tab <- tibble(
     orig_symbol = c(rep_type   ## these how the nb disp params show up
@@ -77,6 +77,17 @@ write_table <- function(table, fn) {
                            ))
 }
 
+write_table2 <- function(table, fn) {
+	invisible(Hmisc::latex(table
+												 , col.just = c("c", "r", "r", "l")
+												 , collabel.just=c("c", "r", "r", "l")
+												 , rowname = NULL
+												 , file = fn
+												 , table.env = FALSE
+	))
+}
+
+
 base_pardf <- mk_table(base$fit, par_names)
 write_table(base_pardf, "base_table.tex")
 
@@ -85,6 +96,19 @@ testify_pardf <- mk_table(testify$fit,
                                par_names, invert = TRUE, value = TRUE))
 
 write_table(testify_pardf, "testify_table.tex")
+
+## combine base and testify pardf?
+
+combo_pardf <- (data.frame(Parameter = c(base_pardf[["Parameter"]],testify_pardf[["Parameter"]]))
+	%>% distinct()
+	%>% left_join(.,base_pardf %>% setNames(paste0('Base ', names(.))), by=c("Parameter"="Base Parameter"))
+	%>% left_join(.,testify_pardf %>% setNames(paste0('Testify ', names(.))), by=c("Parameter"="Testify Parameter"))
+	%>% transmute(Parameter, `Base Estimate`, `Testify Estimate`								
+								, Meaning = ifelse(is.na(`Base Meaning`),`Testify Meaning`,`Base Meaning`))
+)
+
+write_table2(combo_pardf, "combo_table.tex")
+
 
 pp <- update(read_params("PHAC_testify.csv"), testing_intensity=0) # reads from pkg if not found locally
 attr(pp,"description") <- NULL
