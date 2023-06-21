@@ -92,7 +92,7 @@ code/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plo
 
 figure/ontario_mobility.png: code/ontario_mobility.Rout ;
 figure/ontario_base.png: code/ontario_plots.Rout ;
-figure/ontario_base_forecast.png: code/ontario_base_forecast_plot.Rout ;
+figure/ontario_base_forecast.png: code/fresh_ontario_base_forecast_plot.Rout ;
 figure/ontario_testing.png figure/ontario_testify.png: code/ontario_plots.Rout ;
 figure/ontario_testify_forecast.png: code/ontario_testify_forecast_plot.Rout ;
 ######################################################################

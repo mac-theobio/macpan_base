@@ -398,7 +398,7 @@ Both models were used to forecast 30 days ahead and assumed that the mobility in
 
 \subsection{Base model}
 
-Figure \ref{fig:Ont_calibration_base_forecast} shows the fit to new confirmations and death time series from Febrary 24 2020 to August 30 2020. This time frame captures the first wave of the COVID outbreak and the beginning of the second wave in Ontario. The model capture to fit the new confirmations data well within the fitting window but not for the death time series. The model has adaqualt flexibility to capture the effective transmission parameter with mobility data and changes in mobility effects for each mobility break \mike{need to reword}, and mortality parameters were assumed to be constant at the optimized level resulting in a overestimation of deaths. 
+Figure \ref{fig:Ont_calibration_base_forecast} shows the fit to new confirmations and death time series from Febrary 24 2020 to August 30 2020. This time frame captures the first wave of the COVID outbreak and the beginning of the second wave in Ontario. The model capture to fit the new confirmations data well within the fitting window but not for the death time series. The model has adaqualt flexibility to capture the effective transmission parameter with mobility data and changes in mobility effects for each mobility break on Apr 1st and Aug 7, and mortality parameters were assumed to be constant at the optimized level resulting in a overestimation of deaths. 
 
 The 30 day forecast is expected to increase; when over-laying actual observed time series for that time-frame, the observed time series are lower than predicted but within 95\% prediction interval for the new confirmations and missed all the death observations. The parameters for mortality were assumed to be constant throughout the fitting and forecast window. 
 
@@ -409,6 +409,13 @@ The 30 day forecast is expected to increase; when over-laying actual observed ti
 \caption{Ontario base forecast. \ben{need to explain what's going on here; at the very least the caption should say (even if it's kind of obvious) that gray points represent calibration points, red are forecast points.  Why is the death forecast so far off?  Should we just leave it out (probably)? (WZ ...)}}
 \jd{More comfortable leaving it out after we figure it out. It's bizarre. I could be convinced that it's water under the bridge, but it's worth a look.}
 \label{fig:Ont_calibration_base_forecast}
+\end{figure}
+
+\begin{figure}[ht!]
+\includegraphics[width=\maxwidth]{figure/ontario_base_rt.png}
+
+\caption{Ontario base Rt. \mike{I don't know what is wrong with the calculation. I did foi*S0*S/I}}
+\label{fig:Ont_calibration_base_rt}
 \end{figure}
 
 \begin{table}
@@ -430,7 +437,7 @@ The base model is relatively simple but does not account for testing practices. 
 
 Figure \ref{fig:Ont_calibration_testify} shows the results from calibrating the model to positive tests, with the testing flow incorporated and with observed testing rates fed into the model as a known series.
 The variation in the predicted line is driven by high-frequency changes in testing rate, including day-of-week effects.
-It also shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast). The forecast under predicts the number of new positive cases in the forecast time-frame. The actual testing intensitive did increase during the forecast period. 
+It also shows the daily testing in Ontario in the calibration time frame. The vertical line is the cut-off between the calibration window (before September 1st 2020) and 30 days beyond it for the forecast window. The testing intensity over the forecast window is assumed to be constant at the last observed testing intensity on August 30th 2020 (since the actual increase in testing that occurred during the forecast window was not known at the time of the forecast). The forecast under predicts the number of new positive cases in the forecast time-frame \ref{fig:Ont_calibration_testify}. The actual testing intensitive did increase during the forecast period. 
 
 \david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
 
@@ -444,34 +451,25 @@ It also shows the daily testing in Ontario in the calibration time frame. The ve
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_testify_forecast.png}
 
-\caption{Ontario calibration with testing flows}
+\caption{Ontario calibration with testing flows. \mike{do we want to use the raw testing intensity or smooth it with 7dayMA?}}
 \label{fig:Ont_calibration_testify_forecast}
 \end{figure}
 
 \mike{We (I) probably should make another forecast using the testing intensity of the forecast window. Thoughts?}
 \david{Yes it would be good to see how using the correct testing intensity affects the forecast.  This needs to be expressed carefully to avoid confusion.  We need to get across that this emphasizes how much better the forecast would be with advance knowledge of how testing intensity would change over the forecast period.}
 
-\begin{table}
-\centering
-\input{testify_table.tex}
-\caption{Parameter estimates for testify model calibration. \ben{Contrast with non-testify results.  Maybe instead of this table we can include a figure that shows the two values along with confidence intervals? (Have to be a little careful about the scaling - i.e., which parameters it makes sense to show on a common scale ...)}
-\david{Can we explain the factor of 10 difference in $\zeta$?}}
-\label{table:testify}
-
-\end{table}
-
 \FloatBarrier
 
 \section{Discussion}
 
-We have fitted two models that vary in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario, Canada, from 1 March to 30 August 2020.  Our simple base model is typicalof compartmental epidemic models used to study infectious disease epidemics.  The testify model \david{The ``testify'' terminology has not been defined.  Do we want to define it and use it because we like the term? or should we just refer to the ``model with testing flows'' or something like that so referees don't think we're goofy?}  is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
+We have fitted two models that vary in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario, Canada, from 1 March to 30 August 2020.  Our simple base model is typical of compartmental epidemic models used to study infectious disease epidemics.  The testify model is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
 
 \mike{Talk about the assumptions of the forecast period for each model. Freezing vs extending/predicting mobility and testing intensity.}
 
 \subsection{Limitations}
 
-Our model assumes homogeneous mixing of the population. 
-No age-related or spatial contact structure is considered. 
+Our model assumes homogeneous mixing of the population and excludes population-level heterogenetity such as age, spatial/geographical contact structures.
+Calibrating to multiple time-series are challenging; it has to respect the biological process/relationship as well as the flexibility to change in various times. 
 \david{The following sentence needs to be rewritten.  I don't understand what was intended to be expressed.}
 We did not include hospitalization in the calibrations due to reporting from capacity issues which became a serious issue with the admissions and occpuancy underreporting the severity of the pandemic.
 In addition, long-term care facilities (LTCFs), where many elderly people in Canada have died without going to hospital, have not been modelled explicitly.  
@@ -480,6 +478,8 @@ pressure on ICUs more accurately but will not resolve the issues on hospital int
 \david{the last phrase needs to be rephrased.   What is ``hospital intensity''?}
 \mike{How busy the hospitals get. I.e. addmission only shows how many the hosp admit but not how many people how actually showed up that needs treatment.}
 
+When forecasting into the future, many assumptions have to be made for both exogenous input parameters. For example, future mobility patterns are assumed to be the same as the last observed patterns for both models, and similarly for testing intensity in the testify model. As observed in the base model, a fixed mortality ratio is insufficient to capture the mortality patterns. Even if they are captured accurately, there is a possibility that they may differ in the forecast window.
+ 
 \subsection{Conclusions}
 
 \david{This conclusion paragraph leaves a lot to be desired.  I think we should discuss what we think the key take-home messages should be, and then write a new conclusion paragraph.  We should also state that we have continue to develop the software during the pandemic, and will describe further innovations in subsequent papers.}
@@ -503,10 +503,9 @@ The flexibility of incorporating various time-vary parameterizations allows user
 \item base model is calibrating to new cases and death
 \item testify is calibrating to positive test only
 \item consistency of model (death forecast looks bad because the mort parameters are not time-varying), we can drop death and only calibrate to cases and this is now compariable with testify.
-\item Bt and Rt plot? Even if they are a bit redundant, they are a bit different imo. If we include it, we need to make the plot and need a paragraph in the results. 
+\item Bt and Rt plot? Bt and Rt is only differ by a factor of S0 right? Rt is now included but the paragraph is missing and it looks off (please review the code) 
 \item find and clean up \code{estparmtab}/\code{litparmtab} (done)
-\item clean up Tables 1 and 2 (WZ? WZ: Combine it into a single table)
-\item should we include fits to simulations or not? (Now sure what this means)
+\item clean up Tables 1 and 2 (WZ: Combine it into a single table DONE)
 \item Clean up figures, improve captions  
 \item Discussion and conclusions
 \item output/include figs as PDF rather than PNG (JD/WZ?) \mike{output ok, brute force the actual non-output graphics from PNG to PDF?}

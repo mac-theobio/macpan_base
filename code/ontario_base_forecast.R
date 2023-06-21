@@ -33,9 +33,9 @@ fit$forecast_args$end_date <- fit$forecast_args$end_date + extend_days
 
 print(plot(fit,data=mod$data) + xlim(c(as.Date("2020-04-01"),as.Date("2020-09-30"))))
 
-ensemble <- forecast_ensemble(fit, nsim=nsims, scale_Sigma = 10)
+ensemble <- forecast_ensemble(fit, nsim=nsims, scale_Sigma = 10, raw_ensembles = TRUE)
 
-forecast <- ensemble %>% filter(var %in% c("report","death"))
+forecast <- ensemble %>% filter(var %in% c("report","death","S","I","foi"))
 
 saveVars(forecast, mod)
 

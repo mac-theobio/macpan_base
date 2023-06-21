@@ -107,6 +107,10 @@ combo_pardf <- (data.frame(Parameter = c(base_pardf[["Parameter"]],testify_pardf
 								, Meaning = ifelse(is.na(`Base Meaning`),`Testify Meaning`,`Base Meaning`))
 )
 
+print(combo_pardf)
+
+combo_pardf <- combo_pardf[c(1:4,12,5:11),]
+
 write_table2(combo_pardf, "combo_table.tex")
 
 
