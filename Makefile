@@ -21,10 +21,10 @@ vim_session:
 ## macpan_ms.pdf: macpan_ms.tex
 
 Sources += $(wildcard */*.R)
-Sources += macpan_ms.tex McMasterReport_preamble.tex
+Sources += macpan_ms.tex McMasterReport_preamble.tex 
 
 Ignore +=	base_table.tex testify_table.tex litparm_table.tex
-litparm_table.tex base_table.tex testify_table.tex: code/ontario_tables.Rout ;
+litparm_table.tex base_table.tex testify_table.tex combo_table.tex: code/ontario_tables.Rout ;
 
 ######################################################################
 
@@ -90,6 +90,10 @@ code/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plo
 
 ## Explicit pointers for old pathways
 
+## BMB: added, but maybe in the wrong place? FIXME
+figure/ontario_base_rt.png: code/ontario_base_forecast_plot.Rout ;
+
+## 
 figure/ontario_mobility.png: code/ontario_mobility.Rout ;
 figure/ontario_base.png: code/ontario_plots.Rout ;
 figure/ontario_base_forecast.png: code/fresh_ontario_base_forecast_plot.Rout ;
