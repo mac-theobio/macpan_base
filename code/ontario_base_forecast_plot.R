@@ -68,7 +68,7 @@ gg_death
 ggcombo <- plot_grid(gg_report,gg_death,nrow=2)
 ggcombo
 
-ggsave("figure/ontario_base_forecast.png",width = 10, height = 10)
+## ggsave("figure/ontario_base_forecast.png",width = 10, height = 10)
 
 gg_rt <- (ggplot(rt,aes(x=date,y=value))
 						 + geom_line()
@@ -79,6 +79,6 @@ gg_rt <- (ggplot(rt,aes(x=date,y=value))
 )
 gg_rt
 
-ggsave("figure/ontario_base_rt.png",width = 10, height = 10)
+## ggsave("figure/ontario_base_rt.png",width = 10, height = 10)
 
 saveEnvironment()
