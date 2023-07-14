@@ -3,8 +3,8 @@ library(tidyverse)
 library(knitr)
 library(shellpipes)
 
-base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
-testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
+base <- rdsRead("ontario_calibrate")
+testify <- rdsRead("ontario_testify")
 
 cap_first <- function(x) gsub("^(.)", "\\U\\1", x, perl = TRUE)
 
