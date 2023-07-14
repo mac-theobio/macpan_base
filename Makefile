@@ -44,47 +44,36 @@ code/ontario_plots.Rout: code/ontario_plots.R
 code/ontario_tables.Rout: code/ontario_tables.R
 	$(pipeR)
 
-slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R code/cachestuff/ont_calib_comb_mobbreaks.rds
-	$(pipeR)
-
-code/ontario_base_forecast_plot.Rout: slow/ontario_base_forecast.rda code/ontario_base_forecast_plot.R
-	$(pipeR)
-
-slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R code/cachestuff/ont_calib_testify.rds
-	$(pipeR)
-
-code/ontario_testify_forecast_plot.Rout: slow/ontario_testify_forecast.rda code/ontario_testify_forecast_plot.R
-	$(pipeR)
-
-code/ontario_mobility.Rout: code/ontario_mobility.R code/cachestuff/calibrate_comb_setup.rds
-	$(pipeR)
-
 ######################################################################
 
 ## recreating pipeline 2023 Jun
 
-### setting up pieces for calibration
-code/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
+Makefile: | fast
+fast:
+	$(mkdir)
+Ignore += fast
+
+### set up
+slowtarget/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
 	$(pipeR)
 
-code/fresh_ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R code/calibrate_comb_setup.rds
+slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calibrate_comb_setup.rds
 	$(pipeR)
 
-code/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R code/fresh_ontario_calibrate_comb.rds 
+slowtarget/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/fresh_ontario_calibrate_comb.rds 
 	$(pipeR)
 
-code/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R code/fresh_ontario_base_forecast.rda
+fast/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/fresh_ontario_base_forecast.rda
 	$(pipeR)
 
-code/fresh_ontario_testify.Rout: code/ontario_testify.R code/calibrate_comb_setup.rds
+slowtarget/fresh_ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setup.rds
 	$(pipeR)
 
-code/fresh_ontario_testify_forecast.Rout: code/ontario_testify_forecast.R code/fresh_ontario_testify.rds
+slowtarget/fresh_ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/fresh_ontario_testify.rds
 	$(pipeR)
 
-code/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R code/fresh_ontario_testify_forecast.rda
+fast/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/fresh_ontario_testify_forecast.rda
 	$(pipeR)
-
 
 ######################################################################
 
