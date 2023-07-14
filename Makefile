@@ -42,7 +42,7 @@ figure/ontario_plots.Rout: code/ontario_plots.R slow/ontario_calibrate_comb.rds 
 
 ## MS tables
 litparm_table.tex base_table.tex testify_table.tex combo_table.tex: code/ontario_tables.Rout ;
-code/ontario_tables.Rout: code/ontario_tables.R
+code/ontario_tables.Rout: code/ontario_tables.R slow/ontario_calibrate_comb.rds slow/ontario_testify.rds 
 	$(pipeR)
 
 ######################################################################
