@@ -55,24 +55,25 @@ slowtarget/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
 slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calibrate_comb_setup.rds
 	$(pipeR)
 
-slowtarget/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/fresh_ontario_calibrate_comb.rds 
+slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/ontario_calibrate_comb.rds 
 	$(pipeR)
 
-figure/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/fresh_ontario_base_forecast.rda
+figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)
 
-slowtarget/fresh_ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setup.rds
+slowtarget/ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setup.rds
 	$(pipeR)
 
-slowtarget/fresh_ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/fresh_ontario_testify.rds
+slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/ontario_testify.rds
 	$(pipeR)
 
-figure/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/fresh_ontario_testify_forecast.rda
+figure/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/ontario_testify_forecast.rda
 	$(pipeR)
 
 ######################################################################
 
 ## Explicit pointers for old pathways
+## Need to update once things are running
 
 ## BMB: added, but maybe in the wrong place? FIXME
 figure/ontario_base_rt.png: code/ontario_base_forecast_plot.Rout ;
@@ -80,7 +81,7 @@ figure/ontario_base_rt.png: code/ontario_base_forecast_plot.Rout ;
 ## 
 figure/ontario_mobility.png: code/ontario_mobility.Rout ;
 figure/ontario_base.png: code/ontario_plots.Rout ;
-figure/ontario_base_forecast.png: code/fresh_ontario_base_forecast_plot.Rout ;
+figure/ontario_base_forecast.png: code/ontario_base_forecast_plot.Rout ;
 figure/ontario_testing.png figure/ontario_testify.png: code/ontario_plots.Rout ;
 figure/ontario_testify_forecast.png: code/ontario_testify_forecast_plot.Rout ;
 ######################################################################
