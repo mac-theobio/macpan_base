@@ -48,11 +48,6 @@ code/ontario_tables.Rout: code/ontario_tables.R
 
 ## recreating pipeline 2023 Jun
 
-Makefile: | fast
-fast:
-	$(mkdir)
-Ignore += fast
-
 ### set up
 slowtarget/calibrate_comb_setup.Rout: code/calibrate_comb_setup.R
 	$(pipeR)
@@ -63,7 +58,7 @@ slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calib
 slowtarget/fresh_ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/fresh_ontario_calibrate_comb.rds 
 	$(pipeR)
 
-fast/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/fresh_ontario_base_forecast.rda
+figure/fresh_ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/fresh_ontario_base_forecast.rda
 	$(pipeR)
 
 slowtarget/fresh_ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setup.rds
@@ -72,7 +67,7 @@ slowtarget/fresh_ontario_testify.Rout: code/ontario_testify.R slow/calibrate_com
 slowtarget/fresh_ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/fresh_ontario_testify.rds
 	$(pipeR)
 
-fast/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/fresh_ontario_testify_forecast.rda
+figure/fresh_ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/fresh_ontario_testify_forecast.rda
 	$(pipeR)
 
 ######################################################################
