@@ -6,6 +6,9 @@ all: macpan_ms.pdf
 ## macpan_ms.pdf.final:
 ## slowsync:
 
+## FIXME
+makeslow = defined
+
 ######################################################################
 
 current: target
@@ -24,7 +27,6 @@ Sources += $(wildcard */*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex 
 
 Ignore +=	base_table.tex testify_table.tex litparm_table.tex
-litparm_table.tex base_table.tex testify_table.tex combo_table.tex: code/ontario_tables.Rout ;
 
 ######################################################################
 
@@ -32,15 +34,14 @@ Sources += README.md TODO.md
 
 ######################################################################
 
-autowrapR = defined
+autopipeR = defined
 
-## MS
-
-## dependencies
-
-code/ontario_plots.Rout: code/ontario_plots.R 
+## MS plots
+figure/ontario_plots.Rout: code/ontario_plots.R slow/ontario_calibrate_comb.rds slow/ontario_testify.rds slow/calibrate_comb_setup.rds
 	$(pipeR)
 
+## MS tables
+litparm_table.tex base_table.tex testify_table.tex combo_table.tex: code/ontario_tables.Rout ;
 code/ontario_tables.Rout: code/ontario_tables.R
 	$(pipeR)
 
@@ -58,13 +59,13 @@ slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calib
 slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/ontario_calibrate_comb.rds 
 	$(pipeR)
 
-figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
-	$(pipeR)
-
 slowtarget/ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setup.rds
 	$(pipeR)
 
 slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/ontario_testify.rds
+	$(pipeR)
+
+figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)
 
 figure/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/ontario_testify_forecast.rda
@@ -72,19 +73,7 @@ figure/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R 
 
 ######################################################################
 
-## Explicit pointers for old pathways
-## Need to update once things are running
-
-## BMB: added, but maybe in the wrong place? FIXME
-figure/ontario_base_rt.png: code/ontario_base_forecast_plot.Rout ;
-
-## 
-figure/ontario_mobility.png: code/ontario_mobility.Rout ;
-figure/ontario_base.png: code/ontario_plots.Rout ;
-figure/ontario_base_forecast.png: code/ontario_base_forecast_plot.Rout ;
-figure/ontario_testing.png figure/ontario_testify.png: code/ontario_plots.Rout ;
-figure/ontario_testify_forecast.png: code/ontario_testify_forecast_plot.Rout ;
-######################################################################
+## FIXME Deleted lots of manual figure links
 
 ## repiped figures
 figure/flow.chart.pdf: figure/flow.Rout ;

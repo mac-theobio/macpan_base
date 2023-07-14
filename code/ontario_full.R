@@ -9,10 +9,6 @@ stop_date <-  as.Date("2021-05-29")
 stop_date <-  as.Date("2021-06-15")
 stop_date <-  as.Date("2020-08-30")
 
-cachedat <- readRDS("cachestuff/calibrate_comb_setup.rds")
-
-
-
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
 	%>% filter(var %in% c("report","H","death"))
@@ -75,4 +71,5 @@ print(plot(current, data=cachedat$calibrate_data_fill)
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=calibrate_data_fill,mobdat=clean_mobility)
-saveRDS(ont_calib_comb_reports_mobbreaks,"cachestuff/ont_calib_comb_mobbreaks.rds")
+
+rdsSave()

@@ -4,11 +4,6 @@ library(shellpipes)
 
 loadEnvironments()
 
-run <- TRUE
-save <- FALSE
-
-if(run){
-
 # source("calibrate_comb_setup.R")
 ## This is a very slow step because it is downloading large mobility csvs
 # load("calibrate_comb_setup.rda")
@@ -17,13 +12,11 @@ stop_date <-  as.Date("2020-08-30")
 
 cachedat <- rdsRead()
 
-
 calibrate_data <- (cachedat$calibrate_data_fill
 	%>% filter(date <= stop_date)
 	%>% filter(var %in% c("report","death"))
 	%>% filter(date >= as.Date("2020-02-24"))
 )
-
 
 ## loading parameters
 
@@ -81,11 +74,7 @@ current <- do.call(calibrate_comb
 print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("2020-09-01"))) 
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
-}
 
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
-if(save){
-saveRDS(ont_calib_comb_reports_mobbreaks,"code/cachestuff/ont_calib_comb_mobbreaks.rds")
-}
 
 rdsSave(ont_calib_comb_reports_mobbreaks)

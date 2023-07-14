@@ -6,9 +6,10 @@ packageVersion("McMasterPandemic")
 library(shellpipes)
 library(anytime) ## required because cached objects still think we are loading this pkg
 
-## How do I read in two rds again in shellpipe-verse?
+base <- rdsRead("ontario_calibrate")
+testify <- rdsRead("ontario_testify")
+dat <- rdsRead("_setup")
 
-base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 (plot(base$fit, data=filter(base$data, date<=as.Date("2020-08-30")))
     ## 'dlspace' not working, alas
     + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
@@ -17,7 +18,6 @@ base <- readRDS("code/cachestuff/ont_calib_comb_mobbreaks.rds")
 ggsave("figure/ontario_base.png",width = 10,height = 6)
 
 
-testify <- readRDS("code/cachestuff/ont_calib_testify.rds")
 dd <- suppressWarnings(predict(testify$fit
 			  , ensemble=FALSE
 			  , keep_vars=c("postest"))
@@ -32,7 +32,6 @@ ddcombo <- (testify$data
     %>% select(date, var, value, data)
 )
 
-dat <- readRDS("code/cachestuff/calibrate_comb_setup.rds")
 
 start_date <- as.Date("2020-03-01")
 end_date <- as.Date("2020-10-01")
