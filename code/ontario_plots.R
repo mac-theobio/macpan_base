@@ -14,10 +14,9 @@ dat <- rdsRead("_setup")
     ## 'dlspace' not working, alas
     + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
     + expand_limits(x = as.Date("2020-10-01"))
-)
-ggsave("figure/ontario_base.png",width = 10,height = 6)
+) %>% teeGG(desc="base",width = 10,height = 6)
 
-
+## 2023 Jul 17 (Mon) Does this really belong here or should it be upstream?
 dd <- suppressWarnings(predict(testify$fit
 			  , ensemble=FALSE
 			  , keep_vars=c("postest"))
@@ -47,7 +46,7 @@ testdat <- (dat$test_data_fill
 
 ddcombo2 <- bind_rows(ddcombo, testdat)
 
-gg <- (ggplot(ddcombo2, aes(x=date))
+(ggplot(ddcombo2, aes(x=date))
     + geom_line(data = ddcombo, aes(y=value), colour = "black")
     + geom_point(aes(y=data, colour  = var), alpha=0.3)
     + theme_bw()
@@ -58,10 +57,7 @@ gg <- (ggplot(ddcombo2, aes(x=date))
                          sec.axis = sec_axis(~.*iscale, name = "testing intensity"))
     + geom_vline(aes(xintercept=as.Date("2020-09-01")), lty = 2)
     ## can't combine log/lin scale, so use linear for both
-)
-print(gg)
-
-ggsave("figure/ontario_testify.png",width = 10,height = 6)
+) %>% teeGG(desc="testify", width = 10,height = 6)
 
 ## testing <- (ggplot(testdat,aes(x=Date,y=intensity))
 ## 	+ geom_point()
@@ -75,4 +71,4 @@ ggsave("figure/ontario_testify.png",width = 10,height = 6)
 ## print(testing)
 ## ggsave("figure/ontario_testing.png",width = 10,height = 6)
 
-saveEnvironment()
+## saveEnvironment() ## don't saveEnvironment unless there's a reason; plotting files should usually not?
