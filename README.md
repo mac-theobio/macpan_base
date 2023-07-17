@@ -1,5 +1,7 @@
 # macpan_base
 
+## Instructions
+
 * If necessary export extra R libraries `export R_LIBS_USER=/usr/local/lib/R/site-library`
 
 ```r
@@ -17,3 +19,7 @@ c("McMasterPandemic", "batchtools", "furrr", "future", "future.batchtools",
 "ggplot2", "gsheet", "readr", "splines", "tidyr", "bbmle", "gtable", 
 "knitr", "diagram")
 ```
+
+## Structure
+
+

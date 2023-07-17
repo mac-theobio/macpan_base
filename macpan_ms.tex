@@ -370,7 +370,7 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \mike{We replaced it with the important dates when we gave up on mobility later on. I do prefer mobility for this paper for a more generalized approach to incorprating different exogenous data (I guess same arugement applies to important dates as well).}
 
 \begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_mobility.png}
+\includegraphics[width=\maxwidth]{figure/ontario_mobility.Rout.pdf}
 
 \caption{Ontario mobility \ben{WZ: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}
 \mike{Need to add the mobility breakdates in the diagram; the model uses a different slope and intercept at different breakdates.}
@@ -404,7 +404,7 @@ The 30 day forecast is expected to increase; when over-laying actual observed ti
 
 
 \begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_base_forecast.png}
+\includegraphics[width=\maxwidth]{figure/ontario_base_forecast_plot.rptDeath.pdf}
 
 \caption{Ontario base forecast. \ben{need to explain what's going on here; at the very least the caption should say (even if it's kind of obvious) that gray points represent calibration points, red are forecast points.  Why is the death forecast so far off?  Should we just leave it out (probably)? (WZ ...)}}
 \jd{More comfortable leaving it out after we figure it out. It's bizarre. I could be convinced that it's water under the bridge, but it's worth a look.}
@@ -412,7 +412,7 @@ The 30 day forecast is expected to increase; when over-laying actual observed ti
 \end{figure}
 
 \begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_base_rt.png}
+\includegraphics[width=\maxwidth]{figure/ontario_base_forecast_plot.rt.pdf}
 
 \caption{Ontario base Rt. \mike{I don't know what is wrong with the calculation. I did foi*S0*S/I}}
 \label{fig:Ont_calibration_base_rt}

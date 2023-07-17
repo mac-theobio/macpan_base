@@ -5,8 +5,9 @@ library(shellpipes)
 library(cowplot)
 library(zoo)
 library(gtable)
-library(shellpipes)
 
+library(shellpipes)
+startGraphics(width=7, height=7)
 loadEnvironments()
 
 gg <- (ggplot(postest,aes(x=date,y=value))
@@ -19,10 +20,9 @@ gg <- (ggplot(postest,aes(x=date,y=value))
 	+ ylab("Daily Positives")
 	## Overlaying the data
 )
-gg
-gg <- gg + coord_cartesian(ylim = c(0,1500))
 
-gg
-ggsave("figure/ontario_testify_forecast.png",width = 10, height = 10)
+## Chesterton's fence
+## print (gg + coord_cartesian(ylim = c(0,1500)))
+print(gg)
 
 saveEnvironment()

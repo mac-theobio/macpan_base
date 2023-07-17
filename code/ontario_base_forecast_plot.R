@@ -50,7 +50,6 @@ gg_report <- (ggplot(filter(reports_death,var=="report"),aes(x=date,y=value))
     + ylab("Daily Reported Cases")
     + coord_cartesian(ylim=c(0,1000))
 )
-gg_report
 
 gg_death <- (ggplot(filter(reports_death,var=="death"),aes(x=date,y=value))
 	## Overlaying the data
@@ -63,22 +62,14 @@ gg_death <- (ggplot(filter(reports_death,var=="death"),aes(x=date,y=value))
 	+ ylab("Daily Death")
 	+ coord_cartesian(ylim=c(0,100))
 )
-gg_death
 
 ggcombo <- plot_grid(gg_report,gg_death,nrow=2)
-ggcombo
+teeGG(ggcombo, desc="rptDeath")
 
-## ggsave("figure/ontario_base_forecast.png",width = 10, height = 10)
-
-gg_rt <- (ggplot(rt,aes(x=date,y=value))
+(ggplot(rt,aes(x=date,y=value))
 						 + geom_line()
 						 + geom_ribbon(aes(ymin=lwr,ymax=upr),alpha=0.1)
 						 + theme_bw()		
 						 + ylab("Rt")
 						 + geom_hline(aes(yintercept=1))
-)
-gg_rt
-
-## ggsave("figure/ontario_base_rt.png",width = 10, height = 10)
-
-saveEnvironment()
+) %>% teeGG(desc="rt")

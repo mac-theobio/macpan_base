@@ -1,5 +1,7 @@
 library(tidyverse);theme_set(theme_bw())
+
 library(shellpipes)
+startGraphics(width = 8, height = 6)
 
 dat <- rdsRead()
 
@@ -19,8 +21,5 @@ gg <- (ggplot(mob,aes(x=date,y=rel_activity))
 )
 
 print(gg)
-
-
-ggsave("figure/ontario_mobility.png",width = 8, height = 6)
 
 saveEnvironment()
