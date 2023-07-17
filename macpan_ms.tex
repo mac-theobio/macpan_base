@@ -110,8 +110,7 @@ the average level of susceptibility in the remaining population decreases.\david
 %\begin{figure}[ht!]
 \begin{figure}
 % \includegraphics[width=\maxwidth]{figure/flow.chart.crop.pdf}
-\includegraphics[width=\maxwidth]{figure/Macpan_Base_Epi-model.png}
-figure/Macpan_Base_Epi-model.png}
+\includegraphics[width=\maxwidth]{pix/Macpan_Base_Epi-model.png}
 \caption{Flow chart for basic compartmental mechanistic transmission model. 
 Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs} (ICU with prognosis of survival), \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care after ICU stay). 
 Compartments denoted by rectangles are accumulators, primarily used in the condensation step to compute incidences: \code{R} (recovered), \code{D} (dead), \code{X} (accumulator for cumulative hospital admissions).
@@ -443,14 +442,14 @@ It also shows the daily testing in Ontario in the calibration time frame. The ve
 \david{I suggest using open circles during the forecast window, as we do for observed cases and hospitalizations.}
 
 \begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_testify.png}
+\includegraphics[width=\maxwidth]{figure/ontario_plots.testify.pdf}
 
 \caption{Calibration of positive tests and testing intensity}
 \label{fig:Ont_calibration_testify}
 \end{figure}
 
 \begin{figure}[ht!]
-\includegraphics[width=\maxwidth]{figure/ontario_testify_forecast.png}
+\includegraphics[width=\maxwidth]{figure/ontario_testify_forecast_plot.Rout.pdf}
 
 \caption{Ontario calibration with testing flows. \mike{do we want to use the raw testing intensity or smooth it with 7dayMA?}}
 \label{fig:Ont_calibration_testify_forecast}

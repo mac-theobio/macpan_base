@@ -24,5 +24,3 @@ gg <- (ggplot(postest,aes(x=date,y=value))
 ## Chesterton's fence
 ## print (gg + coord_cartesian(ylim = c(0,1500)))
 print(gg)
-
-saveEnvironment()

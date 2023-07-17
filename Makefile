@@ -37,6 +37,7 @@ Sources += README.md TODO.md
 autopipeR = defined
 
 ## MS plots
+pdfDesc += figure/ontario_plots
 figure/ontario_plots.Rout: code/ontario_plots.R slow/ontario_calibrate_comb.rds slow/ontario_testify.rds slow/calibrate_comb_setup.rds
 	$(pipeR)
 

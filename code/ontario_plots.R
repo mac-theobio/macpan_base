@@ -1,10 +1,14 @@
 library(tidyverse); theme_set(theme_bw(base_size = 10))
+
 ## point to OLD/stored MacPan
 .libPaths(c("Rlib", .libPaths()))
 library(McMasterPandemic)
 packageVersion("McMasterPandemic")
-library(shellpipes)
+
 library(anytime) ## required because cached objects still think we are loading this pkg
+
+library(shellpipes)
+startGraphics()
 
 base <- rdsRead("ontario_calibrate")
 testify <- rdsRead("ontario_testify")
