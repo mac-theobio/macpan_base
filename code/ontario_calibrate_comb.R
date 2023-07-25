@@ -46,6 +46,7 @@ opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_
 	# , log_nb_disp = c(report=20)
 )
 
+mob_breaks <- c("2020-04-01","2020-08-07")
 
 current <- do.call(calibrate_comb
 		, c(nlist(params=params
@@ -59,7 +60,7 @@ current <- do.call(calibrate_comb
 		, use_mobility = TRUE
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
 		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
-		, mob_breaks = c("2020-04-01","2020-08-07")
+		, mob_breaks = mob_breaks,
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
 		, use_spline = FALSE
@@ -75,6 +76,6 @@ print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("20
       + ggtitle("Current model: mobility")
       + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
-ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility)
+ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility, breakpoints = mob_breaks)
 
 rdsSave(ont_calib_comb_reports_mobbreaks)

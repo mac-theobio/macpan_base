@@ -372,8 +372,9 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_mobility.Rout.pdf}
 
-\caption{Ontario mobility \ben{WZ: a previous version of this graph looked very different, with giant day-of-week effects.  The current version I'm seeing is much smoother ... do we know what happened/which was right?}
-\mike{Need to add the mobility breakdates in the diagram; the model uses a different slope and intercept at different breakdates.}
+\caption{Ontario mobility 
+  \mike{Need to add the mobility breakdates in the diagram; the model uses a different slope and intercept at different breakdates.}
+  \ben{Mike or JD: can you tell me how to retrieve breakpoints from wherever they're defined to be used in this plot? {\tt mob\_breaks} is set in {\tt ontario\_calibrate\_comb.R} ?}
 }
 \label{fig:Ont_mobility}
 \end{figure}
