@@ -11,6 +11,8 @@ loadEnvironments()
 
 mod <- rdsRead()
 
+## mod <- readRDS("slow/ontario_calibrate_comb.rds")
+
 fit <- mod$fit
 
 ## Hack end date

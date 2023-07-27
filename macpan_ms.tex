@@ -501,15 +501,12 @@ The flexibility of incorporating various time-vary parameterizations allows user
 \section{To do}
 
 \begin{itemize}
-\item base model is calibrating to new cases and death
-\item testify is calibrating to positive test only
-\item consistency of model (death forecast looks bad because the mort parameters are not time-varying), we can drop death and only calibrate to cases and this is now compariable with testify.
+\item base model is calibrating to new cases and death; testify is calibrating to positive test only
+\item consistency of model (death forecast looks bad because the mort parameters are not time-varying), we can drop death and only calibrate to cases and this is now comparable with testify
+\item \ben{re: the above two points, I'm not sure what the best answer is that's also consistent with doing as little work as possible :-) (1) fitting to multiple streams is supposedly one of our features (2) fitting to cases and death but not allowing breakpoints on death is supposedly giving us terrible-looking answers. I don't mind the base model and testify model doing different things}
 \item Bt and Rt plot? Bt and Rt is only differ by a factor of S0 right? Rt is now included but the paragraph is missing and it looks off (please review the code) 
-\item find and clean up \code{estparmtab}/\code{litparmtab} (done)
-\item clean up Tables 1 and 2 (WZ: Combine it into a single table DONE)
 \item Clean up figures, improve captions  
 \item Discussion and conclusions
-\item output/include figs as PDF rather than PNG (JD/WZ?) \mike{output ok, brute force the actual non-output graphics from PNG to PDF?}
 \item \david{In the original PHAC report, we showed fits to all
     the large provinces.  I'm OK with discussing Ontario only, but just checking that change was intentional.  I've move the commented-out appendix to \texttt{cuts.tex}.}
 \end{itemize}
