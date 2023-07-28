@@ -91,7 +91,7 @@ I guess that's why the symbol for the proportion in ICU who die was not given ab
 This version of the model assumes homogeneous mixing --- all classes of infectives contribute additively to the force of infection (the \emph{per capita} infection rate of susceptibles).
 We assumed hospitalized individuals do not contribute to the force of infection. \mike{re-write this point nicely? it is a strong assumption.}  
 We did add one feature to the model to account for heterogeneity in susceptibility in the population, which we typically imagine is driven by heterogeneity in exposure (e.g., front-line and essential workers will be infected earlier), but could also be influenced by genetic, immunological, or other factors.
-A \emph{phenomenological heterogeneity} parameter \david{not ``factor''} $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that the most susceptible individuals tend to be infected first, after which
+A \emph{phenomenological heterogeneity} parameter $\zeta$, modifies the force of infection by a factor of $\left(S(t)/N\right)^\zeta$. Since $0 < S/N < 1$, a positive value of $\zeta$ will make the force of infection decrease as the remaining fraction susceptible decreases, capturing the fact that the most susceptible individuals tend to be infected first, after which
 the average level of susceptibility in the remaining population decreases.\david{revised that last sentence, which I kept misreading} While modelers have considered the dynamics of epidemiological models incorporating incidence functions of this general form \cite{WilsWorc+45,Liu+87}, previous attempts to model phenomenological heterogeneity have used transmission proportional to an exponential function of prevalence (i.e., $S I/N \times e^{-(I/N)^n}$ where $n$ is a shape parameter) rather than using a power law \cite{Will+06,Gran+09}. \ben{JD please check that this makes sense/expand where necessary; check Dwyer? Williams et al 2006: ``To allow for heterogeneity in sexual behaviour and to fit the observed asymptotic prevalence of infection, the transmission parameter takes the value $\lambda_0$ at the start of the epidemic and declines exponentially at rate $\alpha$ times the prevalence of infection.'' Granich et al. say ``To allow for heterogeneity in sexual behaviour and for the observed steady state prevalence of HIV, we let the transmission decrease with the prevalence, P. If n=1, the decrease is exponential; if $n=\infty$, the decrease is a step function. Both have been used in previous models (5, 29).'' Granich et al. also cite \cite{williamsHIV2006} (their ref. 29), but I don't see a transmission model in there anywhere ...}
 
 %\begin{figure}[ht!]
@@ -163,7 +163,6 @@ moments chosen to match empirical estimates of case-reporting delays.
 \mike{Do we have/need a formula for FOI?}
 \ben{how did we pick these values? 
 Probably don't have a formal ref but some statement of what we used to guess that this was reasonable would be good ...}.
-\jd{Another option here would just be to say where $\phi$ is typically a Gamma distribution with moments chosen to match literature estimates>}
 \ben{done, but still not clear that there are a lot of such estimates in the literature \ldots}\david{I added ``empirical'', which can cover unpublished estimates.}
 When computing case reports from incidence we also assume a case-report proportion \code{c\_prop} to account for the fact that the majority of COVID infections are never reported \cite{Doug+2020}; this value is usually calibrated from data.
 
@@ -179,7 +178,7 @@ Here, we instead expand the susceptible and all infected compartments factoriall
 \item tested and awaiting positive results; or 
 \item tested positive.
 \end{itemize}
-After receiving negative results (whether true negatives, from individuals in $S$, or false negatives, from individuals in one of the infectious compartments), individuals cycle back to the untested sub-compartment where they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment; depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}).  We assume here that people waiting for test results do not isolate.
+After receiving negative results (whether true negatives, from individuals in $S$, or false negatives, from individuals in one of the infectious compartments), individuals cycle back to the corresponding “untested” sub-compartment, since they can be tested again. After receiving positive results, they remain in the positively tested sub-compartment; depending on the model parameters, their transmission may be reduced due to self-isolation (controlled by the parameter \code{iso\_t}).  We assume here that people waiting for test results do not isolate.
 Gharouni \emph{et al.}\/ \cite{Ghar+22} thoroughly analyze the epidemiological consequences of this structure in a simpler framework that expands a basic SIR model rather than the COVID-specific compartmental model (\cref{fig:flowchart}) as the foundation.
 Individuals may progress between epidemiological compartments (e.g., becoming infectious or recovering) while awaiting the results of tests. In general, progressing individuals move to the same testing subcompartment, e.g., from \code{Im}-negative-waiting to \code{R}-negative-waiting.
 
@@ -191,7 +190,7 @@ W = \sum_i w_i X_i/N \,,
 then for a daily \emph{per capita} testing rate $\rho$ we might expect that the corresponding \emph{per capita} testing rate in compartment $i$ would be ${\mathcal T}_i = \rho w_i/W$. 
 \david{We should try to keep notation consistent with \cite{Ghar+22}.  I changed
 $T_i$ to ${\mathcal T}_i$.  Not sure that's sufficient.}
-However, under some extreme conditions (if testing is so extreme that few untested symptomatic people are left) this formulation can allow the \emph{per capita} testing rate to explode. To mitigate this problem we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
+However, under some extreme conditions (if testing is so extreme that few untested symptomatic people are left) this formulation can allow the \emph{per capita} testing rate to explode. To address this problem we add a maximum daily \emph{per capita} testing rate $\tau$ to the model such that
 \begin{equation}
 {\mathcal T}_i = \frac{\rho \tau w_i}{\tau W + \rho} \,;
 \end{equation}
@@ -260,7 +259,7 @@ It is easy to specify a scalar value (say, 1\% of the population) to indicate th
 
 To compute the other summaries (\Rzero, $r$, and moments of the generation interval) we rely on the fact that the software saves the force of infection at each time step. 
 We simulate the progression of a \emph{single} individual through the infection process, i.e., setting the population size to 1 and setting the initial state to $E=1$ with all other compartments empty. 
-Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular age \mike{stage? or infection state?} of infection, and thus also the expected force of infection generated by a single infectious individual, as a function of time since infection. 
+Simulating deterministically then generates a time course of the probability that an individual is in any given box at a particular “age of infection”, and thence the expected force of infection generated by a single infectious individual through time. 
 This vector $K(t)$ is the same as the transmission kernel in a renewal equation \cite{Cham+18}. 
 We can easily compute 
 \begin{equation}\label{eq:Rzero}
@@ -297,8 +296,7 @@ We use standard nonlinear optimization algorithms built into R, such as Nelder-M
 
 A link function can be added for any parameter in the model to constrain it to a sensible domain; the user specifies this by adding an appropriate prefix to the name of the parameter in the list of starting values for parameters to be calibrated. 
 For example, specifying \code{log\_beta0 = -1} would specify that the baseline transmission parameter $\beta_0$ should be calibrated on the log scale, ensuring that the value of $\beta_0$ is always positive, and using a starting value of -1 on the log scale (i.e., initial $\beta_0 = \exp(-1)$). 
-Specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the fraction of mortality that occurs outside hospitals) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1, and using a starting value of $\beta_0 = \textrm{logit}^{-1}(-0.2) = 0.45$.
-\jd{Maybe make this number a bit smaller?}
+Specifying \code{logit\_nonhosp\_mort = -0.2} would specify that the value of \code{nonhosp\_mort} (the fraction of mortality that occurs outside hospitals) should be fitted on a logit, or log-odds, scale, ensuring that it is bounded between 0 and 1, and using a starting value of $\beta_0 = \textrm{logit}^{-1}(-{0.2}) = 0.45$.
 
 The model includes a general framework for adding a prior probability distribution for any parameter, using any distribution available in R. 
 For example, \code{dbeta(nonhosp\_mort, 2, 2)} would specify a $\textrm{Beta}(2,2)$ prior for \code{nonhosp\_mort}.
@@ -321,17 +319,9 @@ Other model parameters are taken from the literature (\cref{tab:litparm}).
 \end{table}
 
 We do not include hospitalization and ICU occupancy in our calibration because our model assumes all severe cases go through ICU, whereas during the early pandemic period
-that we focus on here, many severe cases actually occurred entirely in Long Term Care Facilities (LTCFs); thus,
-our model would not properly match the observed time series of hospitalization and ICU occupancy, or at least would fail to account for
-severe cases outside of hospitals. Furthermore, capacity limitations in the health care system lead to ceilings on hospitalization that are
+that we focus on here, many severe cases actually occurred entirely in Long Term Care Facilities (LTCFs); furthermore, capacity limitations in the health care system lead to ceilings on hospitalization that are
 not represented in our model.
-\ben{I think I got this statement right but am not sure: WZ/JD/DE, please check for correctness/clarity.}
-\david{I removed ``properly'' since we make no attempt to represent capacity limits
-  to my knowledge. What you describe accurately reflects our rationale in 2020, but we are currently happy to calibrate to hosp and ICU. Can we rephrase in a way
-  that is consistent with us later deciding that fitting to hosp and ICU is OK?
-  Is my additional phrase ``during the early pandemic period
-that we focus on here'' a solution?}
-\mike{RE:Ben, this is reads fine to me.}
+\jd{I removed earlier comments, and simplified by removing stuff about why we didn't want to use an inappropriate model.}
 
 \subsubsection*{Forecasting}
 
@@ -360,8 +350,7 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \includegraphics[width=\maxwidth]{figure/ontario_mobility.Rout.pdf}
 
 \caption{Ontario mobility 
-  \mike{Need to add the mobility breakdates in the diagram; the model uses a different slope and intercept at different breakdates.}
-  \ben{Mike or JD: can you tell me how to retrieve breakpoints from wherever they're defined to be used in this plot? {\tt mob\_breaks} is set in {\tt ontario\_calibrate\_comb.R} ?}
+  \mike{Need to add the mobility breakpoints.}
 }
 \label{fig:Ont_mobility}
 \end{figure}
@@ -371,18 +360,18 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \hypertarget{sec:Results}{}
 \section{Results}
 
-We used the Ontario data and fitted it to two different models to demonstrate the capability of this modeling framework. The first model is our simplest model, following the schematic illustrated in Figure \ref{fig:flowchart}. This model calibrates to new confirmation and death time series and includes mobility with two additional breaks and phenomenological heterogeneity. We will refer to this as the ``base model''.
+We fitted two different models to the Ontario data demonstrate the capability of this modeling framework. The first model is our simplest model, following the schematic illustrated in Figure \ref{fig:flowchart}. This model calibrates to new confirmation and death time series and includes mobility with two additional breaks and phenomenological heterogeneity. We will refer to this as the ``base model''.
 The second model extends the base model by incorporating the testing structure illustrated in Figure \ref{fig:testing_flow}. We will refer to the second model as the ``testify model''. 
+\jd{The following s.~confuses me, we do have breakpoints.}
 We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window. The transmission rate is a function of time-varying intercepts and slopes on the mobility index, which is a sensible proxy for changes in behavior in response to public health restrictions. Two change points were included to allow the transmission rate to have a different intercept and slope with respect to the mobility index, capturing the adaptiveness of the mobility patterns.
-Both models were used to forecast 30 days ahead and assumed that the mobility index would remain constant at the last observed value for the forecast period.
+Both models were used to forecast 30 days ahead, under the assumption that the mobility index would remain constant at the last observed value for the forecast period.
 \david{That was true in 2020 but is no longer true.
   We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.} \mike{This is incorrect, we did use it in mobility, but we have to double check if it is used to match policy change vs goodness of fit?!? for the mobility pattern.}
-
+\jd{What isn't true? I feel the text has left these comments behind?}
 
 \mike{Do we want to include some simulation to show the model works and can do the calibration?}
 \david{I think that would strengthen the paper, if people have the strength for it.  While I'm always pushing for testing against simulations, I am most concerned about getting this paper finished and submitted soon.  If a fit to a simulation can be achieved quickly, then great.}
 \mike{Pretty drainned, happy to delete this suggestion unless the results are ``really'' thin}
-
 
 \subsection{Base model}
 
@@ -450,7 +439,10 @@ It also shows the daily testing in Ontario in the calibration time frame. The ve
 
 \section{Discussion}
 
-We have fitted two models that vary in complexity to SARS-CoV-2 daily reporting and death time series data for Ontario, Canada, from 1 March to 30 August 2020.  Our simple base model is typical of compartmental epidemic models used to study infectious disease epidemics.  The testify model is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
+We present a compartmental framework developed in real time during the SARS-CoV-2 pandemic, first to make simple projections, and later to fit epidemic data, combine different data streams, and make forecasts for a variety of public-health agencies and governmental advisory bodies. Valuable lessons were learned in this process that should be consolidated to provide a better foundation for future pandemics. The modeling approaches used here, and the challenges faced, have already been incorporated into newer, more flexible tools, and development is continuing.
+
+\jd{Can somebody brief me on how these fits relate to what we actually did in real time?}
+We show two example fits for the province of Ontario early in the pandemic, from models that vary in complexity.  Our simple base model is typical of compartmental epidemic models used to study infectious disease epidemics.  The testify model is a practical expansion of the base model that allows us to take advantage of data on time-varying testing practices and policies.
 
 \mike{Talk about the assumptions of the forecast period for each model. Freezing vs extending/predicting mobility and testing intensity.}
 
@@ -479,9 +471,6 @@ First, it is important to have ways to incorporate time-varying parameterization
 Second, allowing for testing intensity to disaggregate the transmission rates through time (i.e. does increase in positive cases/confirmation due to an increase in transmission or testing capacity). 
 The flexibility of incorporating various time-vary parameterizations allows users to make more realistic features and scenario exploration. 
 
-\david{\macro{input\{nextsteps.tex\}} has been commented out.  There may be useful comments in there that would help with Discussion/Conclusions.}
-
-\thickredline
 \clearpage
 
 \bibliographystyle{vancouver}
