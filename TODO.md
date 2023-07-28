@@ -1,6 +1,5 @@
 
 F4: death forecast looks bad because the mort parameters are not time-varying
-* What do we think about the death data series? ⇒ WZ
 * Make a decision about: time variation for mortality (but what would be the reason?); drop death (can we find another multi-stream example?)
 
 Testify:
