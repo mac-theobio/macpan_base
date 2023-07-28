@@ -1,36 +1,24 @@
 
-- Figure out what's up with `figure/flow.chart.crop.pdf`
-- Parameter estimate table: does it make sense and fix the greater than symbol
-- Make better looking plots (the code is in `code/ontario_plots.R`)
-- Need to write a better results section!
-- venue: PLoS ONE?
-- pipeline
-    - interim hack with 
-    - locate working commit on MacPan repo
+F4: death forecast looks bad because the mort parameters are not time-varying
+* What do we think about the death data series? ⇒ WZ
+* Make a decision about: time variation for mortality (but what would be the reason?); drop death (can we find another multi-stream example?)
 
+Testify:
+* Are we OK with doing it only on cases?
 
-## everyone
+Fix Rt plot
+* Are we changing just β (R0(t)), or are we also multiply by S/N (Re(t))? make any decision and state it clearly
 
+Add breakpoints to mobility plot
 
-MLi:
-	- fitting with mobility (with mobility breaks) + phenomhet to reports and death
-	- testify
-	- splines: currently not doing, but I did run testify spline and it is in cache.
+Clean up figures, improve captions  
 
+Discussion and conclusions
 
-## JD
+Rewrite results to serve some sort of updated Discussion
 
-- Check "kernel moments calculation" section for accuracy and completeness
+Preprint: medrXiv 
 
-## Mike/Irena
+Submit: PLoS ONE?
 
-- Confirm that description of calibration, forecasting procedure is actually what we are doing
-- no process error? 
-- ensemble of parameters via MVN sampling? (Importance sampling?)
-- NB observation error?
-- quantile-based envelopes? (mention Juul et al.?)
-
-## BB
-
-- "ascertainment ratio" is a term I couldn't remember. Use it where appropriate.
-- discuss calculation of $R_t$ (i.e., by scaling $R_0$ by $\beta(t)$ ?
+Profit!!
