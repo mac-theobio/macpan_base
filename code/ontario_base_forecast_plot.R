@@ -5,9 +5,10 @@ library(cowplot)
 library(zoo)
 library(gtable)
 
-rpcall("figure/ontario_base_forecast_plot.Rout .pipestar code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda")
-
 loadEnvironments()
+
+## FIXME: use this
+get_R0(coef(mod$fit), method = "analytical")
 
 reports_death <- (forecast
 	%>% filter(var %in% c("report","death"))
@@ -20,7 +21,6 @@ reports_death <- (forecast
 )
 
 print(reports_death,n=Inf)
-
 
 rt_ensemble <- (forecast
 	%>% filter(var %in% c("S","foi","I"))
