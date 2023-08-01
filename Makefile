@@ -6,7 +6,7 @@ all: macpan_ms.pdf
 ## macpan_ms.pdf.final: macpan_ms.tex
 ## slowsync:
 
-macpan_ms.pdf: macpan_ms.tex  code/ontario_tables.Rout
+macpan_ms.pdf: macpan_ms.tex  code/ontario_tables.Rout figure/ontario_base_forecast_plot.Rout.pdf
 
 ## FIXME
 makeslow = defined
