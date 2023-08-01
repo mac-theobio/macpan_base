@@ -6,7 +6,7 @@ all: macpan_ms.pdf
 ## macpan_ms.pdf.final: macpan_ms.tex
 ## slowsync:
 
-## macpan_ms.pdf:
+## macpan_ms.pdf: macpan_ms.tex  code/contario_tables.Rout
 
 ## FIXME
 makeslow = defined
@@ -40,7 +40,7 @@ autopipeR = defined
 
 ## MS plots
 pdfDesc += figure/ontario_plots
-figure/ontario_plots.Rout: code/ontario_plots.R slow/ontario_calibrate_comb.rds slow/ontario_testify.rds slow/calibrate_comb_setup.rds
+figure/ontario_testing_plot.Rout: code/ontario_testing_plot.R slow/ontario_calibrate_comb.rds slow/ontario_testify.rds slow/calibrate_comb_setup.rds
 	$(pipeR)
 
 ## MS tables
@@ -71,6 +71,10 @@ slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/o
 pdfDesc += figure/ontario_base_forecast_plot
 figure/ontario_base_forecast_plot.Rout.final:
 figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
+	$(pipeR)
+
+
+figure/ontario_base_rt_plot.Rout: code/ontario_base_rt_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)
 
 figure/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R slow/ontario_testify_forecast.rda

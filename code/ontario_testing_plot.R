@@ -14,11 +14,11 @@ base <- rdsRead("ontario_calibrate")
 testify <- rdsRead("ontario_testify")
 dat <- rdsRead("_setup")
 
-(plot(base$fit, data=filter(base$data, date<=as.Date("2020-08-30")))
-    ## 'dlspace' not working, alas
-    + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
-    + expand_limits(x = as.Date("2020-10-01"))
-) %>% teeGG(desc="base",width = 10,height = 6)
+# (plot(base$fit, data=filter(base$data, date<=as.Date("2020-08-30")))
+#    ## 'dlspace' not working, alas
+#    + scale_x_date(date_breaks="1 month", date_labels="%b-%Y")
+#    + expand_limits(x = as.Date("2020-10-01"))
+#) %>% teeGG(desc="base",width = 10,height = 6)
 
 ## 2023 Jul 17 (Mon) Does this really belong here or should it be upstream?
 dd <- suppressWarnings(predict(testify$fit
