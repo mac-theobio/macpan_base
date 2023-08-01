@@ -68,7 +68,6 @@ slowtarget/ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setu
 slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/ontario_testify.rds
 	$(pipeR)
 
-pdfDesc += figure/ontario_base_forecast_plot
 figure/ontario_base_forecast_plot.Rout.final:
 figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)

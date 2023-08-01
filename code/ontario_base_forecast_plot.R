@@ -5,8 +5,6 @@ library(cowplot)
 library(zoo)
 library(gtable)
 
-rpcall("code/ontario_base_forecast_plot.Rout .pipestar slow/ontario_base_forecast.rda")
-
 loadEnvironments()
 
 
