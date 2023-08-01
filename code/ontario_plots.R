@@ -1,7 +1,7 @@
 library(tidyverse); theme_set(theme_bw(base_size = 10))
 
 ## point to OLD/stored MacPan
-.libPaths(c("Rlib", .libPaths()))
+# .libPaths(c("Rlib", .libPaths()))
 library(McMasterPandemic)
 packageVersion("McMasterPandemic")
 
@@ -61,7 +61,7 @@ ddcombo2 <- bind_rows(ddcombo, testdat)
                          sec.axis = sec_axis(~.*iscale, name = "testing intensity"))
     + geom_vline(aes(xintercept=as.Date("2020-09-01")), lty = 2)
     ## can't combine log/lin scale, so use linear for both
-) %>% teeGG(desc="testify", width = 10,height = 6)
+)##  %>% teeGG(desc="testify", width = 10,height = 6)
 
 ## testing <- (ggplot(testdat,aes(x=Date,y=intensity))
 ## 	+ geom_point()

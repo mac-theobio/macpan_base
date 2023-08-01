@@ -20,9 +20,9 @@ reports_death <- (forecast
 	)
 )
 
-print(reports_death,n=Inf)
-
 R0val <- get_R0(coef(mod$fit), method = "analytical")
+
+R0t <- R0val
 
 rt_ensemble <- (forecast
 	%>% filter(var %in% c("S","foi","I"))
@@ -89,4 +89,4 @@ teeGG(ggcombo, desc="rptDeath")
     + geom_hline(aes(yintercept=1))
     + scale_x_date(date_labels = "%b-%Y")
     + scale_linetype_manual(values = 1:2, labels = c("Reff", "Rt"))
-) %>% teeGG(desc="rt")
+) # %>% teeGG(desc="rt")

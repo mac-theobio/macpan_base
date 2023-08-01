@@ -3,8 +3,10 @@
 
 ## See makestuff/slowtarget.md for workflow control and assuring you are up to date
 all: macpan_ms.pdf
-## macpan_ms.pdf.final:
+## macpan_ms.pdf.final: macpan_ms.tex
 ## slowsync:
+
+## macpan_ms.pdf:
 
 ## FIXME
 makeslow = defined
