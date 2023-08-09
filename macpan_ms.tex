@@ -99,10 +99,9 @@ the average level of susceptibility in the remaining population decreases.\david
 % \includegraphics[width=\maxwidth]{figure/flow.chart.crop.pdf}
 \includegraphics[width=\maxwidth]{pix/Macpan_Base_Epi-model.png}
 \caption{Flow chart for basic compartmental mechanistic transmission model. 
-Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs} (ICU with prognosis of survival), \code{ICUd} (ICU with prognosis of death), \code{H2} (acute care after ICU stay). 
-Compartments denoted by rectangles are accumulators, primarily used in the condensation step to compute incidences: \code{R} (recovered), \code{D} (dead), \code{X} (accumulator for cumulative hospital admissions).
-\ben{prettify this further, \textbf{or} steal something better from Irena?}}
-\mike{Stole this diagram from Darren's product paper.}
+Compartments: \code{S} (susceptible), \code{E} (exposed), \code{Ia} (asymptomatic infection), \code{Ip} (presymptomatic infection), \code{Im} (mild/moderately symptomatic infection), \code{Is} (severely symptomatic infection), \code{H} (hospitalized [acute care]), \code{ICUs}/``ICU Survive'' (ICU with prognosis of survival), \code{ICUd}/``ICU Die'' (ICU with prognosis of death), \code{H2}/``Hospitalized Recovery'' (acute care after ICU stay). 
+%Compartments denoted by rectangles are accumulators, primarily used in the condensation step to compute incidences: \code{R} (recovered), \code{D} (dead), \code{X} (accumulator for cumulative hospital admissions).
+}
 \label{fig:flowchart}
 \end{figure}
 
@@ -349,8 +348,7 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_mobility.Rout.pdf}
 
-\caption{Ontario mobility 
-  \mike{Need to add the mobility breakpoints.}
+\caption{Ontario mobility. \ben{need more description/standalone: 7-day average, etc.}
 }
 \label{fig:Ont_mobility}
 \end{figure}
