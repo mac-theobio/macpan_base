@@ -1,5 +1,3 @@
-Need to double check base parameter table, some values are changed inside the calibration script and when we adjust for R0 and gbar. Is it using the calibrated object to get the base parameters?
-
 
 F4: death forecast looks bad because the mort parameters are not time-varying
 * Make a decision about: time variation for mortality (but what would be the reason?); drop death (can we find another multi-stream example?)
