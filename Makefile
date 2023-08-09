@@ -8,9 +8,6 @@ all: macpan_ms.pdf
 
 macpan_ms.pdf: macpan_ms.tex  code/ontario_tables.Rout figure/ontario_base_forecast_plot.Rout.pdf
 
-## FIXME
-makeslow = defined
-
 ######################################################################
 
 current: target
