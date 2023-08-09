@@ -360,16 +360,12 @@ We use mobility data from Apple\footnote{\url{https://raw.githubusercontent.com/
 
 We fitted two different models to the Ontario data demonstrate the capability of this modeling framework. The first model is our simplest model, following the schematic illustrated in Figure \ref{fig:flowchart}. This model calibrates to new confirmation and death time series and includes mobility with two additional breaks and phenomenological heterogeneity. We will refer to this as the ``base model''.
 The second model extends the base model by incorporating the testing structure illustrated in Figure \ref{fig:testing_flow}. We will refer to the second model as the ``testify model''. 
-\jd{The following s.~confuses me, we do have breakpoints.}
-We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window. The transmission rate is a function of time-varying intercepts and slopes on the mobility index, which is a sensible proxy for changes in behavior in response to public health restrictions. Two change points were included to allow the transmission rate to have a different intercept and slope with respect to the mobility index, capturing the adaptiveness of the mobility patterns.
+We did not explicitly include break dates (i.e., time-varying transmission rates) to match different public health measures and restrictions in place within the fitting window, but instead included them in the mobility index. The transmission rate is a function of time-varying intercepts and slopes on the mobility index, which is a sensible proxy for changes in behavior in response to public health restrictions. Two change points were included to allow the transmission rate to have a different intercept and slope with respect to the mobility index, capturing the adaptiveness of the mobility patterns.
 Both models were used to forecast 30 days ahead, under the assumption that the mobility index would remain constant at the last observed value for the forecast period.
 \david{That was true in 2020 but is no longer true.
-  We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.} \mike{This is incorrect, we did use it in mobility, but we have to double check if it is used to match policy change vs goodness of fit?!? for the mobility pattern.}
+  We should rephase.  We could perhaps say ``was a good proxy\dots\ during the focal time period'' or something like that, but we then need to say this stopped being true eventually and some reference(s) to support this would be very helpful.} 
+\mike{Maybe add it in the discussion?}
 \jd{What isn't true? I feel the text has left these comments behind?}
-
-\mike{Do we want to include some simulation to show the model works and can do the calibration?}
-\david{I think that would strengthen the paper, if people have the strength for it.  While I'm always pushing for testing against simulations, I am most concerned about getting this paper finished and submitted soon.  If a fit to a simulation can be achieved quickly, then great.}
-\mike{Pretty drainned, happy to delete this suggestion unless the results are ``really'' thin}
 
 \subsection{Base model}
 
@@ -377,6 +373,7 @@ Figure \ref{fig:Ont_calibration_base_forecast} shows the fit to new confirmation
 
 The 30 day forecast is expected to increase; when over-laying actual observed time series for that time-frame, the observed time series are lower than predicted but within 95\% prediction interval for the new confirmations and missed all the death observations. The parameters for mortality were assumed to be constant throughout the fitting and forecast window. 
 
+Figure \ref{fig:Ont_calibration_base_rt} shows the R0t and Ret from the base model. \mike{thought on the interval band on Rts?}
 
 \begin{figure}[ht!]
 \includegraphics[width=\maxwidth]{figure/ontario_base_forecast_plot.Rout.pdf}
