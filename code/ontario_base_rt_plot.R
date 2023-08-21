@@ -25,6 +25,7 @@ rt_ensemble <- (forecast
 	%>% ungroup()
 )
 
+
 ## rt_ensemble |> filter(date == min(date)) |> pull(rt) |> hist()
 
 rt <- (rt_ensemble
