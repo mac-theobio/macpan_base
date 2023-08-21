@@ -8,7 +8,6 @@ library(shellpipes)
 
 loadEnvironments()
 
-
 mod <- rdsRead()
 
 ## mod <- readRDS("slow/ontario_calibrate_comb.rds")
@@ -36,8 +35,6 @@ fit$forecast_args$end_date <- fit$forecast_args$end_date + extend_days
 # )
 
 print(plot(fit,data=mod$data) + xlim(c(as.Date("2020-04-01"),as.Date("2020-09-30"))))
-
-
 
 ensemble <- forecast_ensemble(fit, nsim=nsims, scale_Sigma = sigma_scale, raw_ensembles = TRUE)
 

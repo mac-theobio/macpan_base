@@ -1,4 +1,8 @@
 
+F4-5; we do not have a well-conditioned covariance matrix. This is unlikely to be something we can fix effectively _unless_ we can find a better fit and it fixes itself. BB will look into refitting, fitting with greater precision in some way?, ... There is also a more expensive way to try to get the second-derivative matrix from a given fit by using numDeriv::Hessian
+
+----------------------------------------------------------------------
+
 F4: death forecast looks bad because the mort parameters are not time-varying
 * Make a decision about: time variation for mortality (but what would be the reason?); drop death (can we find another multi-stream example?)
 
