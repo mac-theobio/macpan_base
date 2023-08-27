@@ -21,13 +21,19 @@ print(diag(vcov(mle2_obj)))
 optargs <- c(list(par = coef(mle2_obj),
                   fn = mle2_obj@minuslogl,
                   data = mod$data),
-             mod$fit$forecast_args)
+             mod$fit$forecast_args,
+             list(control = list(maxit = 2e4)))
 system.time(
     newopt <- do.call("optim", optargs)
 )
 
+all.equal(newopt$par, coef(mle2_obj))  ## rel diff 0.079
+
 hessargs <- optargs
 hessargs[[1]] <- newopt$par
+
+all.equal(newopt$par, coef(mle2_obj))
+
 
 system.time(
     newhess_optim <- do.call("optimHess", hessargs)
@@ -45,7 +51,7 @@ try(solve(newhess_optim))
 
 sqrt(diag(MASS::ginv(newhess_numderiv)))
 sqrt(diag(MASS::ginv(newhess_optim)))
-sqrt(diag(solve(newhess_optim)))
+
 ##rdsSave(pp)
 saveEnvironment()
 
