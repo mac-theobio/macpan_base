@@ -32,8 +32,6 @@ params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
 
 args(calibrate_comb)
 
-quit()
-
 ### What parameters do we want to optimize?
 
 opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_mort=-1)

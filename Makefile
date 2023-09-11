@@ -60,6 +60,7 @@ slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calib
 slowtarget/ontario_base_calibration_check.Rout: code/ontario_base_calibration_check.R slow/ontario_calibrate_comb.rds
 	$(pipeR)
 
+## checkup.Rout.final: code/checkup.R 
 checkup.Rout: code/checkup.R slow/ontario_base_calibration_check.rda
 	$(pipeR)
 
