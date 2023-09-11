@@ -1,0 +1,5 @@
+library(shellpipes)
+
+loadEnvironments()
+
+objects()
