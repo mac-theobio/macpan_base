@@ -57,7 +57,7 @@ slowtarget/ontario_calibrate_comb.Rout: code/ontario_calibrate_comb.R slow/calib
 	$(pipeR)
 
 ## ontario_base_calibration_check.Rlog: code/ontario_base_calibration_check.R slow/ontario_calibrate_comb.rds
-ontario_base_calibration_check.Rout: code/ontario_base_calibration_check.R slow/ontario_calibrate_comb.rds
+slowtarget/ontario_base_calibration_check.Rout: code/ontario_base_calibration_check.R slow/ontario_calibrate_comb.rds
 	$(pipeR)
 
 slowtarget/ontario_base_forecast.Rout: code/ontario_base_forecast.R slow/ontario_calibrate_comb.rds 

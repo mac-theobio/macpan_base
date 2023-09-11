@@ -4,10 +4,6 @@ library(shellpipes)
 
 loadEnvironments()
 
-# source("calibrate_comb_setup.R")
-## This is a very slow step because it is downloading large mobility csvs
-# load("calibrate_comb_setup.rda")
-
 stop_date <-  as.Date("2020-08-30")
 
 cachedat <- rdsRead()
@@ -30,8 +26,13 @@ params[["E0"]] <- 5
 params[["mu"]] <- 0.85
 params[["rho"]] <- 1/10
 params[["delta"]] <- 0.2
+## params[["log_nb_disp"]] = c(report=30, death=15)
 
 params[["N"]] <- 14.57e6 ## Population of Ontario (2019)
+
+args(calibrate_comb)
+
+quit()
 
 ### What parameters do we want to optimize?
 
@@ -41,9 +42,12 @@ opt_pars <- list(#params=c(log_E0=2, log_beta0=-1, logit_mu = -1, logit_nonhosp_
 		# , mu = 0.8
 		, logit_nonhosp_mort = -0.5
 		)
-	, log_nb_disp = c(report=30, death=15)
-	# , log_nb_disp = c(report=30, death=10)
-	# , log_nb_disp = c(report=20)
+	# , log_nb_disp = c(report=30, death=15)
+)
+
+## Try holding these constant to simplify JD 2023 Sep 11 (Mon)
+fixed_pars <- list(
+	log_nb_disp = c(report=30, death=15)
 )
 
 mob_breaks <- c("2020-04-01","2020-08-07")
@@ -54,19 +58,16 @@ current <- do.call(calibrate_comb
 		, data = calibrate_data
 		, mob_data = cachedat$clean_mobility
 		, opt_pars = opt_pars
+		, fixed_pars = fixed_pars
 		, use_DEoptim = FALSE
-		, DE_cores = 3
+		## , DE_cores = 3
 		, use_phenomhet = TRUE
 		, use_mobility = TRUE
-		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14","2021-03-01")
-		# , mob_breaks = c("2020-04-01","2020-08-07","2020-10-01","2021-01-14")
 		, mob_breaks = mob_breaks
 		, mob_breaks_int = TRUE
 		, mob_logist_scale = 3
 		, use_spline = FALSE
-		, spline_type = "ns"
-		, spline_df = NA
-		, spline_days = 14
+		## , spline_type = "ns" , spline_df = NA , spline_days = 14
 		, use_testing = FALSE
 		)
 	)

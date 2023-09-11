@@ -34,7 +34,7 @@ all.equal(newopt$par, coef(mle2_obj))  ## rel diff 0.079
 
 ## compute hessian via optimHess
 hessargs <- optargs
-hessargs[[1]] <- newopt$par
+hessargs$par <- newopt$par
 system.time(
     newhess_optim <- do.call("optimHess", hessargs)
 )
@@ -53,13 +53,14 @@ try(solve(newhess_optim))
 sqrt(diag(MASS::ginv(newhess_numderiv)))
 sqrt(diag(MASS::ginv(newhess_optim)))
 
+## Make an mle object with parameters from the extended (optim) fit
 newmle <- mle2_obj
 newmle@coef <- newopt$par
 pp1 <- profile(newmle, std.err=.01)
 ## coef() fills in the fixed value of the focal parameter --
 ##   so x@coef is different from coef(x)
 
-optargs2 <- c(list(par = coef(pp0),
+optargs2 <- c(list(par = coef(pp1),
                   fn = mle2_obj@minuslogl,
                   data = mod$data),
              mod$fit$forecast_args,
@@ -73,8 +74,8 @@ optargs2 <- c(list(par = coef(pp0),
 system.time(
     newopt2 <- do.call("optim", optargs2)
 )
-## much better (should compare fit projections)
-hessargs[[1]] <- newopt2$par
+## much better likelihood (should compare fit projections)
+hessargs$par <- newopt2$par
 system.time(
     newhess_optim2 <- do.call("optimHess", hessargs)
 )
@@ -94,11 +95,12 @@ try(solve(newhess_optim2))
 sqrt(diag(MASS::ginv(newhess_numderiv2)))
 sqrt(diag(MASS::ginv(newhess_optim2)))
 
-
-## name hack ...
+## name hack to convert profile fit to look like a regular fit
 names(newopt2$par)[1] <- names(newopt$par)[1]
 newmle2 <- mle2_obj
 newmle2@coef <- newopt2$par
+
+## Refit and be very tolerant
 pp2 <- profile(newmle2, std.err=.01, trace = TRUE, tol.newmin = 0.5)
 
 optargs3 <- c(list(par = coef(pp2),
@@ -120,7 +122,6 @@ names(newopt3$par)[1] <- names(newopt$par)[1]
 newmle3 <- mle2_obj
 newmle3@coef <- newopt2$par
 pp3 <- profile(newmle3, std.err=.01, trace = TRUE, tol.newmin = 0.5)
-
 
 saveEnvironment()
 
