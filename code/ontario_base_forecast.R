@@ -17,7 +17,7 @@ fit <- mod$fit
 ## Hack end date
 extend_days <- 30
 
-nsims <- 1000
+nsims <- 100
 
 sigma_scale <- 1
 
