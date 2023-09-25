@@ -29,7 +29,9 @@ visCompartmental(mb)
 try(testify <- cfun("testing")) ## broken ...
 ```
 
-* 
+* hazard correction
+
+* `R0`/`r` computation
 
 -------------
 
