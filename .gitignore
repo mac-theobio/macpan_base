@@ -32,3 +32,5 @@ macpan_base.Rproj
 *.mk
 *.subdeps
 *_table.tex
+*.fdb_latexmk
+*.fls
