@@ -17,7 +17,7 @@ fit <- mod$fit
 ## Hack end date
 extend_days <- 30
 
-nsims <- 100
+nsims <- 500
 
 sigma_scale <- 1
 
@@ -34,11 +34,13 @@ fit$forecast_args$end_date <- fit$forecast_args$end_date + extend_days
 # 	, fit$forecast_args$time_args$X[rep(nrow(fit$forecast_args$time_args$X),30),]
 # )
 
-print(plot(fit,data=mod$data) + xlim(c(as.Date("2020-04-01"),as.Date("2020-09-30"))))
+# print(plot(fit,data=mod$data) + xlim(c(as.Date("2020-04-01"),as.Date("2020-09-30"))))
 
 ensemble <- forecast_ensemble(fit, nsim=nsims, scale_Sigma = sigma_scale, raw_ensembles = TRUE)
 
 forecast <- ensemble %>% filter(var %in% c("report","death","S","I","foi"))
+
+print(forecast)
 
 saveVars(forecast, mod)
 

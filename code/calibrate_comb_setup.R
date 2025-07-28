@@ -2,7 +2,6 @@ library(McMasterPandemic)
 library(tidyverse)
 library(zoo)
 library(shellpipes)
-
 ## Section 1: Read Data Sources
 
 ### Get time series data from MLi's data repo; mobility data from Apple and Google.

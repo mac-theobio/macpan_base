@@ -71,9 +71,9 @@ current <- do.call(calibrate_comb
 	)
 )
 
-print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("2020-09-01"))) 
-      + ggtitle("Current model: mobility")
-      + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
+# print(plot(current, data=filter(cachedat$calibrate_data_fill,date <= as.Date("2020-09-01"))) 
+#      + ggtitle("Current model: mobility")
+#      + scale_x_date(date_breaks = "1 month", date_labels = "%b"))
 
 ont_calib_comb_reports_mobbreaks <- list(fit=current, data=cachedat$calibrate_data_fill,mobdat=cachedat$clean_mobility, breakpoints = mob_breaks)
 

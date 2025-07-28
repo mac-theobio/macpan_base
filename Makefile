@@ -23,7 +23,7 @@ vim_session:
 ## macpan_ms.pdf: macpan_ms.tex
 
 Sources += $(wildcard */*.R)
-Sources += macpan_ms.tex McMasterReport_preamble.tex 
+Sources += macpan_ms.tex McMasterReport_preamble.tex notes.md 
 
 Ignore +=	base_table.tex testify_table.tex litparm_table.tex
 
