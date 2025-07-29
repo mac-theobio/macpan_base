@@ -102,7 +102,6 @@ Ignore += linked/
 linked:
 	$(mkdir)
 
-
 ######################################################################
 
 ## FIXME Deleted lots of manual figure links
