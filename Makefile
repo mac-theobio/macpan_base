@@ -22,7 +22,7 @@ vim_session:
 
 ## macpan_ms.pdf: macpan_ms.tex
 
-Sources += $(wildcard code/*.R figure/*.R sandbox/*.R)
+Sources += $(wildcard code/*.R figure/*.R sandbox/*.R linked/*.R)
 Sources += macpan_ms.tex McMasterReport_preamble.tex notes.md 
 
 Ignore +=	base_table.tex testify_table.tex litparm_table.tex
@@ -95,10 +95,10 @@ retro_forecast.Rout: linked/ontario_base_forecast_plot.R ontario_base_forecast.r
 ontario_base_forecast.rda:
 	$(LNF) slow/$@
 
+## Does not actually work because token expires
 linked/ontario_base_forecast_plot.R: | linked
-	wget -O $@ https://raw.githubusercontent.com/papsti/macpan_retro/f710d93202bb0873d94d67e03dc272440da02174/data/ontario_base_forecast_plot.R?token=GHSAT0AAAAAADD65ES3U6WYE3AWWJASGASG2EIR5HA
+	wget -O $@ https://raw.githubusercontent.com/papsti/macpan_retro/f710d9/data/ontario_base_forecast_plot.R?token=XXXX
 
-Ignore += linked/
 linked:
 	$(mkdir)
 
