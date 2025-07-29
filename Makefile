@@ -72,10 +72,9 @@ slowtarget/ontario_testify.Rout: code/ontario_testify.R slow/calibrate_comb_setu
 slowtarget/ontario_testify_forecast.Rout: code/ontario_testify_forecast.R slow/ontario_testify.rds
 	$(pipeR)
 
-figure/ontario_base_forecast_plot.Rout.final:
+## figure/ontario_base_forecast_plot.Rout.final:
 figure/ontario_base_forecast_plot.Rout: code/ontario_base_forecast_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)
-
 
 figure/ontario_base_rt_plot.Rout: code/ontario_base_rt_plot.R slow/ontario_base_forecast.rda
 	$(pipeR)
@@ -85,6 +84,24 @@ figure/ontario_testify_forecast_plot.Rout: code/ontario_testify_forecast_plot.R 
 
 figure/ontario_mobility.Rout: code/ontario_mobility.R slow/calibrate_comb_setup.rds
 	$(pipeR)
+
+######################################################################
+
+## Archaeology 2025 Jul 29 (Tue)
+
+retro_forecast.Rout: linked/ontario_base_forecast_plot.R ontario_base_forecast.rda
+	$(pipeR)
+
+ontario_base_forecast.rda:
+	$(LNF) slow/$@
+
+linked/ontario_base_forecast_plot.R: | linked
+	wget -O $@ https://raw.githubusercontent.com/papsti/macpan_retro/f710d93202bb0873d94d67e03dc272440da02174/data/ontario_base_forecast_plot.R?token=GHSAT0AAAAAADD65ES3U6WYE3AWWJASGASG2EIR5HA
+
+Ignore += linked/
+linked:
+	$(mkdir)
+
 
 ######################################################################
 
